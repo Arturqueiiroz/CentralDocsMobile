@@ -1,5 +1,5 @@
-import { LoginScreen } from './src/Presentation/views/Login/Login';
+import RegisterScreen  from './src/Presentation/views/Cadastro/Cadastro';
 
 export default function App() {
-  return <LoginScreen />;
+  return <RegisterScreen />;
 }
