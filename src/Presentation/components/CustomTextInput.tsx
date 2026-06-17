@@ -1,7 +1,7 @@
 import { Text, TextInput, View, StyleSheet } from 'react-native';
 
 interface Props {
-    label: string;
+    label?: string;
     placeholder: string;
     value: string;
     property: string;
@@ -19,7 +19,11 @@ export const CustomInput = ({
 }: Props) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>{label}</Text>
+            {label && (
+                <Text style={styles.label}>
+                    {label}
+                </Text>
+            )}
 
             <TextInput
                 style={styles.input}
@@ -34,11 +38,11 @@ export const CustomInput = ({
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 20,
+        marginBottom: 10,
     },
 
     label: {
-        fontSize: 14,
+        fontSize: 18,
         marginBottom: 8,
         color: '#333',
     },
