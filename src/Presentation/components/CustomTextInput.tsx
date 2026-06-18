@@ -1,4 +1,6 @@
-import { Text, TextInput, View, StyleSheet } from 'react-native';
+import { Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 
 interface Props {
     label?: string;
@@ -17,6 +19,7 @@ export const CustomInput = ({
     secureTextEntry = false,
     onChangeText,
 }: Props) => {
+    const [showPassword, setShowPassword] = useState(false);
     return (
         <View style={styles.container}>
             {label && (
@@ -25,13 +28,27 @@ export const CustomInput = ({
                 </Text>
             )}
 
-            <TextInput
-                style={styles.input}
-                placeholder={placeholder}
-                value={value}
-                secureTextEntry={secureTextEntry}
-                onChangeText={(text) => onChangeText(property, text)}
-            />
+            <View style={styles.inputContainer}>
+                <TextInput
+                    style={styles.input}
+                    placeholder={placeholder}
+                    value={value}
+                    secureTextEntry={secureTextEntry && !showPassword}
+                    onChangeText={(text) => onChangeText(property, text)}
+                />
+
+                {secureTextEntry && (
+                    <TouchableOpacity
+                        onPress={() => setShowPassword(!showPassword)}
+                    >
+                        <Ionicons
+                            name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                            size={24}
+                            color="#666"
+                        />
+                    </TouchableOpacity>
+                )}
+            </View>
         </View>
     );
 };
@@ -48,7 +65,13 @@ const styles = StyleSheet.create({
     },
 
     input: {
+        flex: 1,
         height: 50,
+    },
+
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         borderWidth: 1,
         borderColor: '#D9D9D9',
         borderRadius: 8,
