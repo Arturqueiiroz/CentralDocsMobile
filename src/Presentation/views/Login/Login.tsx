@@ -1,11 +1,15 @@
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../../../App';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { CustomInput } from '../../components/CustomTextInput';
+import { CustomButton } from '../../components/CustomButton';
 
 export const LoginScreen = () => {
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
     return (
         <View style={styles.container}>
             <View style={styles.card}>
@@ -41,29 +45,42 @@ export const LoginScreen = () => {
                 property="password"
                 secureTextEntry
                 onChangeText={(property, value) => setPassword(value)}
+
+                
             />
+            
                 <TouchableOpacity style={styles.forgotPasswordContainer}>
                     <Text style={styles.forgotPassword}>
                         Esqueceu a senha?
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.loginButton}>
-                    <Text style={styles.loginButtonText}>
-                        Entrar
-                    </Text>
-                </TouchableOpacity>
+                <CustomButton
+                    title="Entrar"
+                    onPress={() => {}}
+                />
 
                 <View style={styles.registerContainer}>
                     <Text style={styles.registerText}>
                         Não tem conta?
                     </Text>
 
-                    <TouchableOpacity>
-                        <Text style={styles.registerLink}>
-                            Criar conta
-                        </Text>
-                    </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Cadastro')}
+                >
+                    <Text style={styles.registerLink}>
+                        Criar conta
+                    </Text>
+                </TouchableOpacity>
                 </View>
+                <View style={styles.google}>
+                   <Text>Ou entre com</Text> 
+                </View>
+                <TouchableOpacity style={styles.googleButton}>
+                    <Image
+                        source={require('../../../../assets/img/google-icon-1.png')}
+                        style={styles.googleIcon}
+                    />
+                </TouchableOpacity>                  
             </View>
         </View>
     );
@@ -156,5 +173,27 @@ forgotPasswordContainer: {
         fontWeight: 'bold',
         marginLeft: 5,
         fontSize: 17
+    },
+    google: {
+        alignItems: 'center',
+        marginTop: 20,
+    },
+
+    googleButton: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: '#DDD',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 15,
+    },
+
+    googleIcon: {
+        width: 30,
+        height: 30,
+        resizeMode: 'contain',
     },
 });
