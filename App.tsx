@@ -28,7 +28,7 @@ export default function App() {
           component={ConfirmacaoBiometrica}
         />
 
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Login"
           component={LoginScreen}
         />
@@ -36,7 +36,7 @@ export default function App() {
         <Stack.Screen
           name="Cadastro"
           component={RegisterScreen}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
