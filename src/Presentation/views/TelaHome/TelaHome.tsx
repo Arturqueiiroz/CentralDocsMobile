@@ -24,17 +24,17 @@ export const TelaHomeScreen = () => {
 
                 <View style={styles.cardsRow}>
                     <View style={styles.infoCard}>
-                        <Text style={styles.number}>128</Text>
+                        <Text style={styles.number}>7</Text>
                         <Text style={styles.label}>Documentos</Text>
                     </View>
 
                     <View style={styles.infoCard}>
-                        <Text style={styles.number}>14</Text>
+                        <Text style={styles.number}>3</Text>
                         <Text style={styles.label}>Contribuidores</Text>
                     </View>
                 </View>
 
-                {/* <View style={styles.storageCard}>
+                <View style={styles.storageCard}>
                     <View style={styles.storageHeader}>
                         <Text style={styles.storageTitle}>
                             Armazenamento
@@ -50,7 +50,7 @@ export const TelaHomeScreen = () => {
                     <Text style={styles.storageText}>
                         4,1 GB de 5 GB utilizados
                     </Text>
-                </View> */}
+                </View>
 
                 <View style={styles.sectionHeader}>
                     <Text style={styles.sectionTitle}>
@@ -62,36 +62,65 @@ export const TelaHomeScreen = () => {
                     </Text>
                 </View>
 
-                <View style={styles.activityCard}>
-                    <Text style={styles.activityTitle}>
-                        Curriculaum.
-                    </Text>
+<View style={styles.activityCard}>
+    <View style={styles.activityHeader}>
+        <Text style={styles.activityTitle}>
+            Curriculo
+        </Text>
 
-                    <Text style={styles.activitySubtitle}>
-                        Editado há 2 horas
-                    </Text>
-                </View>
+        <TouchableOpacity>
+            <Ionicons
+                name="ellipsis-vertical"
+                size={20}
+                color="#777"
+            />
+        </TouchableOpacity>
+    </View>
 
-                <View style={styles.activityCard}>
-                    <Text style={styles.activityTitle}>
-                        Relatório Financeiro do 4º Trimestre
-                    </Text>
+    <Text style={styles.activitySubtitle}>
+        Editado há 2 horas
+    </Text>
+</View>
 
-                    <Text style={styles.activitySubtitle}>
-                        Compartilhado com Sarah M.
-                    </Text>
-                </View>
+<View style={styles.activityCard}>
+    <View style={styles.activityHeader}>
+        <Text style={styles.activityTitle}>
+            Relatório Financeiro do 4º Trimestre
+        </Text>
 
-                <View style={styles.activityCard}>
-                    <Text style={styles.activityTitle}>
-                        CPF
-                    </Text>
+        <TouchableOpacity>
+            <Ionicons
+                name="ellipsis-vertical"
+                size={20}
+                color="#777"
+            />
+        </TouchableOpacity>
+    </View>
 
-                    <Text style={styles.activitySubtitle}>
-                        Adicionado aos favoritos
-                    </Text>
-                </View>
-            </ScrollView>
+    <Text style={styles.activitySubtitle}>
+        Compartilhado com Sarah M.
+    </Text>
+</View>
+
+<View style={styles.activityCard}>
+    <View style={styles.activityHeader}>
+        <Text style={styles.activityTitle}>
+            CPF
+        </Text>
+
+        <TouchableOpacity>
+            <Ionicons
+                name="ellipsis-vertical"
+                size={20}
+                color="#777"
+            />
+        </TouchableOpacity>
+    </View>
+
+    <Text style={styles.activitySubtitle}>
+        Adicionado aos favoritos
+    </Text>
+</View>            </ScrollView>
 
             <TouchableOpacity style={styles.fab}>
                 <Text style={styles.fabText}>+</Text>
@@ -100,12 +129,12 @@ export const TelaHomeScreen = () => {
 
 
 
-<View style={styles.containerIcones}>
+            <View style={styles.containerIcones}>
                 <TouchableOpacity style={[styles.tabItem, styles.tabItemActive]}>
                     <Ionicons
                         name={'grid'}
                         size={22}
-                        color="#2563EB"    
+                        // color="#2563EB"    
                     /> 
                     <Text style={[styles.tabLabel, styles.tabLabelActive]}>Dashboard</Text>                  
                 </TouchableOpacity>
@@ -184,7 +213,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#777',
     },
-
     storageCard: {
         backgroundColor: '#2563EB',
         borderRadius: 16,
@@ -203,7 +231,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
-
+    
     percent: {
         color: '#FFF',
         fontWeight: '700',
@@ -215,7 +243,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255,255,255,0.3)',
         overflow: 'hidden',
     },
-
     progressFill: {
         width: '82%',
         height: '100%',
@@ -323,4 +350,10 @@ const styles = StyleSheet.create({
         color: '#2563EB', 
         fontWeight: '600',
     },
+    activityHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+},
 });
