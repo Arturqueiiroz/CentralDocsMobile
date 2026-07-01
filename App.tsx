@@ -3,9 +3,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Importações das suas telas e componentes
+import { TelaPrincipalScreen } from './src/Presentation/views/TelaPrincipal/TelaPrincipal';
 import { LoginScreen } from './src/Presentation/views/Login/Login';
 import RegisterScreen from './src/Presentation/views/Cadastro/Cadastro';
-import ProfileScreen from './src/Presentation/views/TelaPrincipal/TelaPrincipal';
 import TelaHomeScreen from './src/Presentation/views/TelaHome/TelaHome';
 import ConfirmacaoBiometrica from "./src/Presentation/views/Biometria/Biometria";
 
@@ -24,11 +24,15 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="TelaHome"
+                initialRouteName="TelaPrincipal"
                 screenOptions={{
                     headerShown: false,
                 }}
             >
+                <Stack.Screen
+                    name="TelaPrincipal"
+                    component={TelaPrincipalScreen}
+                />
                 <Stack.Screen
                     name="TelaHome"
                     component={TelaHomeScreen}
@@ -47,11 +51,6 @@ export default function App() {
                 <Stack.Screen
                     name="Biometria"
                     component={ConfirmacaoBiometrica}
-                />
-
-                <Stack.Screen
-                    name="TelaPrincipal"
-                    component={ProfileScreen}
                 />
             </Stack.Navigator>
         </NavigationContainer>

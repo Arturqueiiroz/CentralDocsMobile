@@ -1,479 +1,378 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-} from "react-native";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import React from "react";
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Image, } from "react-native";
 
-export default function ProfileScreen() {
-  const [name] = useState("Nickinho");
+import { HeaderScreen } from "../../components/Header";
 
+export const TelaPrincipalScreen = () => {
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Ionicons name="menu" size={26} color="#2563eb" />
-        </TouchableOpacity>
+    <ScrollView
+      style={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
+      <HeaderScreen />
+      <View style={styles.hero}>
 
-        <Text style={styles.logo}>CentralDocs</Text>
-
-        <TouchableOpacity>
-          <Image
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            }}
-            style={styles.headerAvatar}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {/* Perfil */}
-      <View style={styles.profileContainer}>
-        <View style={styles.avatarContainer}>
-          <Image
-            source={{
-              uri: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
-            }}
-            style={styles.avatar}
-          />
-
-          <TouchableOpacity style={styles.editButton}>
-            <Ionicons name="pencil" size={14} color="#fff" />
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.plan}>Plano Membro</Text>
-
-        <View style={styles.badgesContainer}>
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>VERIFICADO</Text>
-          </View>
-
-          <Text style={styles.memberText}>
-            MEMBRO DESDE 2026
-          </Text>
-        </View>
-      </View>
-
-      {/* Status */}
-      <View style={styles.card}>
-        <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>Status da conta</Text>
-
-          <Ionicons
-            name="checkmark-circle"
-            size={18}
-            color="#2563eb"
-          />
-        </View>
-
-        <View style={styles.storageRow}>
-          <Text style={styles.storageLabel}>
-            Uso de armazenamento
-          </Text>
-
-          <Text style={styles.storageValue}>
-            12.4 GB / 50 GB
-          </Text>
-        </View>
-
-        <View style={styles.progressBackground}>
-          <View style={styles.progressFill} />
-        </View>
-
-        <TouchableOpacity style={styles.upgradeButton}>
-          <MaterialCommunityIcons
-            name="crown-outline"
-            size={16}
-            color="#2563eb"
-          />
-
-          <Text style={styles.upgradeText}>
-            Faça upgrade para a versão premium
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Informações pessoais */}
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>
-          Informações pessoais
+        <Text style={styles.badge}>
+          A nova era da gestão digital
         </Text>
 
-        <InfoItem
-          icon="mail-outline"
-          title="EMAIL"
-          value="nickinho@email.com"
-        />
+        <Text style={styles.title}>
+          Organize seus documentos em um só lugar
+        </Text>
 
-        <InfoItem
-          icon="call-outline"
-          title="NÚMERO DE TELEFONE"
-          value="(11)98765-4312"
-        />
+        <Text style={styles.description}>
+          Segurança, velocidade e organização para sua vida digital.
+          Comece grátis hoje mesmo.
+        </Text>
 
-        <InfoItem
-          icon="location-outline"
-          title="LOCALIZAÇÃO"
-          value="São Paulo - SP"
-        />
-      </View>
-
-      {/* Segurança */}
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Segurança</Text>
-
-        <SecurityItem
-          icon="lock-reset"
-          text="Alterar a senha"
-        />
-
-        <SecurityItem
-          icon="fingerprint"
-          text="Login biométrico"
-          badge="HABILITADO"
-        />
-
-        <SecurityItem
-          icon="shield-check"
-          text="Autenticação de dois fatores"
-        />
-      </View>
-
-      {/* Sair */}
-      <TouchableOpacity style={styles.logoutButton}>
-        <MaterialCommunityIcons
-          name="logout"
-          size={20}
-          color="#ef4444"
-        />
-
-        <Text style={styles.logoutText}>Sair</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.version}>
-        APP VERSION 2.4.1 (BUILD 829)
-      </Text>
-    </View>
-  );
-}
-
-type InfoItemProps = {
-  icon: keyof typeof Ionicons.glyphMap;
-  title: string;
-  value: string;
-};
-
-function InfoItem({
-  icon,
-  title,
-  value,
-}: InfoItemProps) {
-  return (
-    <TouchableOpacity style={styles.infoItem}>
-      <View style={styles.infoLeft}>
-        <View style={styles.iconBox}>
-          <Ionicons
-            name={icon}
-            size={18}
-            color="#2563eb"
-          />
-        </View>
-
-        <View>
-          <Text style={styles.infoTitle}>{title}</Text>
-          <Text style={styles.infoValue}>{value}</Text>
-        </View>
-      </View>
-
-      <Ionicons
-        name="chevron-forward"
-        size={18}
-        color="#9ca3af"
-      />
-    </TouchableOpacity>
-  );
-}
-
-type SecurityItemProps = {
-  icon: string;
-  text: string;
-  badge?: string;
-};
-
-function SecurityItem({
-  icon,
-  text,
-  badge,
-}: SecurityItemProps) {
-  return (
-    <TouchableOpacity style={styles.securityItem}>
-      <View style={styles.securityLeft}>
-        <MaterialCommunityIcons
-          name={icon as any}
-          size={20}
-          color="#4b5563"
-        />
-
-        <Text style={styles.securityText}>{text}</Text>
-      </View>
-
-      {badge ? (
-        <View style={styles.enabledBadge}>
-          <Text style={styles.enabledText}>
-            {badge}
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>
+            Comece agora
           </Text>
-        </View>
-      ) : (
-        <Ionicons
-          name="chevron-forward"
-          size={18}
-          color="#9ca3af"
+        </TouchableOpacity>
+
+        <Image
+          source={require("../../../../assets/img/ChatGPT Image 23 de abr. de 2026, 15_03_20.png")}
+          style={styles.dashboard}
         />
-      )}
-    </TouchableOpacity>
+
+      </View>
+      <View style={styles.section}>
+
+        <Text style={styles.sectionTitle}>
+          Por que{"\n"}CentralDocs?
+        </Text>
+        <View style={styles.card}>
+
+          <Image
+            source={require("../../../../assets/img/Seguranca (2).png")}
+            style={styles.icon}
+          />
+
+          <Text style={styles.cardTitle}>
+            Segurança
+          </Text>
+
+          <Text style={styles.cardText}>
+            Proteção de nível bancário com criptografia de ponta a ponta para
+            seus dados mais sensíveis.
+          </Text>
+
+        </View>
+        <View style={styles.card}>
+
+          <Image
+            source={require("../../../../assets/img/Organizacao.png")}
+            style={styles.icon}
+          />
+
+          <Text style={styles.cardTitle}>
+            Organização
+          </Text>
+
+          <Text style={styles.cardText}>
+            Pastas inteligentes que se auto-organizam usando inteligência
+            artificial avançada.
+          </Text>
+
+        </View>
+        <View style={styles.cardBlue}>
+
+          <Image
+            source={require("../../../../assets/img/PesquisaRapida.png")}
+            style={styles.icon}
+          />
+
+          <Text style={styles.cardBlueTitle}>
+            Pesquisa rápida
+          </Text>
+
+          <Text style={styles.cardBlueText}>
+            Encontre qualquer documento em segundos, mesmo dentro de imagens e
+            PDFs digitalizados.
+          </Text>
+
+        </View>
+
+      </View>
+      <View style={styles.cta}>
+
+        <Text style={styles.ctaTitle}>
+          Pronto para{"\n"}organizar sua{"\n"}vida?
+        </Text>
+
+        <Text style={styles.ctaDescription}>
+          Junte-se a mais de 10.000 usuários que já simplificaram sua gestão de
+          documentos.
+        </Text>
+
+        <TouchableOpacity style={styles.ctaButton}>
+          <Text style={styles.ctaButtonText}>
+            Experimente Grátis
+          </Text>
+        </TouchableOpacity>
+
+      </View>
+      <View style={styles.footer}>
+
+        <Image
+          source={require("../../../../assets/img/LogoCentralDocsNova.png")}
+          style={styles.logo}
+        />
+
+        <Text style={styles.footerDescription}>
+          Sua central de documentos definitiva, segura e acessível de qualquer
+          lugar.
+        </Text>
+
+        <View style={styles.footerLinks}>
+
+          <View>
+
+            <Text style={styles.footerTitle}>Produto</Text>
+
+            <Text style={styles.footerItem}>Recursos</Text>
+
+            <Text style={styles.footerItem}>Segurança</Text>
+
+            <Text style={styles.footerItem}>Preços</Text>
+
+          </View>
+
+          <View>
+
+            <Text style={styles.footerTitle}>Ajuda</Text>
+
+            <Text style={styles.footerItem}>Suporte</Text>
+
+            <Text style={styles.footerItem}>Contato</Text>
+
+            <Text style={styles.footerItem}>Privacidade</Text>
+
+          </View>
+
+        </View>
+
+        <View style={styles.hr} />
+
+        <Text style={styles.copy}>
+          © 2026 CentralDocs
+        </Text>
+
+      </View>
+
+    </ScrollView>
   );
-}
+};
+
+export default TelaPrincipalScreen;
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
-    backgroundColor: "#f3f4f6",
-    paddingTop: 50,
+    backgroundColor: "#FFFFFF",
   },
 
-  header: {
-    flexDirection: "row",
+  hero: {
+    paddingHorizontal: 25,
+    paddingTop: 25,
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingBottom: 15,
-    backgroundColor: "#fff",
-  },
-
-  logo: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: "#2563eb",
-  },
-
-  headerAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-
-  profileContainer: {
-    alignItems: "center",
-    paddingVertical: 25,
-  },
-
-  avatarContainer: {
-    position: "relative",
-  },
-
-  avatar: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-  },
-
-  editButton: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: "#2563eb",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#fff",
-  },
-
-  name: {
-    fontSize: 22,
-    fontWeight: "700",
-    marginTop: 10,
-  },
-
-  plan: {
-    color: "#6b7280",
-    marginTop: 4,
-  },
-
-  badgesContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 12,
-    gap: 10,
   },
 
   badge: {
-    backgroundColor: "#dbeafe",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    backgroundColor: "#EAF3FF",
+    color: "#3478F6",
+    paddingHorizontal: 18,
+    paddingVertical: 7,
     borderRadius: 20,
-  },
-
-  badgeText: {
-    color: "#2563eb",
-    fontSize: 11,
-    fontWeight: "700",
-  },
-
-  memberText: {
-    fontSize: 11,
-    color: "#6b7280",
     fontWeight: "600",
+    fontSize: 12,
+    marginBottom: 20,
   },
 
-  card: {
-    backgroundColor: "#fff",
-    marginHorizontal: 12,
-    marginBottom: 15,
-    borderRadius: 14,
-    padding: 15,
+  title: {
+    fontSize: 34,
+    fontWeight: "bold",
+    color: "#111827",
+    textAlign: "center",
+    lineHeight: 42,
   },
 
-  rowBetween: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  description: {
+    marginTop: 18,
+    textAlign: "center",
+    color: "#6B7280",
+    lineHeight: 24,
+    fontSize: 15,
+    width: "95%",
+  },
+
+  button: {
+    marginTop: 25,
+    backgroundColor: "#2563EB",
+    width: "100%",
+    paddingVertical: 16,
+    borderRadius: 12,
     alignItems: "center",
+  },
+
+  buttonText: {
+    color: "#FFF",
+    fontWeight: "700",
+    fontSize: 16,
+  },
+
+  dashboard: {
+    width: "100%",
+    height: 250,
+    resizeMode: "contain",
+    marginTop: 25,
+  },
+
+  section: {
+    marginTop: 25,
+    paddingHorizontal: 20,
   },
 
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#111827",
+    marginBottom: 25,
+  },
+
+  card: {
+    backgroundColor: "#F8FAFC",
+    borderRadius: 18,
+    padding: 20,
+    marginBottom: 18,
+  },
+
+  cardBlue: {
+    backgroundColor: "#2563EB",
+    borderRadius: 18,
+    padding: 20,
+    marginBottom: 18,
+  },
+
+  icon: {
+    width: 34,
+    height: 34,
+    resizeMode: "contain",
     marginBottom: 15,
   },
 
-  storageRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-
-  storageLabel: {
-    color: "#6b7280",
-  },
-
-  storageValue: {
+  cardTitle: {
+    fontSize: 18,
     fontWeight: "700",
-  },
-
-  progressBackground: {
-    height: 6,
-    backgroundColor: "#e5e7eb",
-    borderRadius: 999,
-    marginTop: 10,
-  },
-
-  progressFill: {
-    width: "25%",
-    height: "100%",
-    backgroundColor: "#2563eb",
-    borderRadius: 999,
-  },
-
-  upgradeButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 15,
-  },
-
-  upgradeText: {
-    color: "#2563eb",
-    fontWeight: "600",
-    marginLeft: 5,
-  },
-
-  infoItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 12,
-  },
-
-  infoLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  iconBox: {
-    width: 38,
-    height: 38,
-    borderRadius: 10,
-    backgroundColor: "#eff6ff",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-
-  infoTitle: {
-    fontSize: 11,
-    color: "#9ca3af",
-  },
-
-  infoValue: {
-    fontSize: 15,
+    marginBottom: 10,
     color: "#111827",
   },
 
-  securityItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 14,
+  cardText: {
+    color: "#6B7280",
+    lineHeight: 22,
+    fontSize: 14,
   },
 
-  securityLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
+  cardBlueTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 10,
+    color: "#FFF",
   },
 
-  securityText: {
+  cardBlueText: {
+    color: "#FFF",
+    lineHeight: 22,
+    fontSize: 14,
+  },
+
+  cta: {
+    marginHorizontal: 20,
+    marginTop: 10,
+    marginBottom: 30,
+    backgroundColor: "#2563EB",
+    borderRadius: 18,
+    padding: 25,
+    alignItems: "center",
+  },
+
+  ctaTitle: {
+    color: "#FFF",
+    fontSize: 28,
+    fontWeight: "bold",
+    textAlign: "center",
+    lineHeight: 36,
+  },
+
+  ctaDescription: {
+    color: "#FFF",
+    textAlign: "center",
+    marginTop: 18,
+    lineHeight: 24,
     fontSize: 15,
   },
 
-  enabledBadge: {
-    backgroundColor: "#dbeafe",
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
+  ctaButton: {
+    marginTop: 25,
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 28,
+    paddingVertical: 15,
+    borderRadius: 12,
   },
 
-  enabledText: {
-    color: "#2563eb",
-    fontSize: 10,
+  ctaButtonText: {
+    color: "#2563EB",
     fontWeight: "700",
+    fontSize: 15,
   },
 
-  logoutButton: {
+  footer: {
+    paddingHorizontal: 25,
+    paddingBottom: 40,
+  },
+
+  logo: {
+    width: 150,
+    height: 45,
+    resizeMode: "contain",
+    marginBottom: 15,
+  },
+
+  footerDescription: {
+    color: "#6B7280",
+    lineHeight: 22,
+    marginBottom: 25,
+  },
+
+  footerLinks: {
     flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
+    justifyContent: "space-between",
   },
 
-  logoutText: {
-    color: "#ef4444",
+  footerTitle: {
     fontWeight: "700",
-    marginLeft: 5,
+    marginBottom: 12,
+    color: "#111827",
   },
 
-  version: {
-    textAlign: "center",
-    marginTop: 20,
-    color: "#9ca3af",
-    fontSize: 11,
-    letterSpacing: 1,
+  footerItem: {
+    marginBottom: 8,
+    color: "#6B7280",
   },
+
+  hr: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB",
+    marginVertical: 25,
+  },
+
+  copy: {
+    textAlign: "center",
+    color: "#9CA3AF",
+    fontSize: 13,
+  },
+
 });
