@@ -26,7 +26,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="TelaPrincipal"
+                initialRouteName="Formulario"
                 screenOptions={{
                     headerShown: false,
                 }}
@@ -56,14 +56,10 @@ export default function App() {
                 />
 
                 <Stack.Screen
-                    name="TelaPrincipal"
-                    component={ProfileScreen}
+                    name="Formulario"
+                    component={FormularioScreen}
                 />
-                <Stack.Screen 
-                name="Formulario"
-                component={FormularioScreen}
-                />
-                
+
             </Stack.Navigator>
         </NavigationContainer>
     );
