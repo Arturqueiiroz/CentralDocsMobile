@@ -5,6 +5,8 @@ import { RootStackParamList } from '../../../../App';
 
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
+
+// ✅ Caminhos corrigidos
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
 
@@ -45,6 +47,7 @@ export default function RegisterScreen() {
                     property="cpf"
                     onChangeText={(property, value) => setCpf(value)}
                 />
+
                 <CustomInput
                     label="Senha"
                     placeholder="Digite sua senha"
@@ -73,13 +76,13 @@ export default function RegisterScreen() {
                         Já tem conta?
                     </Text>
 
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('Login')}
-                >
-                    <Text style={styles.loginLink}>
-                        Fazer login
-                    </Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Login')}
+                    >
+                        <Text style={styles.loginLink}>
+                            Fazer login
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.google}>

@@ -8,6 +8,7 @@ import RegisterScreen from './src/Presentation/views/Cadastro/Cadastro';
 import ProfileScreen from './src/Presentation/views/TelaPrincipal/TelaPrincipal';
 import TelaHomeScreen from './src/Presentation/views/TelaHome/TelaHome';
 import ConfirmacaoBiometrica from "./src/Presentation/views/Biometria/Biometria";
+import FormularioScreen from "./src/Presentation/views/Formulario/Formulario";
 
 // Definição dos tipos das rotas para o TypeScript
 export type RootStackParamList = {
@@ -16,6 +17,7 @@ export type RootStackParamList = {
     Biometria: undefined;
     TelaHome: undefined;
     TelaPrincipal: undefined;
+    Formulario: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -53,6 +55,11 @@ export default function App() {
                     name="TelaPrincipal"
                     component={ProfileScreen}
                 />
+                <Stack.Screen 
+                name="Formulario"
+                component={FormularioScreen}
+                />
+                
             </Stack.Navigator>
         </NavigationContainer>
     );

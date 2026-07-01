@@ -1,6 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 import { HeaderScreen } from '../../components/Header';
 
 export const TelaHomeScreen = () => {
@@ -13,13 +12,8 @@ export const TelaHomeScreen = () => {
                 contentContainerStyle={styles.content}
             >
                 <View style={styles.welcomeContainer}>
-                    <Text style={styles.welcomeText}>
-                        Bom dia, Artur
-                    </Text>
-
-                    <Text style={styles.subtitle}>
-                        Seu espaço de trabalho foi atualizado.
-                    </Text>
+                    <Text style={styles.welcomeText}>Bom dia, Artur</Text>
+                    <Text style={styles.subtitle}>Seu espaço de trabalho foi atualizado.</Text>
                 </View>
 
                 <View style={styles.cardsRow}>
@@ -36,10 +30,7 @@ export const TelaHomeScreen = () => {
 
                 <View style={styles.storageCard}>
                     <View style={styles.storageHeader}>
-                        <Text style={styles.storageTitle}>
-                            Armazenamento
-                        </Text>
-
+                        <Text style={styles.storageTitle}>Armazenamento</Text>
                         <Text style={styles.percent}>82%</Text>
                     </View>
 
@@ -47,113 +38,63 @@ export const TelaHomeScreen = () => {
                         <View style={styles.progressFill} />
                     </View>
 
-                    <Text style={styles.storageText}>
-                        4,1 GB de 5 GB utilizados
-                    </Text>
+                    <Text style={styles.storageText}>4,1 GB de 5 GB utilizados</Text>
                 </View>
 
                 <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>
-                        Atividade recente
-                    </Text>
-
-                    <Text style={styles.seeAll}>
-                        Ver tudo
-                    </Text>
+                    <Text style={styles.sectionTitle}>Atividade recente</Text>
+                    <Text style={styles.seeAll}>Ver tudo</Text>
                 </View>
 
-<View style={styles.activityCard}>
-    <View style={styles.activityHeader}>
-        <Text style={styles.activityTitle}>
-            Curriculo
-        </Text>
+                <View style={styles.activityCard}>
+                    <View style={styles.activityHeader}>
+                        <Text style={styles.activityTitle}>Curriculo</Text>
+                        <TouchableOpacity>
+                            <Ionicons name="ellipsis-vertical" size={20} color="#777" />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={styles.activitySubtitle}>Editado há 2 horas</Text>
+                </View>
 
-        <TouchableOpacity>
-            <Ionicons
-                name="ellipsis-vertical"
-                size={20}
-                color="#777"
-            />
-        </TouchableOpacity>
-    </View>
+                <View style={styles.activityCard}>
+                    <View style={styles.activityHeader}>
+                        <Text style={styles.activityTitle}>Relatório Financeiro do 4º Trimestre</Text>
+                        <TouchableOpacity>
+                            <Ionicons name="ellipsis-vertical" size={20} color="#777" />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={styles.activitySubtitle}>Compartilhado com Sarah M.</Text>
+                </View>
 
-    <Text style={styles.activitySubtitle}>
-        Editado há 2 horas
-    </Text>
-</View>
-
-<View style={styles.activityCard}>
-    <View style={styles.activityHeader}>
-        <Text style={styles.activityTitle}>
-            Relatório Financeiro do 4º Trimestre
-        </Text>
-
-        <TouchableOpacity>
-            <Ionicons
-                name="ellipsis-vertical"
-                size={20}
-                color="#777"
-            />
-        </TouchableOpacity>
-    </View>
-
-    <Text style={styles.activitySubtitle}>
-        Compartilhado com Sarah M.
-    </Text>
-</View>
-
-<View style={styles.activityCard}>
-    <View style={styles.activityHeader}>
-        <Text style={styles.activityTitle}>
-            CPF
-        </Text>
-
-        <TouchableOpacity>
-            <Ionicons
-                name="ellipsis-vertical"
-                size={20}
-                color="#777"
-            />
-        </TouchableOpacity>
-    </View>
-
-    <Text style={styles.activitySubtitle}>
-        Adicionado aos favoritos
-    </Text>
-</View>            </ScrollView>
+                <View style={styles.activityCard}>
+                    <View style={styles.activityHeader}>
+                        <Text style={styles.activityTitle}>CPF</Text>
+                        <TouchableOpacity>
+                            <Ionicons name="ellipsis-vertical" size={20} color="#777" />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={styles.activitySubtitle}>Adicionado aos favoritos</Text>
+                </View>
+            </ScrollView>
 
             <TouchableOpacity style={styles.fab}>
                 <Text style={styles.fabText}>+</Text>
             </TouchableOpacity>
 
-
-
-
             <View style={styles.containerIcones}>
                 <TouchableOpacity style={[styles.tabItem, styles.tabItemActive]}>
-                    <Ionicons
-                        name={'grid'}
-                        size={22}
-                        // color="#2563EB"    
-                    /> 
-                    <Text style={[styles.tabLabel, styles.tabLabelActive]}>Dashboard</Text>                  
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.tabItem}>
-                    <Ionicons
-                        name={'document-text-outline'}
-                        size={22}
-                        color="#8E9AA6"    
-                    />  
-                    <Text style={styles.tabLabel}>Documentos</Text>                  
+                    <Ionicons name={'grid'} size={22} color="#2563EB" />
+                    <Text style={[styles.tabLabel, styles.tabLabelActive]}>Dashboard</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.tabItem}>
-                    <Ionicons
-                        name={'person-outline'}
-                        size={22}
-                        color="#8E9AA6"    
-                    />  
-                    <Text style={styles.tabLabel}>Perfil</Text>                  
+                    <Ionicons name={'document-text-outline'} size={22} color="#8E9AA6" />
+                    <Text style={styles.tabLabel}>Documentos</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.tabItem}>
+                    <Ionicons name={'person-outline'} size={22} color="#8E9AA6" />
+                    <Text style={styles.tabLabel}>Perfil</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -167,33 +108,28 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F3F4F8',
     },
-
     content: {
         padding: 20,
+        paddingBottom: 100, // Ajuste para o ScrollView não sumir atrás do menu inferior e do FAB
     },
-
     welcomeContainer: {
         marginBottom: 20,
     },
-
     welcomeText: {
         fontSize: 20,
         fontWeight: '600',
         color: '#2563EB',
     },
-
     subtitle: {
         marginTop: 4,
         fontSize: 14,
         color: '#555',
     },
-
     cardsRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 20,
     },
-
     infoCard: {
         width: '48%',
         backgroundColor: '#FFF',
@@ -201,13 +137,11 @@ const styles = StyleSheet.create({
         padding: 20,
         elevation: 2,
     },
-
     number: {
         fontSize: 28,
         fontWeight: '700',
         color: '#222',
     },
-
     label: {
         marginTop: 8,
         fontSize: 15,
@@ -219,24 +153,20 @@ const styles = StyleSheet.create({
         padding: 20,
         marginBottom: 25,
     },
-
     storageHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 15,
     },
-
     storageTitle: {
         color: '#FFF',
         fontSize: 16,
         fontWeight: '600',
     },
-    
     percent: {
         color: '#FFF',
         fontWeight: '700',
     },
-
     progressBackground: {
         height: 8,
         borderRadius: 10,
@@ -248,30 +178,25 @@ const styles = StyleSheet.create({
         height: '100%',
         backgroundColor: '#FFF',
     },
-
     storageText: {
         color: '#FFF',
         marginTop: 10,
         fontSize: 13,
     },
-
     sectionHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 15,
     },
-
     sectionTitle: {
         fontSize: 22,
         fontWeight: '600',
     },
-
     seeAll: {
         color: '#2563EB',
         fontWeight: '600',
     },
-
     activityCard: {
         backgroundColor: '#FFF',
         borderRadius: 12,
@@ -279,13 +204,11 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         elevation: 1,
     },
-
     activityTitle: {
         fontSize: 16,
         fontWeight: '600',
         color: '#222',
     },
-
     activitySubtitle: {
         marginTop: 4,
         color: '#777',
@@ -305,9 +228,7 @@ const styles = StyleSheet.create({
         borderTopColor: '#E5E7EB',
         paddingBottom: 12,
     },
-
-    fab: 
-    {
+    fab: {
         position: 'absolute',
         bottom: 85,
         right: 25,
@@ -318,42 +239,37 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,
+        zIndex: 10, // Garante que o botão flutuante fique clicável acima do conteúdo
     },
-
-    fabText: 
-    {
+    fabText: {
         color: '#FFF',
         fontSize: 32,
         fontWeight: '300',
     },
-    tabItem: 
-    {
+    tabItem: {
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 6,
         paddingHorizontal: 20,
         borderRadius: 20,
     },
-
     tabItemActive: {
         backgroundColor: '#EFF6FF',
     },
-
     tabLabel: {
         fontSize: 11,
         color: '#8E9AA6',
         marginTop: 4,
         fontWeight: '500',
     },
-
     tabLabelActive: {
-        color: '#2563EB', 
+        color: '#2563EB',
         fontWeight: '600',
     },
     activityHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-},
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
+    },
 });
