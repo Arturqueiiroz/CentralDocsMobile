@@ -54,11 +54,6 @@ export default function App() {
                     name="Biometria"
                     component={ConfirmacaoBiometrica}
                 />
-
-                <Stack.Screen
-                    name="TelaPrincipal"
-                    component={ProfileScreen}
-                />
                 <Stack.Screen 
                 name="Formulario"
                 component={FormularioScreen}
