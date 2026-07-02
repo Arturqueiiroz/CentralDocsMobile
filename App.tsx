@@ -3,10 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Importações das suas telas e componentes
-import { LoginScreen } from './src/Presentation/views/Login/Login';
-import RegisterScreen from './src/Presentation/views/Cadastro/Cadastro';
-import ProfileScreen from './src/Presentation/views/TelaPrincipal/TelaPrincipal';
-import TelaHomeScreen from './src/Presentation/views/TelaHome/TelaHome';
+import { LoginScreen } from "./src/Presentation/views/Login/Login";
+import RegisterScreen from "./src/Presentation/views/Cadastro/Cadastro";
+import ProfileScreen from "./src/Presentation/views/TelaPrincipal/TelaPrincipal";
+import TelaHomeScreen from "./src/Presentation/views/TelaHome/TelaHome";
 import ConfirmacaoBiometrica from "./src/Presentation/views/Biometria/Biometria";
 
 // Definição dos tipos das rotas para o TypeScript
@@ -16,6 +16,7 @@ export type RootStackParamList = {
     Biometria: undefined;
     TelaHome: undefined;
     TelaPrincipal: undefined;
+    Documentos: undefined; // futura tela
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -53,6 +54,13 @@ export default function App() {
                     name="TelaPrincipal"
                     component={ProfileScreen}
                 />
+
+                {/* Quando criar a tela, adicione aqui:
+                <Stack.Screen
+                    name="Documentos"
+                    component={DocumentosScreen}
+                />
+                */}
             </Stack.Navigator>
         </NavigationContainer>
     );

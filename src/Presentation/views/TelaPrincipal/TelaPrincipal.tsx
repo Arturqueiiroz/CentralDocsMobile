@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FooterScreen } from "../../components/Footer";
 import {
   View,
   Text,
