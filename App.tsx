@@ -27,7 +27,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="TelaHome"
+                initialRouteName="Documentos"
                 screenOptions={{
                     headerShown: false,
                 }}

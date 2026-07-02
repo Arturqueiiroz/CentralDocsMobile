@@ -1,7 +1,6 @@
 import React from "react";
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Image, } from "react-native";
 import { FooterScreen } from '../../components/Footer';
-
 import { HeaderScreen } from "../../components/Header";
 
 export const TelaPrincipalScreen = () => {

@@ -1,16 +1,7 @@
 import React from "react";
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    StyleSheet,
-    Alert,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert, } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-    useNavigation,
-    useRoute,
-} from "@react-navigation/native";
+import { useNavigation, useRoute,} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { RootStackParamList } from "../../../App";

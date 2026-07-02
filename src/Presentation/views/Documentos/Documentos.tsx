@@ -418,7 +418,9 @@ const styles = StyleSheet.create({
     tabItem: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingflex: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 12,
     },
     tabItemActive: {
         backgroundColor: '#EFF6FF',
