@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, Image, Dimensions} from 'react-native';
-
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
+// 1. Importando o Header customizado
+import { HeaderScreen } from '../../components/Header';
 // Tipagem básica para os itens de arquivo
 interface DocumentItem {
     id: string;
@@ -15,7 +16,7 @@ const { width } = Dimensions.get('window');
 export default function DocumentosScreen() {
     const [activeTab, setActiveTab] = useState<'Tudo' | 'Pessoal' | 'Trabalho'>('Tudo');
 
-    // Dados fictícios baseados na imagem image_945fa9.png
+    // Dados fictícios baseados na imagem
     const documentos: DocumentItem[] = [
         {
             id: '1',
@@ -48,7 +49,6 @@ export default function DocumentosScreen() {
     ];
 
     const renderIcon = (type: string) => {
-        // Cores de fundo e emojis simulando os ícones da imagem
         switch (type) {
             case 'pdf': return <View style={[styles.iconContainer, { backgroundColor: '#EEF4FF' }]}><Text style={{ color: '#2F80ED', fontWeight: 'bold' }}>📄</Text></View>;
             case 'image': return <View style={[styles.iconContainer, { backgroundColor: '#F5EEFF' }]}><Text style={{ color: '#9B51E0' }}>🖼️</Text></View>;
@@ -60,17 +60,8 @@ export default function DocumentosScreen() {
 
     return (
         <View style={styles.container}>
-            {/* HEADER */}
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.menuButton}>
-                    <Text style={styles.menuText}>☰</Text>
-                </TouchableOpacity>
-                <Text style={styles.logoText}>CentralDocs</Text>
-                <Image
-                    source={{ uri: 'https://via.placeholder.com/40' }}
-                    style={styles.avatar}
-                />
-            </View>
+            {/* 2. HEADER CUSTOMIZADO COMPARTILHADO (Passando o nome opcional se quiser) */}
+            <HeaderScreen nome="Nickinho" />
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
@@ -144,7 +135,7 @@ export default function DocumentosScreen() {
                         Faça upgrade para a versão Pro e obtenha 2 TB de armazenamento criptografado de documentos.
                     </Text>
                     <TouchableOpacity style={styles.upgradeButton}>
-                        <Text style={styles.upgradeButtonText}>Upgrade Now</Text>
+                        <Text style={styles.upgradeButtonText}>Atualize agora</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -162,7 +153,7 @@ export default function DocumentosScreen() {
 
             </ScrollView>
 
-            {/* FOOTER TAB BAR BAR (Simulação da barra inferior ativa em Documentos) */}
+            {/* FOOTER TAB BAR BAR */}
             <View style={styles.tabBar}>
                 <TouchableOpacity style={styles.tabItem}>
                     <Text style={styles.tabIcon}>🎛️</Text>
@@ -174,7 +165,7 @@ export default function DocumentosScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.tabItem}>
                     <Text style={styles.tabIcon}>👤</Text>
-                    <Text style={styles.tabLabel}>perfil</Text>
+                    <Text style={styles.tabLabel}>Perfil</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -185,36 +176,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F8FAFC',
-        paddingTop: 40,
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        backgroundColor: '#FFFFFF',
-    },
-    menuButton: {
-        padding: 5,
-    },
-    menuText: {
-        fontSize: 24,
-        color: '#3B82F6',
-    },
-    logoText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#2B6CB0',
-    },
-    avatar: {
-        width: 35,
-        height: 35,
-        borderRadius: 17.5,
+        // 3. Removido paddingTop exagerado daqui pois o HeaderScreen já possui margem superior interna
     },
     scrollContent: {
         paddingHorizontal: 20,
-        paddingBottom: 100, // Espaço para não cobrir atrás da TabBar
+        paddingBottom: 100,
     },
     searchSection: {
         flexDirection: 'row',
@@ -418,7 +384,6 @@ const styles = StyleSheet.create({
     tabItem: {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingflex: 1,
     },
     tabItemActive: {
         backgroundColor: '#EFF6FF',
