@@ -136,11 +136,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F8FAFC', // Fundo levemente azulado/cinza claro muito limpo
     },
-    content: {
-        paddingHorizontal: 20,
-        paddingTop: 15,
-        paddingBottom: 110,
-    },
+content: {
+    paddingHorizontal: 20,
+    paddingTop: 15,
+    paddingBottom: 140,
+},
     welcomeContainer: {
         marginBottom: 25,
     },

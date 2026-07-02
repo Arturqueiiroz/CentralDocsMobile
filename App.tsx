@@ -20,6 +20,8 @@ export type RootStackParamList = {
     TelaHome: undefined;
     TelaPrincipal: undefined;
     Formulario: undefined;
+    Documentos: undefined;
+    Perfil: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -28,7 +30,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="Perfil"
+                initialRouteName="TelaHome"
                 screenOptions={{
                     headerShown: false,
                 }}

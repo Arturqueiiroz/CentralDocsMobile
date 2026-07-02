@@ -1,20 +1,24 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert, } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute,} from "@react-navigation/native";
+import {
+    useNavigation,
+    useRoute,
+    RouteProp,
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { RootStackParamList } from "../../../App";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
+type RouteProps = RouteProp<RootStackParamList>;
 
 export const FooterScreen = () => {
     const navigation = useNavigation<NavigationProps>();
-    const route = useRoute();
+    const route = useRoute<RouteProps>();
 
     return (
         <View style={styles.containerIcones}>
-
             {/* Dashboard */}
             <TouchableOpacity
                 style={[
@@ -26,18 +30,13 @@ export const FooterScreen = () => {
                 <Ionicons
                     name="grid"
                     size={22}
-                    color={
-                        route.name === "TelaHome"
-                            ? "#2563EB"
-                            : "#8E9AA6"
-                    }
+                    color={route.name === "TelaHome" ? "#2563EB" : "#8E9AA6"}
                 />
 
                 <Text
                     style={[
                         styles.tabLabel,
-                        route.name === "TelaHome" &&
-                            styles.tabLabelActive,
+                        route.name === "TelaHome" && styles.tabLabelActive,
                     ]}
                 >
                     Dashboard
@@ -46,21 +45,24 @@ export const FooterScreen = () => {
 
             {/* Documentos */}
             <TouchableOpacity
-                style={styles.tabItem}
-                onPress={() =>
-                    Alert.alert(
-                        "Em desenvolvimento",
-                        "A tela de Documentos ainda não foi criada."
-                    )
-                }
+                style={[
+                    styles.tabItem,
+                    route.name === "Documentos" && styles.tabItemActive,
+                ]}
+                onPress={() => navigation.navigate("Documentos")}
             >
                 <Ionicons
                     name="document-text-outline"
                     size={22}
-                    color="#8E9AA6"
+                    color={route.name === "Documentos" ? "#2563EB" : "#8E9AA6"}
                 />
 
-                <Text style={styles.tabLabel}>
+                <Text
+                    style={[
+                        styles.tabLabel,
+                        route.name === "Documentos" && styles.tabLabelActive,
+                    ]}
+                >
                     Documentos
                 </Text>
             </TouchableOpacity>
@@ -69,32 +71,25 @@ export const FooterScreen = () => {
             <TouchableOpacity
                 style={[
                     styles.tabItem,
-                    route.name === "TelaPrincipal" &&
-                        styles.tabItemActive,
+                    route.name === "Perfil" && styles.tabItemActive,
                 ]}
-                onPress={() => navigation.navigate("TelaPrincipal")}
+                onPress={() => navigation.navigate("Perfil")}
             >
                 <Ionicons
                     name="person-outline"
                     size={22}
-                    color={
-                        route.name === "TelaPrincipal"
-                            ? "#2563EB"
-                            : "#8E9AA6"
-                    }
+                    color={route.name === "Perfil" ? "#2563EB" : "#8E9AA6"}
                 />
 
                 <Text
                     style={[
                         styles.tabLabel,
-                        route.name === "TelaPrincipal" &&
-                            styles.tabLabelActive,
+                        route.name === "Perfil" && styles.tabLabelActive,
                     ]}
                 >
                     Perfil
                 </Text>
             </TouchableOpacity>
-
         </View>
     );
 };

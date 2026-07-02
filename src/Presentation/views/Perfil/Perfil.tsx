@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView,} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { HeaderScreen } from '../../components/Header'; // Ajuste os pontinhos de acordo com a pasta onde criar este arquivo
-
-const { width } = Dimensions.get('window');
+import { FooterScreen } from "../../components/Footer";
 
 export default function PerfilScreen() {
     return (
@@ -142,8 +141,11 @@ export default function PerfilScreen() {
                 {/* VERSÃO DO APP */}
                 <Text style={styles.versionText}>APP VERSION 2.4.1 (BUILD 829)</Text>
 
-            </ScrollView>
-        </View>
+         </ScrollView>
+
+<FooterScreen />
+
+</View>
     );
 }
 
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: 20,
-        paddingBottom: 40, // Respiro confortável no final da rolagem
+        paddingBottom: 140, // Respiro confortável no final da rolagem
     },
     profileHeaderContainer: {
         alignItems: 'center',
