@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { HeaderScreen } from '../../components/Header';
-import { FooterScreen } from '../../components/Footer';
+import { FooterScreen } from "../../components/Footer";
 
 export const TelaHomeScreen = () => {
     return (
