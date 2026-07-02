@@ -10,6 +10,7 @@ import TelaHomeScreen from './src/Presentation/views/TelaHome/TelaHome';
 import ConfirmacaoBiometrica from "./src/Presentation/views/Biometria/Biometria";
 import FormularioScreen from "./src/Presentation/views/Formulario/Formulario";
 import DocumentosScreen from "./src/Presentation/views/Documentos/Documentos";
+import PerfilScreen from "./src/Presentation/views/Perfil/Perfil";
 
 // Definição dos tipos das rotas para o TypeScript
 export type RootStackParamList = {
@@ -27,7 +28,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="Documentos"
+                initialRouteName="Perfil"
                 screenOptions={{
                     headerShown: false,
                 }}
@@ -63,6 +64,10 @@ export default function App() {
                 <Stack.Screen
                     name="Documentos"
                     component={DocumentosScreen}
+                />
+                <Stack.Screen
+                    name="Perfil"
+                    component={PerfilScreen}
                 />
 
 
