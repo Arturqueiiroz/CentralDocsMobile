@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+// 1. Importando o hook de navegação
+import { useNavigation } from "@react-navigation/native";
 
 import { CustomInput } from "../../components/CustomTextInput";
 import { CustomButton } from "../../components/CustomButton";
 
 export default function FormularioScreen() {
+    // 2. Iniciando a navegação
+    const navigation = useNavigation<any>();
+
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
     const [dataNascimento, setDataNascimento] = useState("");
@@ -67,13 +72,22 @@ export default function FormularioScreen() {
                 contentContainerStyle={styles.content}
                 keyboardShouldPersistTaps="handled"
             >
+                {/* 3. BOTÃO DE VOLTAR ADICIONADO AQUI */}
+                <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => navigation.goBack()}
+                    activeOpacity={0.7}
+                >
+                    <Ionicons name="arrow-back" size={22} color="#1E293B" />
+                    <Text style={styles.backButtonText}>Voltar</Text>
+                </TouchableOpacity>
+
                 <Text style={styles.title}>Dados Pessoais</Text>
                 <Text style={styles.subtitle}>Mantenha suas informações atualizadas para uma melhor experiência.</Text>
 
                 {/* ==========================
                     INFORMAÇÕES BÁSICAS
                 ========================== */}
-                {/* ADICIONADO: zIndex dinâmico aqui no card para sobrepor o conteúdo de baixo */}
                 <View style={[styles.card, dropdownAberto && styles.cardComDropdown]}>
                     <View style={styles.cardHeader}>
                         <Ionicons name="person-outline" size={18} color="#0A5BC4" />
@@ -292,6 +306,22 @@ const styles = StyleSheet.create({
     content: {
         padding: 16,
     },
+    // ESTILOS ADICIONADOS PARA O BOTÃO VOLTAR
+    backButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 16,
+        alignSelf: "flex-start",
+        paddingVertical: 8,
+        paddingRight: 16, // Área de toque melhorada
+    },
+    backButtonText: {
+        fontSize: 16,
+        color: "#1E293B",
+        marginLeft: 6,
+        fontWeight: "600",
+    },
+    // ----------------------------------------
     title: {
         fontSize: 24,
         fontWeight: "bold",
@@ -338,7 +368,6 @@ const styles = StyleSheet.create({
     halfInput: {
         width: "48%",
     },
-    // CORRIGIDO: Aumentado para corresponder ao tamanho padrão das labels do seu CustomInput
     label: {
         fontSize: 16,
         color: "#1E293B",
@@ -350,7 +379,6 @@ const styles = StyleSheet.create({
         width: "100%",
         marginBottom: 12,
     },
-    // CORRIGIDO: Padding e ajustes para mimetizar perfeitamente a altura e robustez do CustomInput
     genderButton: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -358,23 +386,22 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#CBD5E1",
         borderRadius: 8,
-        paddingHorizontal: 16, // Aumentado o recuo interno lateral
+        paddingHorizontal: 16,
         backgroundColor: "#FFF",
-        height: 54, // Aumentado levemente para casar com a altura padrão de inputs modernos
+        height: 54,
     },
     genderButtonAberto: {
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
         borderBottomWidth: 0,
     },
-    // CORRIGIDO: Tamanho de fonte aumentado de 15 para 16 para ficar igual ao "Ex: Mini Nick"
     genderText: {
         fontSize: 16,
         color: "#1E293B",
     },
     dropdownLista: {
         position: "absolute",
-        top: 54, // Ajustado para a nova altura do botão
+        top: 54,
         left: 0,
         right: 0,
         backgroundColor: "#FFF",
@@ -386,12 +413,12 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     dropdownItem: {
-        padding: 14, // Mais área de toque para o usuário clicar
+        padding: 14,
         borderTopWidth: 1,
         borderTopColor: "#F1F5F9",
     },
     dropdownItemText: {
-        fontSize: 16, // Itens da lista também acompanham o tamanho correto agora
+        fontSize: 16,
         color: "#475569",
     },
     dropdownItemAtivoText: {
@@ -411,7 +438,7 @@ const styles = StyleSheet.create({
     buscarButton: {
         backgroundColor: "#D0E1FD",
         paddingHorizontal: 20,
-        height: 54, // Ajustado para alinhar perfeitamente com a nova altura padrão
+        height: 54,
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 8,

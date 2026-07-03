@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, Dimensions, Platform, StatusBar } from 'react-native'; // <--- CORRIGIDO AQUI
+import { StyleSheet, View, Text, TouchableOpacity, Image, Dimensions, Platform, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const { height } = Dimensions.get('window');
@@ -12,12 +12,9 @@ interface CustomDrawerProps {
 
 export default function CustomDrawer({ currentScreen, onNavigate, onClose }: CustomDrawerProps) {
 
-    // Lista de navegação com os IDs idênticos aos nomes da sua RootStackParamList
+    // Lista de navegação atualizada apenas com os itens desejados
     const menuItems = [
         { id: 'TelaHome', label: 'Home', icon: 'home-outline' },
-        { id: 'Documentos', label: 'Meus documentos', icon: 'document-text-outline' },
-        { id: 'QRcode', label: 'Ler QR Code', icon: 'qr-code-outline' },
-        { id: 'Perfil', label: 'Perfil', icon: 'person-outline' },
         { id: 'Configuraçoes', label: 'Configurações', icon: 'settings-outline' },
         { id: 'SobreNos', label: 'Sobre nós', icon: 'information-circle-outline' },
     ];
@@ -36,7 +33,7 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                 </TouchableOpacity>
             </View>
 
-            {/* CORPO: ITENS DE MENU IGUAL À WEB */}
+            {/* CORPO: ITENS DE MENU */}
             <View style={styles.navContainer}>
                 {menuItems.map((item) => {
                     const isActive = currentScreen === item.id;
@@ -45,7 +42,7 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                             key={item.id}
                             style={[styles.navItem, isActive && styles.navItemActive]}
                             onPress={() => {
-                                onNavigate(item.id); // Dispara o navigation.navigate do React Navigation
+                                onNavigate(item.id);
                                 onClose();
                             }}
                         >

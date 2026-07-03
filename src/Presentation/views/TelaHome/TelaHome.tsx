@@ -1,14 +1,26 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Ionicons, Feather, FontAwesome5 } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { Ionicons, Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from "../../components/Footer";
 
 export const TelaHomeScreen = () => {
+    const navigation = useNavigation<any>();
+    const [menuVisivel, setMenuVisivel] = useState(false);
+
+    const irParaFormulario = () => {
+        setMenuVisivel(false);
+        navigation.navigate('Formulario');
+    };
+
+    const irParaQR = () => {
+        setMenuVisivel(false);
+        navigation.navigate('QRcode');
+    };
+
     return (
         <View style={styles.container}>
-            {/* Se o seu HeaderScreen customizado não tiver o menu lateral e a logo iguais à imagem, */}
-            {/* você pode inspecioná-lo ou usar este abaixo */}
             <HeaderScreen />
 
             <ScrollView
@@ -69,8 +81,7 @@ export const TelaHomeScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                {/* LISTA DE ATIVIDADES */}
-                {/* Item 1: Currículo */}
+                {/* ATIVIDADE */}
                 <View style={styles.activityCard}>
                     <View style={[styles.activityIconContainer, { backgroundColor: '#EBF5FF' }]}>
                         <Feather name="file-text" size={20} color="#3182CE" />
@@ -85,46 +96,64 @@ export const TelaHomeScreen = () => {
                         <Text style={styles.activitySubtitle}>Editado há 2 horas</Text>
                     </View>
                 </View>
-
-                {/* Item 2: Relatório Financeiro */}
-                <View style={styles.activityCard}>
-                    <View style={[styles.activityIconContainer, { backgroundColor: '#E6F9EE' }]}>
-                        <Feather name="share-2" size={20} color="#27AE60" />
-                    </View>
-                    <View style={styles.activityBody}>
-                        <View style={styles.activityHeader}>
-                            <Text style={styles.activityTitle} numberOfLines={1}>Relatório Financeiro do 4º Trimestre</Text>
-                            <TouchableOpacity style={styles.moreButton}>
-                                <Ionicons name="ellipsis-vertical" size={18} color="#A0AEC0" />
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={styles.activitySubtitle}>Compartilhado com Sarah M.</Text>
-                    </View>
-                </View>
-
-                {/* Item 3: CPF */}
-                <View style={styles.activityCard}>
-                    <View style={[styles.activityIconContainer, { backgroundColor: '#FFF3E0' }]}>
-                        <FontAwesome5 name="star" size={18} color="#F2994A" solid />
-                    </View>
-                    <View style={styles.activityBody}>
-                        <View style={styles.activityHeader}>
-                            <Text style={styles.activityTitle} numberOfLines={1}>CPF</Text>
-                            <TouchableOpacity style={styles.moreButton}>
-                                <Ionicons name="ellipsis-vertical" size={18} color="#A0AEC0" />
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={styles.activitySubtitle}>Adicionado aos favoritos</Text>
-                    </View>
-                </View>
             </ScrollView>
 
-            {/* BOTÃO FLUTUANTE (FAB) */}
-            <TouchableOpacity style={styles.fab} activeOpacity={0.8}>
-                <Text style={styles.fabText}>+</Text>
+            {/* BOTÃO FLUTUANTE BASE (FAB) - Sempre fixo e visível abaixo ou acima do modal */}
+            <TouchableOpacity
+                style={styles.fab}
+                activeOpacity={0.8}
+                onPress={() => setMenuVisivel(!menuVisivel)}
+            >
+                <Text style={styles.fabText}>{menuVisivel ? '×' : '+'}</Text>
             </TouchableOpacity>
 
             <FooterScreen />
+
+            {/* === SPEED DIAL MODAL TOTALMENTE TRANSPARENTE === */}
+            <Modal
+                transparent={true}
+                visible={menuVisivel}
+                animationType="fade"
+                onRequestClose={() => setMenuVisivel(false)}
+            >
+                {/* Modificado para transparent conforme pedido da imagem (1).png */}
+                <Pressable style={styles.modalOverlayTransparent} onPress={() => setMenuVisivel(false)}>
+
+                    {/* Container das opções posicionado logo acima do botão fixo */}
+                    <View style={styles.floatingMenu}>
+
+                        {/* Opção 1: Adicionar Documento */}
+                        <TouchableOpacity
+                            style={styles.speedDialRow}
+                            activeOpacity={0.7}
+                            onPress={irParaQR}
+                        >
+                            <View style={styles.floatingLabelBlue}>
+                                <Text style={styles.floatingLabelTextWhite}>Adicionar Documento</Text>
+                            </View>
+                            <View style={styles.miniFabBlue}>
+                                <Ionicons name="qr-code-outline" size={18} color="#FFF" />
+                            </View>
+                        </TouchableOpacity>
+
+                        {/* Opção 2: Formulário */}
+                        <TouchableOpacity
+                            style={styles.speedDialRow}
+                            activeOpacity={0.7}
+                            onPress={irParaFormulario}
+                        >
+                            <View style={styles.floatingLabelBlue}>
+                                <Text style={styles.floatingLabelTextWhite}>Formulário</Text>
+                            </View>
+                            <View style={styles.miniFabBlue}>
+                                <Feather name="clipboard" size={18} color="#FFF" />
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
+
+                </Pressable>
+            </Modal>
         </View>
     );
 };
@@ -134,179 +163,46 @@ export default TelaHomeScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F8FAFC', // Fundo levemente azulado/cinza claro muito limpo
+        backgroundColor: '#F8FAFC',
     },
-content: {
-    paddingHorizontal: 20,
-    paddingTop: 15,
-    paddingBottom: 140,
-},
-    welcomeContainer: {
-        marginBottom: 25,
+    content: {
+        paddingHorizontal: 20,
+        paddingTop: 15,
+        paddingBottom: 140,
     },
-    welcomeText: {
-        fontSize: 16,
-        color: '#1E293B',
-        fontWeight: '500',
-    },
-    welcomeName: {
-        color: '#0061C4',
-        fontWeight: '600',
-    },
-    subtitle: {
-        marginTop: 4,
-        fontSize: 14,
-        color: '#64748B',
-    },
-    highlightText: {
-        color: '#0061C4',
-    },
-    cardsRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 20,
-    },
-    infoCard: {
-        width: '47%',
-        backgroundColor: '#FFF',
-        borderRadius: 20,
-        padding: 16,
-        borderWidth: 1,
-        borderColor: '#EDF2F7',
-        // Sombra suave para o efeito "clean blured"
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.03,
-        shadowRadius: 8,
-        elevation: 1,
-    },
-    cardIconCircle: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 12,
-    },
-    number: {
-        fontSize: 22,
-        fontWeight: '700',
-        color: '#1E293B',
-    },
-    label: {
-        marginTop: 2,
-        fontSize: 13,
-        color: '#94A3B8',
-        fontWeight: '500',
-    },
-    storageCard: {
-        backgroundColor: '#1D68E4',
-        borderRadius: 20,
-        padding: 20,
-        marginBottom: 25,
-        shadowColor: '#1D68E4',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-        elevation: 4,
-    },
-    storageHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 12,
-    },
-    storageTitleRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    storageTitle: {
-        color: '#FFF',
-        fontSize: 15,
-        fontWeight: '600',
-    },
-    percent: {
-        color: '#FFF',
-        fontWeight: '700',
-        fontSize: 16,
-    },
-    progressBackground: {
-        height: 6,
-        borderRadius: 3,
-        backgroundColor: 'rgba(255,255,255,0.25)',
-        overflow: 'hidden',
-    },
-    progressFill: {
-        width: '82%',
-        height: '100%',
-        backgroundColor: '#FFF',
-        borderRadius: 3,
-    },
-    storageText: {
-        color: 'rgba(255,255,255,0.85)',
-        marginTop: 10,
-        fontSize: 12,
-    },
-    sectionHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 15,
-    },
-    sectionTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#1E293B',
-    },
-    seeAll: {
-        color: '#0061C4',
-        fontWeight: '600',
-        fontSize: 14,
-    },
-    activityCard: {
-        flexDirection: 'row',
-        backgroundColor: '#FFF',
-        borderRadius: 16,
-        padding: 12,
-        marginBottom: 12,
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#EDF2F7',
-    },
-    activityIconContainer: {
-        width: 44,
-        height: 44,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 12,
-    },
-    activityBody: {
-        flex: 1,
-    },
-    activityHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    activityTitle: {
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#1E293B',
-        flex: 1,
-        paddingRight: 5,
-    },
-    activitySubtitle: {
-        marginTop: 2,
-        color: '#94A3B8',
-        fontSize: 12,
-    },
-    moreButton: {
-        padding: 4,
-    },
+    welcomeContainer: { marginBottom: 25 },
+    welcomeText: { fontSize: 16, color: '#1E293B', fontWeight: '500' },
+    welcomeName: { color: '#0061C4', fontWeight: '600' },
+    subtitle: { marginTop: 4, fontSize: 14, color: '#64748B' },
+    highlightText: { color: '#0061C4' },
+    cardsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },
+    infoCard: { width: '47%', backgroundColor: '#FFF', borderRadius: 20, padding: 16, borderWidth: 1, borderColor: '#EDF2F7', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.03, shadowRadius: 8, elevation: 1 },
+    cardIconCircle: { width: 36, height: 36, borderRadius: 18, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
+    number: { fontSize: 22, fontWeight: '700', color: '#1E293B' },
+    label: { marginTop: 2, fontSize: 13, color: '#94A3B8', fontWeight: '500' },
+    storageCard: { backgroundColor: '#1D68E4', borderRadius: 20, padding: 20, marginBottom: 25, shadowColor: '#1D68E4', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 10, elevation: 4 },
+    storageHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
+    storageTitleRow: { flexDirection: 'row', alignItems: 'center' },
+    storageTitle: { color: '#FFF', fontSize: 15, fontWeight: '600' },
+    percent: { color: '#FFF', fontWeight: '700', fontSize: 16 },
+    progressBackground: { height: 6, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.25)', overflow: 'hidden' },
+    progressFill: { width: '82%', height: '100%', backgroundColor: '#FFF', borderRadius: 3 },
+    storageText: { color: 'rgba(255,255,255,0.85)', marginTop: 10, fontSize: 12 },
+    sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+    sectionTitle: { fontSize: 16, fontWeight: '600', color: '#1E293B' },
+    seeAll: { color: '#0061C4', fontWeight: '600', fontSize: 14 },
+    activityCard: { flexDirection: 'row', backgroundColor: '#FFF', borderRadius: 16, padding: 12, marginBottom: 12, alignItems: 'center', borderWidth: 1, borderColor: '#EDF2F7' },
+    activityIconContainer: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+    activityBody: { flex: 1 },
+    activityHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    activityTitle: { fontSize: 14, fontWeight: '600', color: '#1E293B', flex: 1, paddingRight: 5 },
+    activitySubtitle: { marginTop: 2, color: '#94A3B8', fontSize: 12 },
+    moreButton: { padding: 4 },
+
+    // BOTÃO FAB FIXO NA TELA
     fab: {
         position: 'absolute',
-        bottom: 95, // Levemente ajustado para ficar perfeito acima do Footer
+        bottom: 95,
         right: 20,
         width: 56,
         height: 56,
@@ -319,12 +215,65 @@ content: {
         shadowOpacity: 0.3,
         shadowRadius: 6,
         elevation: 5,
-        zIndex: 99,
+        zIndex: 999, // Fica visível abaixo do toque do modal, ou acima de tudo.
     },
     fabText: {
         color: '#FFF',
-        fontSize: 28,
+        fontSize: 32,
         fontWeight: '300',
-        marginTop: -2,
+        marginTop: -4,
+    },
+
+    // OVERLAY COMPLETAMENTE TRANSPARENTE
+    modalOverlayTransparent: {
+        flex: 1,
+        backgroundColor: 'transparent',
+    },
+    floatingMenu: {
+        position: 'absolute',
+        bottom: 165, // Posicionado cirurgicamente acima dos 56px + 95px do FAB original
+        right: 20,
+        alignItems: 'flex-end',
+    },
+    speedDialRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+
+    // BALÃO COM FUNDO AZUL
+    floatingLabelBlue: {
+        backgroundColor: '#3B82F6',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        marginRight: 10,
+        shadowColor: '#3B82F6',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    // TEXTO BRANCO
+    floatingLabelTextWhite: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: '#FFFFFF',
+    },
+
+    // MINI BOTÃO CIRCULAR AZUL E ALINHADO COM O CENTRO DO FAB PRINCIPAL
+    miniFabBlue: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#3B82F6',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#3B82F6',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
+        marginRight: 8, // Alinhamento exato para bater com o centro do FAB de 56px de largura
     },
 });
