@@ -1,30 +1,30 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Dimensions, Platform, StatusBar } from 'react-native'; // <--- CORRIGIDO AQUI
 import { Ionicons } from '@expo/vector-icons';
 
 const { height } = Dimensions.get('window');
 
 interface CustomDrawerProps {
     currentScreen: string;
-    onNavigate: (screen: string) => void;
+    onNavigate: (screen: any) => void;
     onClose: () => void;
 }
 
 export default function CustomDrawer({ currentScreen, onNavigate, onClose }: CustomDrawerProps) {
 
-    // Mapeamento exato das telas que você possui na imagem image_089c24.png
+    // Lista de navegação com os IDs idênticos aos nomes da sua RootStackParamList
     const menuItems = [
-        { id: 'PaginaInicial', label: 'Home', icon: 'home-outline' },
+        { id: 'TelaHome', label: 'Home', icon: 'home-outline' },
         { id: 'Documentos', label: 'Meus documentos', icon: 'document-text-outline' },
-        { id: 'QRCode', label: 'Ler QR Code', icon: 'qr-code-outline' },
+        { id: 'QRcode', label: 'Ler QR Code', icon: 'qr-code-outline' },
         { id: 'Perfil', label: 'Perfil', icon: 'person-outline' },
-        { id: 'Configuracoes', label: 'Configurações', icon: 'settings-outline' },
+        { id: 'Configuraçoes', label: 'Configurações', icon: 'settings-outline' },
         { id: 'SobreNos', label: 'Sobre nós', icon: 'information-circle-outline' },
     ];
 
     return (
         <View style={styles.drawerContainer}>
-            {/* TOPO: LOGO E BOTÃO FECHAR */}
+            {/* TOPO: LOGO CENTRALDOCS E BOTÃO DE FECHAR */}
             <View style={styles.header}>
                 <Image
                     source={require('../../../assets/img/LogoCentralDocsNova.png')}
@@ -36,7 +36,7 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                 </TouchableOpacity>
             </View>
 
-            {/* MEIO: LINKS DE NAVEGAÇÃO */}
+            {/* CORPO: ITENS DE MENU IGUAL À WEB */}
             <View style={styles.navContainer}>
                 {menuItems.map((item) => {
                     const isActive = currentScreen === item.id;
@@ -45,7 +45,7 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                             key={item.id}
                             style={[styles.navItem, isActive && styles.navItemActive]}
                             onPress={() => {
-                                onNavigate(item.id);
+                                onNavigate(item.id); // Dispara o navigation.navigate do React Navigation
                                 onClose();
                             }}
                         >
@@ -62,7 +62,7 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                 })}
             </View>
 
-            {/* RODAPÉ: CARD DO USUÁRIO E LOGOUT (Igual ao design da web) */}
+            {/* RODAPÉ: PERFIL E SAIR DA CONTA */}
             <View style={styles.footer}>
                 <View style={styles.userCard}>
                     <View style={styles.avatar}>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         width: 280,
         height: height,
         backgroundColor: '#FFFFFF',
-        paddingTop: 40,
+        paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 20 : 50,
         paddingHorizontal: 20,
         borderRightWidth: 1,
         borderRightColor: '#E2E8F0',
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     },
     navContainer: {
         flex: 1,
-        gap: 8,
+        gap: 6,
     },
     navItem: {
         flexDirection: 'row',
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#3B82F6',
+        backgroundColor: '#2563EB',
         justifyContent: 'center',
         alignItems: 'center',
     },

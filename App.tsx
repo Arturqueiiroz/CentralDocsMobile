@@ -35,7 +35,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="SobreNos"
+                initialRouteName="TelaHome"
                 screenOptions={{
                     headerShown: false,
                 }}
