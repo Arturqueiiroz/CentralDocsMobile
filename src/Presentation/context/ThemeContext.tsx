@@ -3,19 +3,21 @@ import React, { createContext, useState, useContext } from 'react';
 // 1. Aqui mapeamos as cores que o app vai usar nos dois modos.
 // Importante: use sempre os mesmos nomes de propriedades nos dois objetos!
 export const lightTheme = {
-    background: '#F8FAFC',        // Fundo da tela
-    card: '#FFFFFF',            // Fundo dos cards brancos
-    textPrimary: '#1E293B',     // Cor dos títulos principais
-    textSecondary: '#64748B',   // Cor dos textos menores/subtítulos
-    borderColor: '#EDF2F7',     // Cor das bordas
+    background: '#F8FAFC',
+    card: '#FFFFFF',
+    textPrimary: '#1E293B',
+    textSecondary: '#64748B',
+    accentColor: '#1D68E4', // Seu azul original do projeto
+    borderColor: '#EDF2F7',
 };
 
 export const darkTheme = {
-    background: '#0F172A',        // Fundo escuro (Slate 900)
-    card: '#1E293B',            // Cards um pouco mais claros (Slate 800)
-    textPrimary: '#F8FAFC',     // Títulos em branco/gelo
-    textSecondary: '#94A3B8',   // Subtítulos em cinza claro
-    borderColor: '#334155',     // Bordas escuras
+    background: '#0F172A',
+    card: '#1E293B',
+    textPrimary: '#F8FAFC',
+    textSecondary: '#94A3B8',
+    accentColor: '#3B82F6', // Um azul levemente mais claro para destacar no escuro
+    borderColor: '#334155',
 };
 
 // 2. Definimos para o TypeScript o formato que o nosso "gerenciador de tema" terá
