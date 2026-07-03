@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { HeaderScreen } from '../../components/Header'; // Mantendo a consistência do cabeçalho global
+import { HeaderScreen } from '../../components/Header';
+import { FooterScreen } from '../../components/Footer'; // Importando o footer global
 
 const { width } = Dimensions.get('window');
 
@@ -13,7 +14,6 @@ interface TeamMember {
 }
 
 export default function SobreNosScreen() {
-    // Lista customizada de membros com iniciais dinâmicas
     const equipe: TeamMember[] = [
         {
             id: '1',
@@ -37,7 +37,6 @@ export default function SobreNosScreen() {
 
     return (
         <View style={styles.container}>
-            {/* Cabeçalho padrão */}
             <HeaderScreen nome="Nickinho" />
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -69,7 +68,6 @@ export default function SobreNosScreen() {
                     <Text style={styles.sectionTitle}>Nossos Valores</Text>
                 </View>
 
-                {/* CARD GRANDE: CONFIANÇA */}
                 <View style={styles.valueCardFull}>
                     <View style={[styles.iconWrapper, { backgroundColor: '#EEF4FF' }]}>
                         <Ionicons name="shield-checkmark-outline" size={22} color="#1D68E4" />
@@ -78,7 +76,6 @@ export default function SobreNosScreen() {
                     <Text style={styles.valueCardSubtitle}>Segurança inabalável em cada transação e armazenamento.</Text>
                 </View>
 
-                {/* CARDS LADO A LADO: UTILITÁRIO / INCLUSÃO */}
                 <View style={styles.gridValues}>
                     <View style={styles.valueCardHalf}>
                         <View style={[styles.iconWrapper, { backgroundColor: '#EEF4FF' }]}>
@@ -103,15 +100,12 @@ export default function SobreNosScreen() {
                     <Text style={styles.sectionTitle}>Nossa Equipe</Text>
                 </View>
 
-                {/* LISTAGEM DE MEMBROS */}
                 {equipe.map((membro) => {
                     const inicial = membro.nome ? membro.nome.charAt(0).toUpperCase() : '?';
                     return (
                         <View key={membro.id} style={styles.memberCard}>
-                            {/* Avatar placeholder apenas com a inicial estruturada */}
                             <View style={styles.avatarPlaceholder}>
                                 <Text style={styles.avatarText}>{inicial}</Text>
-                                {/* Badge de verificação azul imitando o design original */}
                                 <View style={styles.verifiedBadge}>
                                     <MaterialCommunityIcons name="check-decagram" size={12} color="#FFFFFF" />
                                 </View>
@@ -127,24 +121,10 @@ export default function SobreNosScreen() {
                         </View>
                     );
                 })}
-
             </ScrollView>
 
-            {/* TAB BAR INFERIOR */}
-            <View style={styles.tabBar}>
-                <TouchableOpacity style={styles.tabItem}>
-                    <Ionicons name="grid-outline" size={22} color="#94A3B8" />
-                    <Text style={styles.tabLabel}>Dashboard</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.tabItem}>
-                    <Ionicons name="document-text-outline" size={22} color="#94A3B8" />
-                    <Text style={styles.tabLabel}>Documentos</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.tabItem, styles.tabItemActive]}>
-                    <Ionicons name="person" size={22} color="#2563EB" />
-                    <Text style={[styles.tabLabel, styles.tabLabelActive]}>Perfil</Text>
-                </TouchableOpacity>
-            </View>
+            {/* ADICIONANDO O FOOTER GLOBAL */}
+            <FooterScreen />
         </View>
     );
 }
@@ -156,8 +136,10 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: 20,
-        paddingBottom: 110,
+        paddingBottom: 40,
     },
+    // ... mantive todos os seus estilos originais, 
+    // apenas removi os estilos da 'tabBar' antiga que não são mais necessários
     heroBanner: {
         backgroundColor: '#1E293B',
         borderRadius: 24,
@@ -167,212 +149,35 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 15,
         marginBottom: 25,
-        // Estilização simulando o fundo cristal/geométrico do original
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.15,
         shadowRadius: 10,
         elevation: 4,
     },
-    heroTitle: {
-        color: '#FFFFFF',
-        fontSize: 28,
-        fontWeight: '800',
-        marginBottom: 8,
-        letterSpacing: -0.5,
-    },
-    heroSubtitle: {
-        color: '#94A3B8',
-        fontSize: 13,
-        textAlign: 'center',
-        lineHeight: 18,
-        paddingHorizontal: 15,
-    },
-    badgeSection: {
-        backgroundColor: '#EFF6FF',
-        paddingHorizontal: 14,
-        paddingVertical: 6,
-        borderRadius: 20,
-        alignSelf: 'flex-start',
-        marginBottom: 12,
-    },
-    badgeText: {
-        color: '#1D68E4',
-        fontSize: 12,
-        fontWeight: '700',
-    },
-    missionCard: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: '#E2E8F0',
-        padding: 20,
-        marginBottom: 30,
-    },
-    missionTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-        color: '#1E293B',
-        marginBottom: 12,
-    },
-    missionDescription: {
-        fontSize: 13,
-        color: '#64748B',
-        lineHeight: 20,
-        marginBottom: 18,
-    },
-    progressBarContainer: {
-        height: 4,
-        backgroundColor: '#E2E8F0',
-        borderRadius: 2,
-        width: '100%',
-    },
-    progressBarFill: {
-        height: '100%',
-        backgroundColor: '#1D68E4',
-        borderRadius: 2,
-        width: '65%', // Largura aproximada baseada na imagem
-    },
-    sectionHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-        marginBottom: 15,
-        paddingHorizontal: 4,
-    },
-    sectionTitle: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: '#1E293B',
-    },
-    valueCardFull: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: '#E2E8F0',
-        padding: 16,
-        marginBottom: 12,
-    },
-    iconWrapper: {
-        width: 40,
-        height: 40,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 12,
-    },
-    valueCardTitle: {
-        fontSize: 15,
-        fontWeight: '700',
-        color: '#1E293B',
-        marginBottom: 4,
-    },
-    valueCardSubtitle: {
-        fontSize: 12,
-        color: '#64748B',
-        lineHeight: 16,
-    },
-    gridValues: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 30,
-    },
-    valueCardHalf: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: '#E2E8F0',
-        padding: 16,
-        width: (width - 52) / 2,
-    },
-    memberCard: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 20,
-        padding: 15,
-        borderWidth: 1,
-        borderColor: '#E2E8F0',
-        marginBottom: 12,
-    },
-    avatarPlaceholder: {
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        backgroundColor: '#1E293B',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'relative',
-        marginRight: 15,
-    },
-    avatarText: {
-        color: '#FFFFFF',
-        fontSize: 22,
-        fontWeight: '700',
-    },
-    verifiedBadge: {
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-        backgroundColor: '#1D68E4',
-        width: 18,
-        height: 18,
-        borderRadius: 9,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 2,
-        borderColor: '#FFFFFF',
-    },
-    memberInfo: {
-        flex: 1,
-    },
-    memberName: {
-        fontSize: 15,
-        fontWeight: '700',
-        color: '#1E293B',
-    },
-    memberRole: {
-        fontSize: 12,
-        fontWeight: '600',
-        color: '#2563EB',
-        marginTop: 2,
-        marginBottom: 4,
-    },
-    memberDescription: {
-        fontSize: 11,
-        color: '#94A3B8',
-        lineHeight: 15,
-    },
-    tabBar: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 70,
-        backgroundColor: '#FFFFFF',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        borderTopWidth: 1,
-        borderTopColor: '#E2E8F0',
-    },
-    tabItem: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 4,
-    },
-    tabItemActive: {
-        backgroundColor: '#EFF6FF',
-        paddingHorizontal: 20,
-        paddingVertical: 8,
-        borderRadius: 14,
-    },
-    tabLabel: {
-        fontSize: 11,
-        color: '#94A3B8',
-    },
-    tabLabelActive: {
-        color: '#2563EB',
-        fontWeight: '600',
-    },
+    heroTitle: { color: '#FFFFFF', fontSize: 28, fontWeight: '800', marginBottom: 8, letterSpacing: -0.5 },
+    heroSubtitle: { color: '#94A3B8', fontSize: 13, textAlign: 'center', lineHeight: 18, paddingHorizontal: 15 },
+    badgeSection: { backgroundColor: '#EFF6FF', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, alignSelf: 'flex-start', marginBottom: 12 },
+    badgeText: { color: '#1D68E4', fontSize: 12, fontWeight: '700' },
+    missionCard: { backgroundColor: '#FFFFFF', borderRadius: 20, borderWidth: 1, borderColor: '#E2E8F0', padding: 20, marginBottom: 30 },
+    missionTitle: { fontSize: 20, fontWeight: '700', color: '#1E293B', marginBottom: 12 },
+    missionDescription: { fontSize: 13, color: '#64748B', lineHeight: 20, marginBottom: 18 },
+    progressBarContainer: { height: 4, backgroundColor: '#E2E8F0', borderRadius: 2, width: '100%' },
+    progressBarFill: { height: '100%', backgroundColor: '#1D68E4', borderRadius: 2, width: '65%' },
+    sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 15, paddingHorizontal: 4 },
+    sectionTitle: { fontSize: 16, fontWeight: '700', color: '#1E293B' },
+    valueCardFull: { backgroundColor: '#FFFFFF', borderRadius: 20, borderWidth: 1, borderColor: '#E2E8F0', padding: 16, marginBottom: 12 },
+    iconWrapper: { width: 40, height: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
+    valueCardTitle: { fontSize: 15, fontWeight: '700', color: '#1E293B', marginBottom: 4 },
+    valueCardSubtitle: { fontSize: 12, color: '#64748B', lineHeight: 16 },
+    gridValues: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30 },
+    valueCardHalf: { backgroundColor: '#FFFFFF', borderRadius: 20, borderWidth: 1, borderColor: '#E2E8F0', padding: 16, width: (width - 52) / 2 },
+    memberCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 20, padding: 15, borderWidth: 1, borderColor: '#E2E8F0', marginBottom: 12 },
+    avatarPlaceholder: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#1E293B', justifyContent: 'center', alignItems: 'center', position: 'relative', marginRight: 15 },
+    avatarText: { color: '#FFFFFF', fontSize: 22, fontWeight: '700' },
+    verifiedBadge: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#1D68E4', width: 18, height: 18, borderRadius: 9, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#FFFFFF' },
+    memberInfo: { flex: 1 },
+    memberName: { fontSize: 15, fontWeight: '700', color: '#1E293B' },
+    memberRole: { fontSize: 12, fontWeight: '600', color: '#2563EB', marginTop: 2, marginBottom: 4 },
+    memberDescription: { fontSize: 11, color: '#94A3B8', lineHeight: 15 },
 });

@@ -63,22 +63,6 @@ export default function LerDocumentoScreen() {
                     <Text style={styles.galleryText}>Fazer upload da galeria</Text>
                 </TouchableOpacity>
             </View>
-
-            {/* TAB BAR INFERIOR (Mantendo a aba Documentos como ativa conforme a imagem) */}
-            <View style={styles.tabBar}>
-                <TouchableOpacity style={styles.tabItem}>
-                    <Ionicons name="grid-outline" size={22} color="#94A3B8" />
-                    <Text style={styles.tabLabel}>Dashboard</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.tabItem, styles.tabItemActive]}>
-                    <Ionicons name="document-text" size={22} color="#2563EB" />
-                    <Text style={[styles.tabLabel, styles.tabLabelActive]}>Documentos</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.tabItem}>
-                    <Ionicons name="person-outline" size={22} color="#94A3B8" />
-                    <Text style={styles.tabLabel}>Perfil</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 }
@@ -208,37 +192,5 @@ const styles = StyleSheet.create({
         color: '#64748B',
         fontWeight: '500',
         marginTop: 5,
-    },
-    tabBar: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 70,
-        backgroundColor: '#FFFFFF',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        borderTopWidth: 1,
-        borderTopColor: '#E2E8F0',
-    },
-    tabItem: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 4,
-    },
-    tabItemActive: {
-        backgroundColor: '#EFF6FF',
-        paddingHorizontal: 20,
-        paddingVertical: 8,
-        borderRadius: 14,
-    },
-    tabLabel: {
-        fontSize: 11,
-        color: '#94A3B8',
-    },
-    tabLabelActive: {
-        color: '#2563EB',
-        fontWeight: '600',
     },
 });

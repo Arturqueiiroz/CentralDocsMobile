@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { HeaderScreen } from '../../components/Header'; // Caminho baseado no explorador da image_95bbe7.png
+import { HeaderScreen } from '../../components/Header';
+import { FooterScreen } from '../../components/Footer'; // Importando o seu footer global
 
 export default function ConfiguracoesScreen() {
-    // Estados para os Switches interativos baseados na image_07c98e.png
+    // Estados para os Switches interativos
     const [modoEscuro, setModoEscuro] = useState(false);
     const [alertasEmail, setAlertasEmail] = useState(true);
     const [pushNotifications, setPushNotifications] = useState(true);
@@ -168,21 +169,8 @@ export default function ConfiguracoesScreen() {
 
             </ScrollView>
 
-            {/* BARRA DE NAVEGAÇÃO INFERIOR TAB BAR */}
-            <View style={styles.tabBar}>
-                <TouchableOpacity style={styles.tabItem}>
-                    <Ionicons name="grid-outline" size={22} color="#94A3B8" />
-                    <Text style={styles.tabLabel}>Dashboard</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.tabItem}>
-                    <Ionicons name="document-text-outline" size={22} color="#94A3B8" />
-                    <Text style={styles.tabLabel}>Documentos</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.tabItem, styles.tabItemActive]}>
-                    <Ionicons name="person" size={22} color="#2563EB" />
-                    <Text style={[styles.tabLabel, styles.tabLabelActive]}>Perfil</Text>
-                </TouchableOpacity>
-            </View>
+            {/* ADICIONANDO O FOOTER GLOBAL AQUI */}
+            <FooterScreen />
         </View>
     );
 }
@@ -194,7 +182,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: 20,
-        paddingBottom: 110,
+        paddingBottom: 110, // Mantendo um padding para não ficar escondido atrás do footer
     },
     mainTitle: {
         fontSize: 26,
@@ -328,37 +316,5 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '600',
         color: '#2563EB',
-    },
-    tabBar: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 70,
-        backgroundColor: '#FFFFFF',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        borderTopWidth: 1,
-        borderTopColor: '#E2E8F0',
-    },
-    tabItem: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 4,
-    },
-    tabItemActive: {
-        backgroundColor: '#EFF6FF',
-        paddingHorizontal: 20,
-        paddingVertical: 8,
-        borderRadius: 14,
-    },
-    tabLabel: {
-        fontSize: 11,
-        color: '#94A3B8',
-    },
-    tabLabelActive: {
-        color: '#2563EB',
-        fontWeight: '600',
     },
 });
