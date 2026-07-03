@@ -11,7 +11,9 @@ import ConfirmacaoBiometrica from "./src/Presentation/views/Biometria/Biometria"
 import FormularioScreen from "./src/Presentation/views/Formulario/Formulario";
 import DocumentosScreen from "./src/Presentation/views/Documentos/Documentos";
 import PerfilScreen from "./src/Presentation/views/Perfil/Perfil";
-
+import ConfiguracoesScreen from "./src/Presentation/views/Configuração/Configuracao";
+import LerDocumentoScreen from "./src/Presentation/views/QRcode/Qrcode";
+import SobreNosScreen from "./src/Presentation/views/SobreNos/Sobrenos";
 // Definição dos tipos das rotas para o TypeScript
 export type RootStackParamList = {
     Login: undefined;
@@ -30,7 +32,7 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator
-                initialRouteName="TelaHome"
+                initialRouteName="SobreNos"
                 screenOptions={{
                     headerShown: false,
                 }}
@@ -71,6 +73,19 @@ export default function App() {
                     name="Perfil"
                     component={PerfilScreen}
                 />
+                <Stack.Screen
+                    name="Configuraçoes"
+                    component={ConfiguracoesScreen}
+                />
+                <Stack.Screen
+                    name="QRcode"
+                    component={LerDocumentoScreen}
+                />
+                <Stack.Screen
+                    name="SobreNos"
+                    component={SobreNosScreen}
+                />
+
 
 
             </Stack.Navigator>
