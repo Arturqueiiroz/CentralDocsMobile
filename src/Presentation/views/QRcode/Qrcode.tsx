@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
         opacity: 0.6,
     },
     qrOverlay: {
-        ...StyleSheet.absoluteFillObject,
+        ...StyleSheet.absoluteFill,
         justifyContent: 'center',
         alignItems: 'center',
     },

@@ -1,4 +1,4 @@
-import { Text, TextInput, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, TextInput, View, StyleSheet, TouchableOpacity, KeyboardTypeOptions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 
@@ -9,6 +9,8 @@ interface Props {
     property: string;
     secureTextEntry?: boolean;
     onChangeText: (property: string, value: string) => void;
+    keyboardType?: KeyboardTypeOptions;
+    maxLength?: number;
 }
 
 export const CustomInput = ({
@@ -18,6 +20,8 @@ export const CustomInput = ({
     property,
     secureTextEntry = false,
     onChangeText,
+    keyboardType,
+    maxLength,
 }: Props) => {
     const [showPassword, setShowPassword] = useState(false);
     return (
@@ -35,6 +39,8 @@ export const CustomInput = ({
                     value={value}
                     secureTextEntry={secureTextEntry && !showPassword}
                     onChangeText={(text) => onChangeText(property, text)}
+                    keyboardType={keyboardType}
+                    maxLength={maxLength}
                 />
 
                 {secureTextEntry && (

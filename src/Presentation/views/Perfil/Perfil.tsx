@@ -38,7 +38,7 @@ export default function PerfilScreen() {
                 <View style={styles.card}>
                     <View style={styles.cardHeaderRow}>
                         <Text style={styles.cardTitle}>Status da conta</Text>
-                        <Ionicons name="shield-check-outline" size={20} color="#1D68E4" />
+                        <Ionicons name="shield-checkmark-outline" size={20} color="#1D68E4" />
                     </View>
 
                     <View style={styles.storageTextRow}>

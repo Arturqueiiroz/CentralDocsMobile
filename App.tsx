@@ -24,6 +24,9 @@ export type RootStackParamList = {
     Formulario: undefined;
     Documentos: undefined;
     Perfil: undefined;
+    Configuraçoes: undefined;
+    QRcode: undefined;
+    SobreNos: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

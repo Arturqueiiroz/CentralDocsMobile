@@ -27,7 +27,7 @@ export default function FormularioScreen() {
 
     const opcoesGenero = ["Masculino", "Feminino", "Outros"];
 
-    const handleBuscarCep = async (cepParaBuscar) => {
+    const handleBuscarCep = async (cepParaBuscar?: string) => {
         const cepTermo = cepParaBuscar || cep;
         const cepLimpo = cepTermo.replace(/\D/g, "");
 

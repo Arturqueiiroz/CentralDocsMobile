@@ -61,7 +61,7 @@ export default function ConfiguracoesScreen() {
 
                     <TouchableOpacity style={styles.optionRow} activeOpacity={0.7}>
                         <View style={[styles.iconWrapper, { backgroundColor: '#EEF4FF' }]}>
-                            <MaterialCommunityIcons name="format-text-size" size={20} color="#1D68E4" />
+                            <MaterialCommunityIcons name="format-size" size={20} color="#1D68E4" />
                         </View>
                         <View style={styles.optionTextContainer}>
                             <Text style={styles.optionTitle}>Tamanho do texto</Text>
@@ -98,7 +98,7 @@ export default function ConfiguracoesScreen() {
 
                     <View style={styles.optionRow}>
                         <View style={[styles.iconWrapper, { backgroundColor: '#EEF4FF' }]}>
-                            <Ionicons name="smartphone-outline" size={20} color="#1D68E4" />
+                            <Ionicons name="phone-portrait-outline" size={20} color="#1D68E4" />
                         </View>
                         <View style={styles.optionTextContainer}>
                             <Text style={styles.optionTitle}>Push Notifications</Text>
