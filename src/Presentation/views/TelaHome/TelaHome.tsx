@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     activitySubtitle: { marginTop: 2, color: '#94A3B8', fontSize: 12 },
     moreButton: { padding: 4 },
 
-    // BOTÃO FAB FIXO NA TELA
+   
     fab: {
         position: 'absolute',
         bottom: 95,
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 6,
         elevation: 5,
-        zIndex: 999, // Fica visível abaixo do toque do modal, ou acima de tudo.
+        zIndex: 999, 
     },
     fabText: {
         color: '#FFF',
@@ -224,14 +224,14 @@ const styles = StyleSheet.create({
         marginTop: -4,
     },
 
-    // OVERLAY COMPLETAMENTE TRANSPARENTE
+    
     modalOverlayTransparent: {
         flex: 1,
         backgroundColor: 'transparent',
     },
     floatingMenu: {
         position: 'absolute',
-        bottom: 165, // Posicionado cirurgicamente acima dos 56px + 95px do FAB original
+        bottom: 165, 
         right: 20,
         alignItems: 'flex-end',
     },
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
 
-    // BALÃO COM FUNDO AZUL
+ 
     floatingLabelBlue: {
         backgroundColor: '#3B82F6',
         paddingVertical: 8,
@@ -254,14 +254,13 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3,
     },
-    // TEXTO BRANCO
+
     floatingLabelTextWhite: {
         fontSize: 14,
         fontWeight: '600',
         color: '#FFFFFF',
     },
 
-    // MINI BOTÃO CIRCULAR AZUL E ALINHADO COM O CENTRO DO FAB PRINCIPAL
     miniFabBlue: {
         width: 40,
         height: 40,
@@ -274,6 +273,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 3,
-        marginRight: 8, // Alinhamento exato para bater com o centro do FAB de 56px de largura
+        marginRight: 8, 
     },
 });
