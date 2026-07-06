@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Dimensions } from
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from '../../components/Footer'; // Importando o footer global
+import { useTheme } from '../../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
@@ -14,6 +15,7 @@ interface TeamMember {
 }
 
 export default function SobreNosScreen() {
+    const { theme, isDarkMode } = useTheme();
     const equipe: TeamMember[] = [
         {
             id: '1',
@@ -36,85 +38,85 @@ export default function SobreNosScreen() {
     ];
 
     return (
-        <View style={styles.container}>
-            <HeaderScreen nome="Nickinho" />
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+            <HeaderScreen />
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
                 {/* HERO BANNER SUPERIOR */}
-                <View style={styles.heroBanner}>
+                <View style={[styles.heroBanner, isDarkMode && { backgroundColor: theme.card }]}>
                     <Text style={styles.heroTitle}>Sobre Nós</Text>
-                    <Text style={styles.heroSubtitle}>Moldando o futuro da gestão documental segura.</Text>
+                    <Text style={[styles.heroSubtitle, isDarkMode && { color: theme.textSecondary }]}>Moldando o futuro da gestão documental segura.</Text>
                 </View>
 
                 {/* SEÇÃO: NOSSA MISSÃO */}
-                <View style={styles.badgeSection}>
-                    <Text style={styles.badgeText}>🚀 Nossa Missão</Text>
+                <View style={[styles.badgeSection, { backgroundColor: isDarkMode ? theme.borderColor : '#EFF6FF' }]}>
+                    <Text style={[styles.badgeText, { color: theme.accentColor }]}>🚀 Nossa Missão</Text>
                 </View>
 
-                <View style={styles.missionCard}>
-                    <Text style={styles.missionTitle}>Garantindo o futuro digital</Text>
-                    <Text style={styles.missionDescription}>
-                        Na CentralDocs, acreditamos que a segurança da informação é a espinha dorsal de qualquer organização moderna. Nossa missão é simplificar a complexidade digital, oferecendo ferramentas que garantem soberania e acessibilidade total aos seus documentos mais preciosos.
+                <View style={[styles.missionCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                    <Text style={[styles.missionTitle, { color: theme.textPrimary }]}>Garantindo o futuro digital</Text>
+                    <Text style={[styles.missionDescription, { color: theme.textSecondary }]}>
+                        Na CentralDocs, acreditamos que a segurança da informação é a espinha dorsal de qualquer organização moderna. Nossa missão é simplificar a complexidade digital, offering ferramentas que garantem soberania e acessibilidade total aos seus documentos mais preciosos.
                     </Text>
-                    <View style={styles.progressBarContainer}>
-                        <View style={styles.progressBarFill} />
+                    <View style={[styles.progressBarContainer, { backgroundColor: theme.borderColor }]}>
+                        <View style={[styles.progressBarFill, { backgroundColor: theme.accentColor }]} />
                     </View>
                 </View>
 
                 {/* SEÇÃO: NOSSOS VALORES */}
                 <View style={styles.sectionHeader}>
-                    <Ionicons name="diamond-outline" size={18} color="#1D68E4" />
-                    <Text style={styles.sectionTitle}>Nossos Valores</Text>
+                    <Ionicons name="diamond-outline" size={18} color={theme.accentColor} />
+                    <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Nossos Valores</Text>
                 </View>
 
-                <View style={styles.valueCardFull}>
-                    <View style={[styles.iconWrapper, { backgroundColor: '#EEF4FF' }]}>
-                        <Ionicons name="shield-checkmark-outline" size={22} color="#1D68E4" />
+                <View style={[styles.valueCardFull, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                    <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
+                        <Ionicons name="shield-checkmark-outline" size={22} color={theme.accentColor} />
                     </View>
-                    <Text style={styles.valueCardTitle}>Confiança</Text>
-                    <Text style={styles.valueCardSubtitle}>Segurança inabalável em cada transação e armazenamento.</Text>
+                    <Text style={[styles.valueCardTitle, { color: theme.textPrimary }]}>Confiança</Text>
+                    <Text style={[styles.valueCardSubtitle, { color: theme.textSecondary }]}>Segurança inabalável em cada transação e armazenamento.</Text>
                 </View>
 
                 <View style={styles.gridValues}>
-                    <View style={styles.valueCardHalf}>
-                        <View style={[styles.iconWrapper, { backgroundColor: '#EEF4FF' }]}>
-                            <Ionicons name="flash-outline" size={22} color="#1D68E4" />
+                    <View style={[styles.valueCardHalf, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                        <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
+                            <Ionicons name="flash-outline" size={22} color={theme.accentColor} />
                         </View>
-                        <Text style={styles.valueCardTitle}>Utilitário</Text>
-                        <Text style={styles.valueCardSubtitle}>Foco na eficiência e usabilidade extrema.</Text>
+                        <Text style={[styles.valueCardTitle, { color: theme.textPrimary }]}>Utilitário</Text>
+                        <Text style={[styles.valueCardSubtitle, { color: theme.textSecondary }]}>Foco na eficiência e usabilidade extrema.</Text>
                     </View>
 
-                    <View style={styles.valueCardHalf}>
-                        <View style={[styles.iconWrapper, { backgroundColor: '#EEF4FF' }]}>
-                            <Ionicons name="people-outline" size={22} color="#1D68E4" />
+                    <View style={[styles.valueCardHalf, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                        <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
+                            <Ionicons name="people-outline" size={22} color={theme.accentColor} />
                         </View>
-                        <Text style={styles.valueCardTitle}>Inclusão</Text>
-                        <Text style={styles.valueCardSubtitle}>Tecnologia acessível para todos.</Text>
+                        <Text style={[styles.valueCardTitle, { color: theme.textPrimary }]}>Inclusão</Text>
+                        <Text style={[styles.valueCardSubtitle, { color: theme.textSecondary }]}>Tecnologia acessível para todos.</Text>
                     </View>
                 </View>
 
                 {/* SEÇÃO: NOSSA EQUIPE */}
                 <View style={styles.sectionHeader}>
-                    <Ionicons name="people-outline" size={18} color="#1D68E4" />
-                    <Text style={styles.sectionTitle}>Nossa Equipe</Text>
+                    <Ionicons name="people-outline" size={18} color={theme.accentColor} />
+                    <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Nossa Equipe</Text>
                 </View>
 
                 {equipe.map((membro) => {
                     const inicial = membro.nome ? membro.nome.charAt(0).toUpperCase() : '?';
                     return (
-                        <View key={membro.id} style={styles.memberCard}>
-                            <View style={styles.avatarPlaceholder}>
+                        <View key={membro.id} style={[styles.memberCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                            <View style={[styles.avatarPlaceholder, { backgroundColor: isDarkMode ? theme.borderColor : '#1E293B' }]}>
                                 <Text style={styles.avatarText}>{inicial}</Text>
-                                <View style={styles.verifiedBadge}>
+                                <View style={[styles.verifiedBadge, { backgroundColor: theme.accentColor, borderColor: theme.card }]}>
                                     <MaterialCommunityIcons name="check-decagram" size={12} color="#FFFFFF" />
                                 </View>
                             </View>
 
                             <View style={styles.memberInfo}>
-                                <Text style={styles.memberName}>{membro.nome}</Text>
-                                <Text style={styles.memberRole}>{membro.cargo}</Text>
-                                <Text style={styles.memberDescription} numberOfLines={2}>
+                                <Text style={[styles.memberName, { color: theme.textPrimary }]}>{membro.nome}</Text>
+                                <Text style={[styles.memberRole, { color: theme.accentColor }]}>{membro.cargo}</Text>
+                                <Text style={[styles.memberDescription, { color: theme.textSecondary }]} numberOfLines={2}>
                                     {membro.descricao}
                                 </Text>
                             </View>

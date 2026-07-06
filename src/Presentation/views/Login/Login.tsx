@@ -5,14 +5,17 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
+import { useTheme } from '../../context/ThemeContext';
 
 export const LoginScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { theme } = useTheme();
+
     return (
-        <View style={styles.container}>
-            <View style={styles.card}>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+            <View style={[styles.card, { backgroundColor: theme.card }]}>
 
                 <View style={styles.logoContainer}>
                     <Image
@@ -20,7 +23,7 @@ export const LoginScreen = () => {
                         style={styles.logo}
                     />
 
-                    <Text style={styles.subtitle}>
+                    <Text style={[styles.subtitle, { color: theme.textPrimary }]}>
                         Gerenciamento de documentos
                     </Text>
                 </View>
@@ -34,7 +37,7 @@ export const LoginScreen = () => {
             />
 
             <View style={styles.passwordHeader}>
-                <Text style={styles.label}>Senha</Text>
+                <Text style={[styles.label, { color: theme.textPrimary }]}>Senha</Text>
 
 
             </View>
@@ -50,7 +53,7 @@ export const LoginScreen = () => {
             />
             
                 <TouchableOpacity style={styles.forgotPasswordContainer}>
-                    <Text style={styles.forgotPassword}>
+                    <Text style={[styles.forgotPassword, { color: theme.accentColor }]}>
                         Esqueceu a senha?
                     </Text>
                 </TouchableOpacity>
@@ -60,22 +63,22 @@ export const LoginScreen = () => {
                 />
 
                 <View style={styles.registerContainer}>
-                    <Text style={styles.registerText}>
+                    <Text style={[styles.registerText, { color: theme.textSecondary }]}>
                         Não tem conta?
                     </Text>
 
                 <TouchableOpacity
                     onPress={() => navigation.navigate('Cadastro')}
                 >
-                    <Text style={styles.registerLink}>
+                    <Text style={[styles.registerLink, { color: theme.accentColor }]}>
                         Criar conta
                     </Text>
                 </TouchableOpacity>
                 </View>
                 <View style={styles.google}>
-                   <Text>Ou entre com</Text> 
+                   <Text style={{ color: theme.textSecondary }}>Ou entre com</Text> 
                 </View>
-                <TouchableOpacity style={styles.googleButton}>
+                <TouchableOpacity style={[styles.googleButton, { borderColor: theme.borderColor }]}>
                     <Image
                         source={require('../../../../assets/img/google-icon-1.png')}
                         style={styles.googleIcon}

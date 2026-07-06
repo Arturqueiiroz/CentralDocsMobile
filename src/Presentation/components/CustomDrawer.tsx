@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, Dimensions, Platform, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../context/ThemeContext';
 
 const { height } = Dimensions.get('window');
 
@@ -11,6 +12,7 @@ interface CustomDrawerProps {
 }
 
 export default function CustomDrawer({ currentScreen, onNavigate, onClose }: CustomDrawerProps) {
+    const { theme, isDarkMode } = useTheme();
 
     // Lista de navegação atualizada apenas com os itens desejados
     const menuItems = [
@@ -19,8 +21,12 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
         { id: 'SobreNos', label: 'Sobre nós', icon: 'information-circle-outline' },
     ];
 
+    const activeBg = isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#EFF6FF';
+    const activeColor = theme.accentColor;
+    const inactiveColor = theme.textSecondary;
+
     return (
-        <View style={styles.drawerContainer}>
+        <View style={[styles.drawerContainer, { backgroundColor: theme.card, borderRightColor: theme.borderColor }]}>
             {/* TOPO: LOGO CENTRALDOCS E BOTÃO DE FECHAR */}
             <View style={styles.header}>
                 <Image
@@ -29,7 +35,7 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                     resizeMode="contain"
                 />
                 <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                    <Ionicons name="close" size={24} color="#1E293B" />
+                    <Ionicons name="close" size={24} color={theme.textPrimary} />
                 </TouchableOpacity>
             </View>
 
@@ -40,7 +46,10 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                     return (
                         <TouchableOpacity
                             key={item.id}
-                            style={[styles.navItem, isActive && styles.navItemActive]}
+                            style={[
+                                styles.navItem,
+                                isActive && { backgroundColor: activeBg }
+                            ]}
                             onPress={() => {
                                 onNavigate(item.id);
                                 onClose();
@@ -49,9 +58,13 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                             <Ionicons
                                 name={item.icon as any}
                                 size={20}
-                                color={isActive ? '#2563EB' : '#64748B'}
+                                color={isActive ? activeColor : inactiveColor}
                             />
-                            <Text style={[styles.navLabel, isActive && styles.navLabelActive]}>
+                            <Text style={[
+                                styles.navLabel,
+                                { color: isActive ? activeColor : theme.textPrimary },
+                                isActive && { fontWeight: '600' }
+                            ]}>
                                 {item.label}
                             </Text>
                         </TouchableOpacity>
@@ -60,20 +73,20 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
             </View>
 
             {/* RODAPÉ: PERFIL E SAIR DA CONTA */}
-            <View style={styles.footer}>
-                <View style={styles.userCard}>
-                    <View style={styles.avatar}>
+            <View style={[styles.footer, { borderTopColor: theme.borderColor }]}>
+                <View style={[styles.userCard, { backgroundColor: isDarkMode ? theme.background : '#F8FAFC' }]}>
+                    <View style={[styles.avatar, { backgroundColor: theme.accentColor }]}>
                         <Text style={styles.avatarText}>N</Text>
                     </View>
                     <View style={styles.userInfo}>
-                        <Text style={styles.userName}>Nickinho</Text>
-                        <Text style={styles.userSub}>Conta CentralDocs</Text>
+                        <Text style={[styles.userName, { color: theme.textPrimary }]}>Nickinho</Text>
+                        <Text style={[styles.userSub, { color: theme.textSecondary }]}>Conta CentralDocs</Text>
                     </View>
                 </View>
 
                 <TouchableOpacity style={styles.logoutButton} activeOpacity={0.6}>
-                    <Ionicons name="log-out-outline" size={18} color="#64748B" />
-                    <Text style={styles.logoutText}>Sair da conta</Text>
+                    <Ionicons name="log-out-outline" size={18} color={theme.textSecondary} />
+                    <Text style={[styles.logoutText, { color: theme.textSecondary }]}>Sair da conta</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -84,11 +97,9 @@ const styles = StyleSheet.create({
     drawerContainer: {
         width: 280,
         height: height,
-        backgroundColor: '#FFFFFF',
         paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) + 20 : 50,
         paddingHorizontal: 20,
         borderRightWidth: 1,
-        borderRightColor: '#E2E8F0',
         justifyContent: 'space-between',
     },
     header: {
@@ -116,28 +127,18 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         gap: 12,
     },
-    navItemActive: {
-        backgroundColor: '#EFF6FF',
-    },
     navLabel: {
         fontSize: 15,
         fontWeight: '500',
-        color: '#64748B',
-    },
-    navLabelActive: {
-        color: '#2563EB',
-        fontWeight: '600',
     },
     footer: {
         paddingBottom: 30,
         borderTopWidth: 1,
-        borderTopColor: '#F1F5F9',
         paddingTop: 20,
     },
     userCard: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F8FAFC',
         padding: 12,
         borderRadius: 16,
         gap: 12,
@@ -147,7 +148,6 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#2563EB',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -162,11 +162,9 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 14,
         fontWeight: '700',
-        color: '#1E293B',
     },
     userSub: {
         fontSize: 11,
-        color: '#94A3B8',
     },
     logoutButton: {
         flexDirection: 'row',
@@ -178,6 +176,5 @@ const styles = StyleSheet.create({
     logoutText: {
         fontSize: 14,
         fontWeight: '500',
-        color: '#64748B',
     },
 });

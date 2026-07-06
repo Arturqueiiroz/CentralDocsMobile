@@ -6,10 +6,12 @@ import { useNavigation } from "@react-navigation/native";
 
 import { CustomInput } from "../../components/CustomTextInput";
 import { CustomButton } from "../../components/CustomButton";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function FormularioScreen() {
     // 2. Iniciando a navegação
     const navigation = useNavigation<any>();
+    const { theme, isDarkMode } = useTheme();
 
     const [nome, setNome] = useState("");
     const [cpf, setCpf] = useState("");
@@ -62,9 +64,9 @@ export default function FormularioScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.headerSimulado}>
-                <Text style={styles.headerTitle}>Perfil</Text>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+            <View style={[styles.headerSimulado, { backgroundColor: theme.card, borderBottomColor: theme.borderColor }]}>
+                <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>Perfil</Text>
             </View>
 
             <ScrollView
@@ -78,20 +80,20 @@ export default function FormularioScreen() {
                     onPress={() => navigation.goBack()}
                     activeOpacity={0.7}
                 >
-                    <Ionicons name="arrow-back" size={22} color="#1E293B" />
-                    <Text style={styles.backButtonText}>Voltar</Text>
+                    <Ionicons name="arrow-back" size={22} color={theme.textPrimary} />
+                    <Text style={[styles.backButtonText, { color: theme.textPrimary }]}>Voltar</Text>
                 </TouchableOpacity>
 
-                <Text style={styles.title}>Dados Pessoais</Text>
-                <Text style={styles.subtitle}>Mantenha suas informações atualizadas para uma melhor experiência.</Text>
+                <Text style={[styles.title, { color: theme.textPrimary }]}>Dados Pessoais</Text>
+                <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Mantenha suas informações atualizadas para uma melhor experiência.</Text>
 
                 {/* ==========================
                     INFORMAÇÕES BÁSICAS
                 ========================== */}
-                <View style={[styles.card, dropdownAberto && styles.cardComDropdown]}>
+                <View style={[styles.card, { backgroundColor: theme.card }, dropdownAberto && styles.cardComDropdown]}>
                     <View style={styles.cardHeader}>
-                        <Ionicons name="person-outline" size={18} color="#0A5BC4" />
-                        <Text style={styles.cardTitle}>INFORMAÇÕES BÁSICAS</Text>
+                        <Ionicons name="person-outline" size={18} color={theme.accentColor} />
+                        <Text style={[styles.cardTitle, { color: theme.accentColor }]}>INFORMAÇÕES BÁSICAS</Text>
                     </View>
 
                     <CustomInput
@@ -118,30 +120,31 @@ export default function FormularioScreen() {
                         onChangeText={(p, v) => setDataNascimento(v)}
                     />
 
-                    <Text style={styles.label}>Gênero</Text>
+                    <Text style={[styles.label, { color: theme.textPrimary }]}>Gênero</Text>
                     <View style={styles.dropdownContainer}>
                         <TouchableOpacity
                             style={[
                                 styles.genderButton,
+                                { backgroundColor: theme.card, borderColor: theme.borderColor },
                                 dropdownAberto && styles.genderButtonAberto
                             ]}
                             onPress={() => setDropdownAberto(!dropdownAberto)}
                             activeOpacity={0.8}
                         >
-                            <Text style={styles.genderText}>{genero}</Text>
+                            <Text style={[styles.genderText, { color: theme.textPrimary }]}>{genero}</Text>
                             <Ionicons
                                 name={dropdownAberto ? "chevron-up" : "chevron-down"}
                                 size={18}
-                                color="#666"
+                                color={theme.textSecondary}
                             />
                         </TouchableOpacity>
 
                         {dropdownAberto && (
-                            <View style={styles.dropdownLista}>
+                            <View style={[styles.dropdownLista, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
                                 {opcoesGenero.map((opcao) => (
                                     <TouchableOpacity
                                         key={opcao}
-                                        style={styles.dropdownItem}
+                                        style={[styles.dropdownItem, { borderTopColor: theme.borderColor }]}
                                         onPress={() => {
                                             setGenero(opcao);
                                             setDropdownAberto(false);
@@ -149,7 +152,8 @@ export default function FormularioScreen() {
                                     >
                                         <Text style={[
                                             styles.dropdownItemText,
-                                            genero === opcao && styles.dropdownItemAtivoText
+                                            { color: theme.textSecondary },
+                                            genero === opcao && { color: theme.accentColor, fontWeight: "600" }
                                         ]}>
                                             {opcao}
                                         </Text>
@@ -163,13 +167,13 @@ export default function FormularioScreen() {
                 {/* ==========================
                     ENDEREÇO RESIDENCIAL
                 ========================== */}
-                <View style={styles.card}>
+                <View style={[styles.card, { backgroundColor: theme.card }]}>
                     <View style={styles.cardHeader}>
-                        <Ionicons name="location-outline" size={18} color="#0A5BC4" />
-                        <Text style={styles.cardTitle}>ENDEREÇO RESIDENCIAL</Text>
+                        <Ionicons name="location-outline" size={18} color={theme.accentColor} />
+                        <Text style={[styles.cardTitle, { color: theme.accentColor }]}>ENDEREÇO RESIDENCIAL</Text>
                     </View>
 
-                    <Text style={styles.label}>CEP</Text>
+                    <Text style={[styles.label, { color: theme.textPrimary }]}>CEP</Text>
                     <View style={styles.cepContainer}>
                         <View style={styles.cepInputWrapper}>
                             <CustomInput
@@ -187,8 +191,8 @@ export default function FormularioScreen() {
                                 }}
                             />
                         </View>
-                        <TouchableOpacity style={styles.buscarButton} onPress={() => handleBuscarCep()}>
-                            <Text style={styles.buscarButtonText}>BUSCAR</Text>
+                        <TouchableOpacity style={[styles.buscarButton, { backgroundColor: isDarkMode ? theme.borderColor : '#D0E1FD' }]} onPress={() => handleBuscarCep()}>
+                            <Text style={[styles.buscarButtonText, { color: theme.accentColor }]}>BUSCAR</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -254,10 +258,10 @@ export default function FormularioScreen() {
                 {/* ==========================
                     CONTATO
                 ========================== */}
-                <View style={styles.card}>
+                <View style={[styles.card, { backgroundColor: theme.card }]}>
                     <View style={styles.cardHeader}>
-                        <Ionicons name="mail-outline" size={18} color="#0A5BC4" />
-                        <Text style={styles.cardTitle}>CONTATO</Text>
+                        <Ionicons name="mail-outline" size={18} color={theme.accentColor} />
+                        <Text style={[styles.cardTitle, { color: theme.accentColor }]}>CONTATO</Text>
                     </View>
 
                     <CustomInput

@@ -9,6 +9,7 @@ import { useState } from 'react';
 // ✅ Caminhos corrigidos
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -16,10 +17,11 @@ export default function RegisterScreen() {
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const { theme } = useTheme();
 
     return (
-        <View style={styles.container}>
-            <View style={styles.card}>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
+            <View style={[styles.card, { backgroundColor: theme.card }]}>
 
                 <View style={styles.logoContainer}>
                     <Image
@@ -27,7 +29,7 @@ export default function RegisterScreen() {
                         style={styles.logo}
                     />
 
-                    <Text style={styles.subtitle}>
+                    <Text style={[styles.subtitle, { color: theme.textPrimary }]}>
                         Gerenciamento de documentos
                     </Text>
                 </View>
@@ -72,24 +74,24 @@ export default function RegisterScreen() {
                 />
 
                 <View style={styles.loginContainer}>
-                    <Text style={styles.loginText}>
+                    <Text style={[styles.loginText, { color: theme.textSecondary }]}>
                         Já tem conta?
                     </Text>
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Login')}
                     >
-                        <Text style={styles.loginLink}>
+                        <Text style={[styles.loginLink, { color: theme.accentColor }]}>
                             Fazer login
                         </Text>
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.google}>
-                    <Text>Ou criar com</Text>
+                    <Text style={{ color: theme.textSecondary }}>Ou criar com</Text>
                 </View>
 
-                <TouchableOpacity style={styles.googleButton}>
+                <TouchableOpacity style={[styles.googleButton, { borderColor: theme.borderColor }]}>
                     <Image
                         source={require('../../../../assets/img/google-icon-1.png')}
                         style={styles.googleIcon}

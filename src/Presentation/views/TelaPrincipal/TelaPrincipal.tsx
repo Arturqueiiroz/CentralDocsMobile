@@ -2,30 +2,33 @@ import React from "react";
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Image, } from "react-native";
 import { FooterScreen } from '../../components/Footer';
 import { HeaderScreen } from "../../components/Header";
+import { useTheme } from "../../context/ThemeContext";
 
 export const TelaPrincipalScreen = () => {
+  const { theme, isDarkMode } = useTheme();
+
   return (
     <ScrollView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
       showsVerticalScrollIndicator={false}
     >
       <HeaderScreen />
       <View style={styles.hero}>
 
-        <Text style={styles.badge}>
+        <Text style={[styles.badge, { backgroundColor: isDarkMode ? theme.borderColor : '#EAF3FF', color: theme.accentColor }]}>
           A nova era da gestão digital
         </Text>
 
-        <Text style={styles.title}>
+        <Text style={[styles.title, { color: theme.textPrimary }]}>
           Organize seus documentos em um só lugar
         </Text>
 
-        <Text style={styles.description}>
+        <Text style={[styles.description, { color: theme.textSecondary }]}>
           Segurança, velocidade e organização para sua vida digital.
           Comece grátis hoje mesmo.
         </Text>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: theme.accentColor }]}>
           <Text style={styles.buttonText}>
             Comece agora
           </Text>
@@ -39,44 +42,44 @@ export const TelaPrincipalScreen = () => {
       </View>
       <View style={styles.section}>
 
-        <Text style={styles.sectionTitle}>
+        <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
           Por que{"\n"}CentralDocs?
         </Text>
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
 
           <Image
             source={require("../../../../assets/img/Seguranca (2).png")}
             style={styles.icon}
           />
 
-          <Text style={styles.cardTitle}>
+          <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>
             Segurança
           </Text>
 
-          <Text style={styles.cardText}>
+          <Text style={[styles.cardText, { color: theme.textSecondary }]}>
             Proteção de nível bancário com criptografia de ponta a ponta para
             seus dados mais sensíveis.
           </Text>
 
         </View>
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: theme.card }]}>
 
           <Image
             source={require("../../../../assets/img/Organizacao.png")}
             style={styles.icon}
           />
 
-          <Text style={styles.cardTitle}>
+          <Text style={[styles.cardTitle, { color: theme.textPrimary }]}>
             Organização
           </Text>
 
-          <Text style={styles.cardText}>
+          <Text style={[styles.cardText, { color: theme.textSecondary }]}>
             Pastas inteligentes que se auto-organizam usando inteligência
             artificial avançada.
           </Text>
 
         </View>
-        <View style={styles.cardBlue}>
+        <View style={[styles.cardBlue, { backgroundColor: theme.accentColor }]}>
 
           <Image
             source={require("../../../../assets/img/PesquisaRapida.png")}
@@ -107,7 +110,7 @@ export const TelaPrincipalScreen = () => {
         </Text>
 
         <TouchableOpacity style={styles.ctaButton}>
-          <Text style={styles.ctaButtonText}>
+          <Text style={[styles.ctaButtonText, { color: theme.accentColor }]}>
             Experimente Grátis
           </Text>
         </TouchableOpacity>
@@ -120,7 +123,7 @@ export const TelaPrincipalScreen = () => {
           style={styles.logo}
         />
 
-        <Text style={styles.footerDescription}>
+        <Text style={[styles.footerDescription, { color: theme.textSecondary }]}>
           Sua central de documentos definitiva, segura e acessível de qualquer
           lugar.
         </Text>
@@ -129,31 +132,31 @@ export const TelaPrincipalScreen = () => {
 
           <View>
 
-            <Text style={styles.footerTitle}>Produto</Text>
+            <Text style={[styles.footerTitle, { color: theme.textPrimary }]}>Produto</Text>
 
-            <Text style={styles.footerItem}>Recursos</Text>
+            <Text style={[styles.footerItem, { color: theme.textSecondary }]}>Recursos</Text>
 
-            <Text style={styles.footerItem}>Segurança</Text>
+            <Text style={[styles.footerItem, { color: theme.textSecondary }]}>Segurança</Text>
 
-            <Text style={styles.footerItem}>Preços</Text>
+            <Text style={[styles.footerItem, { color: theme.textSecondary }]}>Preços</Text>
 
           </View>
 
           <View>
 
-            <Text style={styles.footerTitle}>Ajuda</Text>
+            <Text style={[styles.footerTitle, { color: theme.textPrimary }]}>Ajuda</Text>
 
-            <Text style={styles.footerItem}>Suporte</Text>
+            <Text style={[styles.footerItem, { color: theme.textSecondary }]}>Suporte</Text>
 
-            <Text style={styles.footerItem}>Contato</Text>
+            <Text style={[styles.footerItem, { color: theme.textSecondary }]}>Contato</Text>
 
-            <Text style={styles.footerItem}>Privacidade</Text>
+            <Text style={[styles.footerItem, { color: theme.textSecondary }]}>Privacidade</Text>
 
           </View>
 
         </View>
 
-        <View style={styles.hr} />
+        <View style={[styles.hr, { borderBottomColor: theme.borderColor }]} />
 
         <Text style={styles.copy}>
           © 2026 CentralDocs

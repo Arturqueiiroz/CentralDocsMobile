@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {StyleSheet,View,Text,TextInput,TouchableOpacity,ScrollView,Dimensions,} from "react-native";
 import { HeaderScreen } from "../../components/Header";
 import { FooterScreen } from "../../components/Footer";
+import { useTheme } from "../../context/ThemeContext";
 
 interface DocumentItem {
   id: string;
@@ -16,6 +17,8 @@ export default function DocumentosScreen() {
   const [activeTab, setActiveTab] = useState<"Tudo" | "Pessoal" | "Trabalho">(
     "Tudo",
   );
+  const { theme, isDarkMode } = useTheme();
+
   const documentos: DocumentItem[] = [
     {
       id: "1",
@@ -48,10 +51,11 @@ export default function DocumentosScreen() {
   ];
 
  const renderIcon = (type: DocumentItem["iconType"]) => {
+    const iconBg = isDarkMode ? theme.borderColor : undefined;
     switch (type) {
       case "pdf":
         return (
-          <View style={[styles.iconContainer, { backgroundColor: "#EEF4FF" }]}>
+          <View style={[styles.iconContainer, { backgroundColor: iconBg || "#EEF4FF" }]}>
             <Text
               style={{
                 color: "#2F80ED",
@@ -65,28 +69,28 @@ export default function DocumentosScreen() {
 
       case "image":
         return (
-          <View style={[styles.iconContainer, { backgroundColor: "#F5EEFF" }]}>
+          <View style={[styles.iconContainer, { backgroundColor: iconBg || "#F5EEFF" }]}>
             <Text style={{ color: "#9B51E0" }}>🖼️</Text>
           </View>
         );
 
       case "excel":
         return (
-          <View style={[styles.iconContainer, { backgroundColor: "#E6F9EE" }]}>
+          <View style={[styles.iconContainer, { backgroundColor: iconBg || "#E6F9EE" }]}>
             <Text style={{ color: "#27AE60" }}>📊</Text>
           </View>
         );
 
       case "folder":
         return (
-          <View style={[styles.iconContainer, { backgroundColor: "#FFF8EC" }]}>
+          <View style={[styles.iconContainer, { backgroundColor: iconBg || "#FFF8EC" }]}>
             <Text style={{ color: "#F2994A" }}>📁</Text>
           </View>
         );
 
       default:
         return (
-          <View style={styles.iconContainer}>
+          <View style={[styles.iconContainer, iconBg ? { backgroundColor: iconBg } : null]}>
             <Text>📄</Text>
           </View>
         );
@@ -94,24 +98,24 @@ export default function DocumentosScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <HeaderScreen nome="Nickinho" />
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <HeaderScreen />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <View style={styles.searchSection}>
+        <View style={[styles.searchSection, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
           <Text style={styles.searchIcon}>🔍</Text>
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, { color: theme.textPrimary }]}
             placeholder="Pesquise seus arquivos..."
-            placeholderTextColor="#A0AEC0"
+            placeholderTextColor={theme.textSecondary}
           />
         </View>
 
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity style={[styles.addButton, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
           <Text style={styles.addButtonText}>+ Adicionar documento</Text>
         </TouchableOpacity>
 
@@ -119,13 +123,18 @@ export default function DocumentosScreen() {
           {(["Tudo", "Pessoal", "Trabalho"] as const).map((tab) => (
             <TouchableOpacity
               key={tab}
-              style={[styles.chip, activeTab === tab && styles.chipActive]}
+              style={[
+                styles.chip,
+                { backgroundColor: isDarkMode ? theme.borderColor : '#F1F5F9' },
+                activeTab === tab && { backgroundColor: theme.accentColor }
+              ]}
               onPress={() => setActiveTab(tab)}
             >
               <Text
                 style={[
                   styles.chipText,
-                  activeTab === tab && styles.chipTextActive,
+                  { color: theme.textSecondary },
+                  activeTab === tab && { color: "#FFFFFF", fontWeight: "600" },
                 ]}
               >
                 {tab}
@@ -135,20 +144,20 @@ export default function DocumentosScreen() {
         </View>
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Arquivos recentes</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Arquivos recentes</Text>
 
           <TouchableOpacity>
-            <Text style={styles.viewAllText}>Ver tudo</Text>
+            <Text style={[styles.viewAllText, { color: theme.accentColor }]}>Ver tudo</Text>
           </TouchableOpacity>
         </View>
 
         {documentos.map((item) => (
-          <View key={item.id} style={styles.docCard}>
+          <View key={item.id} style={[styles.docCard, { backgroundColor: theme.card }]}>
             {renderIcon(item.iconType)}
 
             <View style={styles.docInfo}>
               <View style={styles.docTitleRow}>
-                <Text style={styles.docTitle} numberOfLines={2}>
+                <Text style={[styles.docTitle, { color: theme.textPrimary }]} numberOfLines={2}>
                   {item.title}
                 </Text>
 
@@ -157,7 +166,9 @@ export default function DocumentosScreen() {
                     styles.badge,
                     {
                       backgroundColor:
-                        item.type === "TRABALHO" ? "#EBF5FF" : "#F3E8FF",
+                        item.type === "TRABALHO" 
+                          ? (isDarkMode ? "rgba(49, 130, 206, 0.15)" : "#EBF5FF") 
+                          : (isDarkMode ? "rgba(107, 70, 193, 0.15)" : "#F3E8FF"),
                     },
                   ]}
                 >
@@ -165,7 +176,9 @@ export default function DocumentosScreen() {
                     style={[
                       styles.badgeText,
                       {
-                        color: item.type === "TRABALHO" ? "#3182CE" : "#6B46C1",
+                        color: item.type === "TRABALHO" 
+                          ? (isDarkMode ? "#63B3ED" : "#3182CE") 
+                          : (isDarkMode ? "#B794F4" : "#6B46C1"),
                       },
                     ]}
                   >
@@ -174,11 +187,11 @@ export default function DocumentosScreen() {
                 </View>
               </View>
 
-              <Text style={styles.docMeta}>{item.info}</Text>
+              <Text style={[styles.docMeta, { color: theme.textSecondary }]}>{item.info}</Text>
             </View>
 
             <TouchableOpacity style={styles.moreButton}>
-              <Text style={styles.moreButtonText}>⋮</Text>
+              <Text style={[styles.moreButtonText, { color: theme.textSecondary }]}>⋮</Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -196,14 +209,14 @@ export default function DocumentosScreen() {
         </View>
 
         <View style={styles.gridContainer}>
-          <TouchableOpacity style={styles.gridCard}>
+          <TouchableOpacity style={[styles.gridCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
             <Text style={styles.gridIcon}>🛡️</Text>
-            <Text style={styles.gridText}>Cofre seguro</Text>
+            <Text style={[styles.gridText, { color: theme.textPrimary }]}>Cofre seguro</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.gridCard}>
+          <TouchableOpacity style={[styles.gridCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
             <Text style={styles.gridIcon}>🔗</Text>
-            <Text style={styles.gridText}>Links compartilhados</Text>
+            <Text style={[styles.gridText, { color: theme.textPrimary }]}>Links compartilhados</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
