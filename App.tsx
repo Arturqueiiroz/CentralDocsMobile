@@ -41,7 +41,7 @@ export default function App() {
         <ThemeProvider>
             <NavigationContainer>
                 <Stack.Navigator
-                    initialRouteName="TelaHome"
+                    initialRouteName="TelaPrincipal"
                     screenOptions={{
                         headerShown: false,
                     }}
@@ -94,6 +94,7 @@ export default function App() {
                         name="SobreNos"
                         component={SobreNosScreen}
                     />
+
                 </Stack.Navigator>
             </NavigationContainer>
         </ThemeProvider>

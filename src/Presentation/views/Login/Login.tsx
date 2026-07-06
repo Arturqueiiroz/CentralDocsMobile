@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
@@ -13,8 +13,17 @@ export const LoginScreen = () => {
     const [password, setPassword] = useState('');
     const { theme } = useTheme();
 
+    // Função de login que navega para a Home
+    const handleLogin = () => {
+        // Aqui você pode adicionar a lógica de autenticação futuramente
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'TelaHome' as any }], // Garante que o usuário não volte para o login
+        });
+    };
+
     return (
-        <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }} style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={[styles.card, { backgroundColor: theme.card }]}>
 
                 <View style={styles.logoContainer}>
@@ -22,181 +31,148 @@ export const LoginScreen = () => {
                         source={require('../../../../assets/img/LogoCentralDocsNova.png')}
                         style={styles.logo}
                     />
-
                     <Text style={[styles.subtitle, { color: theme.textPrimary }]}>
                         Gerenciamento de documentos
                     </Text>
                 </View>
 
-            <CustomInput
-                label="Email"
-                placeholder="Digite seu email"
-                value={email}
-                property="email"
-                onChangeText={(property, value) => setEmail(value)}
-            />
+                <CustomInput
+                    label="Email"
+                    placeholder="Digite seu email"
+                    value={email}
+                    property="email"
+                    onChangeText={(property, value) => setEmail(value)}
+                />
 
-            <View style={styles.passwordHeader}>
-                <Text style={[styles.label, { color: theme.textPrimary }]}>Senha</Text>
+                <View style={styles.passwordHeader}>
+                    <Text style={[styles.label, { color: theme.textPrimary }]}>Senha</Text>
+                </View>
 
+                <CustomInput
+                    placeholder="Digite sua senha"
+                    value={password}
+                    property="password"
+                    secureTextEntry
+                    onChangeText={(property, value) => setPassword(value)}
+                />
 
-            </View>
-
-            <CustomInput
-                placeholder="Digite sua senha"
-                value={password}
-                property="password"
-                secureTextEntry
-                onChangeText={(property, value) => setPassword(value)}
-
-                
-            />
-            
                 <TouchableOpacity style={styles.forgotPasswordContainer}>
                     <Text style={[styles.forgotPassword, { color: theme.accentColor }]}>
                         Esqueceu a senha?
                     </Text>
                 </TouchableOpacity>
+
+                {/* Botão configurado para chamar o handleLogin */}
                 <CustomButton
                     title="Entrar"
-                    onPress={() => {}}
+                    onPress={handleLogin}
                 />
 
                 <View style={styles.registerContainer}>
                     <Text style={[styles.registerText, { color: theme.textSecondary }]}>
                         Não tem conta?
                     </Text>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Cadastro')}
+                    >
+                        <Text style={[styles.registerLink, { color: theme.accentColor }]}>
+                            Criar conta
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('Cadastro')}
-                >
-                    <Text style={[styles.registerLink, { color: theme.accentColor }]}>
-                        Criar conta
-                    </Text>
-                </TouchableOpacity>
-                </View>
                 <View style={styles.google}>
-                   <Text style={{ color: theme.textSecondary }}>Ou entre com</Text> 
+                    <Text style={{ color: theme.textSecondary }}>Ou entre com</Text>
                 </View>
+
                 <TouchableOpacity style={[styles.googleButton, { borderColor: theme.borderColor }]}>
                     <Image
                         source={require('../../../../assets/img/google-icon-1.png')}
                         style={styles.googleIcon}
                     />
-                </TouchableOpacity>                  
+                </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F5F8FF',
-        justifyContent: 'center',
         paddingHorizontal: 20,
     },
-
     card: {
-        backgroundColor: '#FFF',
         borderRadius: 20,
         padding: 25,
         elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
     },
-
     logoContainer: {
         alignItems: 'center',
         marginBottom: 30,
     },
-
     logo: {
-        width: 300,
-        height: 80,
+        width: 250,
+        height: 60,
         resizeMode: 'contain',
     },
-
     subtitle: {
         marginTop: 10,
-        color: '#1f1f1fff',
         fontSize: 17,
-        fontWeight: 600
+        fontWeight: '600',
     },
-
     label: {
-        fontSize: 18,
-        color: '#333',
+        fontSize: 16,
+        fontWeight: '500',
     },
-
     passwordHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 8,
     },
-
-forgotPasswordContainer: {
+    forgotPasswordContainer: {
         alignSelf: 'flex-end',
-        marginTop: 10,
+        marginTop: 5,
         marginBottom: 15,
     },
     forgotPassword: {
-        color: '#0A5BC4',
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: '500',
     },
-
-    loginButton: {
-        backgroundColor: '#0A5BC4',
-        height: 55,
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10,
-    },
-
-    loginButtonText: {
-        color: '#FFF',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-
     registerContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 15,
+        marginTop: 20,
     },
-
     registerText: {
-        color: '#666',
-        fontSize: 17
+        fontSize: 16,
     },
-
     registerLink: {
-        color: '#0A5BC4',
         fontWeight: 'bold',
         marginLeft: 5,
-        fontSize: 17
+        fontSize: 16,
     },
     google: {
         alignItems: 'center',
-        marginTop: 20,
+        marginTop: 25,
     },
-
     googleButton: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 55,
+        height: 55,
+        borderRadius: 27.5,
         borderWidth: 1,
-        borderColor: '#DDD',
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
         marginTop: 15,
     },
-
     googleIcon: {
-        width: 30,
-        height: 30,
+        width: 28,
+        height: 28,
         resizeMode: 'contain',
     },
 });
