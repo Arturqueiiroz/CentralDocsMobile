@@ -17,6 +17,7 @@ import PerfilScreen from "./src/Presentation/views/Perfil/Perfil";
 import ConfiguracoesScreen from "./src/Presentation/views/Configuração/Configuracao";
 import LerDocumentoScreen from "./src/Presentation/views/QRcode/Qrcode";
 import SobreNosScreen from "./src/Presentation/views/SobreNos/Sobrenos";
+import { DadosScreen } from "./src/Presentation/views/DadosPessoais/DadosPessoais";
 
 // Definição dos tipos das rotas para o TypeScript
 export type RootStackParamList = {
@@ -41,7 +42,7 @@ export default function App() {
         <ThemeProvider>
             <NavigationContainer>
                 <Stack.Navigator
-                    initialRouteName="TelaHome"
+                    initialRouteName="Dados"
                     screenOptions={{
                         headerShown: false,
                     }}
@@ -94,6 +95,10 @@ export default function App() {
                         name="SobreNos"
                         component={SobreNosScreen}
                     />
+                    <Stack.Screen
+                        name="Dados"
+                        component={DadosScreen} />
+
                 </Stack.Navigator>
             </NavigationContainer>
         </ThemeProvider>
