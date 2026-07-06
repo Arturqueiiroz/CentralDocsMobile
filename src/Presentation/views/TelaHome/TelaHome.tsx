@@ -4,10 +4,12 @@ import { Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from "../../components/Footer";
+import { useTheme } from '../../context/ThemeContext';
 
 export const TelaHomeScreen = () => {
     const navigation = useNavigation<any>();
     const [menuVisivel, setMenuVisivel] = useState(false);
+    const { theme, isDarkMode } = useTheme();
 
     const irParaFormulario = () => {
         setMenuVisivel(false);
@@ -20,7 +22,7 @@ export const TelaHomeScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
             <HeaderScreen />
 
             <ScrollView
@@ -29,30 +31,30 @@ export const TelaHomeScreen = () => {
             >
                 {/* SAUDAÇÃO */}
                 <View style={styles.welcomeContainer}>
-                    <Text style={styles.welcomeText}>
-                        Bom dia, <Text style={styles.welcomeName}>Nickinho</Text>
+                    <Text style={[styles.welcomeText, { color: theme.textPrimary }]}>
+                        Bom dia, <Text style={[styles.welcomeName, { color: theme.accentColor }]}>Nickinho</Text>
                     </Text>
-                    <Text style={styles.subtitle}>
-                        Seu espaço de trabalho foi <Text style={styles.highlightText}>atualizado</Text>.
+                    <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+                        Seu espaço de trabalho foi <Text style={[styles.highlightText, { color: theme.accentColor }]}>atualizado</Text>.
                     </Text>
                 </View>
 
                 {/* CARDS SUPERIORES */}
                 <View style={styles.cardsRow}>
-                    <View style={styles.infoCard}>
-                        <View style={[styles.cardIconCircle, { backgroundColor: '#EEF4FF' }]}>
-                            <Feather name="file-text" size={20} color="#0061C4" />
+                    <View style={[styles.infoCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                        <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
+                            <Feather name="file-text" size={20} color={theme.accentColor} />
                         </View>
-                        <Text style={styles.number}>128</Text>
-                        <Text style={styles.label}>Documentos</Text>
+                        <Text style={[styles.number, { color: theme.textPrimary }]}>128</Text>
+                        <Text style={[styles.label, { color: theme.textSecondary }]}>Documentos</Text>
                     </View>
 
-                    <View style={styles.infoCard}>
-                        <View style={[styles.cardIconCircle, { backgroundColor: '#EEF4FF' }]}>
-                            <Feather name="users" size={20} color="#0061C4" />
+                    <View style={[styles.infoCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                        <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
+                            <Feather name="users" size={20} color={theme.accentColor} />
                         </View>
-                        <Text style={styles.number}>14</Text>
-                        <Text style={styles.label}>Contribuidores</Text>
+                        <Text style={[styles.number, { color: theme.textPrimary }]}>14</Text>
+                        <Text style={[styles.label, { color: theme.textSecondary }]}>Contribuidores</Text>
                     </View>
                 </View>
 
@@ -75,32 +77,32 @@ export const TelaHomeScreen = () => {
 
                 {/* SEÇÃO ATIVIDADE RECENTE */}
                 <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>Atividade recente</Text>
+                    <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Atividade recente</Text>
                     <TouchableOpacity>
-                        <Text style={styles.seeAll}>Ver tudo</Text>
+                        <Text style={[styles.seeAll, { color: theme.accentColor }]}>Ver tudo</Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* ATIVIDADE */}
-                <View style={styles.activityCard}>
-                    <View style={[styles.activityIconContainer, { backgroundColor: '#EBF5FF' }]}>
-                        <Feather name="file-text" size={20} color="#3182CE" />
+                <View style={[styles.activityCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                    <View style={[styles.activityIconContainer, { backgroundColor: isDarkMode ? theme.borderColor : '#EBF5FF' }]}>
+                        <Feather name="file-text" size={20} color={theme.accentColor} />
                     </View>
                     <View style={styles.activityBody}>
                         <View style={styles.activityHeader}>
-                            <Text style={styles.activityTitle} numberOfLines={1}>Curriculaum.</Text>
+                            <Text style={[styles.activityTitle, { color: theme.textPrimary }]} numberOfLines={1}>Curriculaum.</Text>
                             <TouchableOpacity style={styles.moreButton}>
-                                <Ionicons name="ellipsis-vertical" size={18} color="#A0AEC0" />
+                                <Ionicons name="ellipsis-vertical" size={18} color={theme.textSecondary} />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.activitySubtitle}>Editado há 2 horas</Text>
+                        <Text style={[styles.activitySubtitle, { color: theme.textSecondary }]}>Editado há 2 horas</Text>
                     </View>
                 </View>
             </ScrollView>
 
             {/* BOTÃO FLUTUANTE BASE (FAB) - Sempre fixo e visível abaixo ou acima do modal */}
             <TouchableOpacity
-                style={styles.fab}
+                style={[styles.fab, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}
                 activeOpacity={0.8}
                 onPress={() => setMenuVisivel(!menuVisivel)}
             >
@@ -128,10 +130,10 @@ export const TelaHomeScreen = () => {
                             activeOpacity={0.7}
                             onPress={irParaQR}
                         >
-                            <View style={styles.floatingLabelBlue}>
+                            <View style={[styles.floatingLabelBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
                                 <Text style={styles.floatingLabelTextWhite}>Adicionar Documento</Text>
                             </View>
-                            <View style={styles.miniFabBlue}>
+                            <View style={[styles.miniFabBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
                                 <Ionicons name="qr-code-outline" size={18} color="#FFF" />
                             </View>
                         </TouchableOpacity>
@@ -142,10 +144,10 @@ export const TelaHomeScreen = () => {
                             activeOpacity={0.7}
                             onPress={irParaFormulario}
                         >
-                            <View style={styles.floatingLabelBlue}>
+                            <View style={[styles.floatingLabelBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
                                 <Text style={styles.floatingLabelTextWhite}>Formulário</Text>
                             </View>
-                            <View style={styles.miniFabBlue}>
+                            <View style={[styles.miniFabBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
                                 <Feather name="clipboard" size={18} color="#FFF" />
                             </View>
                         </TouchableOpacity>
@@ -199,7 +201,7 @@ const styles = StyleSheet.create({
     activitySubtitle: { marginTop: 2, color: '#94A3B8', fontSize: 12 },
     moreButton: { padding: 4 },
 
-    // BOTÃO FAB FIXO NA TELA
+   
     fab: {
         position: 'absolute',
         bottom: 95,
@@ -215,7 +217,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 6,
         elevation: 5,
-        zIndex: 999, // Fica visível abaixo do toque do modal, ou acima de tudo.
+        zIndex: 999, 
     },
     fabText: {
         color: '#FFF',
@@ -224,14 +226,14 @@ const styles = StyleSheet.create({
         marginTop: -4,
     },
 
-    // OVERLAY COMPLETAMENTE TRANSPARENTE
+    
     modalOverlayTransparent: {
         flex: 1,
         backgroundColor: 'transparent',
     },
     floatingMenu: {
         position: 'absolute',
-        bottom: 165, // Posicionado cirurgicamente acima dos 56px + 95px do FAB original
+        bottom: 165, 
         right: 20,
         alignItems: 'flex-end',
     },
@@ -241,7 +243,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
 
-    // BALÃO COM FUNDO AZUL
+ 
     floatingLabelBlue: {
         backgroundColor: '#3B82F6',
         paddingVertical: 8,
@@ -254,14 +256,13 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3,
     },
-    // TEXTO BRANCO
+
     floatingLabelTextWhite: {
         fontSize: 14,
         fontWeight: '600',
         color: '#FFFFFF',
     },
 
-    // MINI BOTÃO CIRCULAR AZUL E ALINHADO COM O CENTRO DO FAB PRINCIPAL
     miniFabBlue: {
         width: 40,
         height: 40,
@@ -274,6 +275,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 3,
-        marginRight: 8, // Alinhamento exato para bater com o centro do FAB de 56px de largura
+        marginRight: 8, 
     },
 });

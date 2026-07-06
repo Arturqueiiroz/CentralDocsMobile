@@ -1,4 +1,5 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 
 interface Props {
     title: string;
@@ -6,8 +7,9 @@ interface Props {
 }
 
 export const CustomButton = ({ title, onPress }: Props) => {
+    const { theme } = useTheme();
     return (
-        <TouchableOpacity style={styles.button} onPress={onPress}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: theme.accentColor }]} onPress={onPress}>
             <Text style={styles.buttonText}>{title}</Text>
         </TouchableOpacity>
     );
@@ -15,7 +17,6 @@ export const CustomButton = ({ title, onPress }: Props) => {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#0A5BC4',
         height: 55,
         borderRadius: 10,
         justifyContent: 'center',

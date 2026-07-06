@@ -1,6 +1,7 @@
 import { Text, TextInput, View, StyleSheet, TouchableOpacity, KeyboardTypeOptions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 interface Props {
     label?: string;
@@ -24,18 +25,21 @@ export const CustomInput = ({
     maxLength,
 }: Props) => {
     const [showPassword, setShowPassword] = useState(false);
+    const { theme } = useTheme();
+
     return (
         <View style={styles.container}>
             {label && (
-                <Text style={styles.label}>
+                <Text style={[styles.label, { color: theme.textPrimary }]}>
                     {label}
                 </Text>
             )}
 
-            <View style={styles.inputContainer}>
+            <View style={[styles.inputContainer, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { color: theme.textPrimary }]}
                     placeholder={placeholder}
+                    placeholderTextColor={theme.textSecondary}
                     value={value}
                     secureTextEntry={secureTextEntry && !showPassword}
                     onChangeText={(text) => onChangeText(property, text)}
@@ -50,7 +54,7 @@ export const CustomInput = ({
                         <Ionicons
                             name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                             size={24}
-                            color="#666"
+                            color={theme.textSecondary}
                         />
                     </TouchableOpacity>
                 )}
@@ -67,7 +71,6 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 18,
         marginBottom: 8,
-        color: '#333',
     },
 
     input: {
@@ -79,9 +82,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#D9D9D9',
         borderRadius: 8,
         paddingHorizontal: 15,
-        backgroundColor: '#FFF',
     },
 });

@@ -9,6 +9,7 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { RootStackParamList } from "../../../App";
+import { useTheme } from "../context/ThemeContext";
 
 type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
 type RouteProps = RouteProp<RootStackParamList>;
@@ -16,27 +17,33 @@ type RouteProps = RouteProp<RootStackParamList>;
 export const FooterScreen = () => {
     const navigation = useNavigation<NavigationProps>();
     const route = useRoute<RouteProps>();
+    const { theme, isDarkMode } = useTheme();
+
+    const activeBg = isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#EFF6FF';
+    const activeColor = theme.accentColor;
+    const inactiveColor = theme.textSecondary;
 
     return (
-        <View style={styles.containerIcones}>
+        <View style={[styles.containerIcones, { backgroundColor: theme.card, borderTopColor: theme.borderColor }]}>
             {/* Dashboard */}
             <TouchableOpacity
                 style={[
                     styles.tabItem,
-                    route.name === "TelaHome" && styles.tabItemActive,
+                    route.name === "TelaHome" && { backgroundColor: activeBg },
                 ]}
                 onPress={() => navigation.navigate("TelaHome")}
             >
                 <Ionicons
                     name="grid"
                     size={22}
-                    color={route.name === "TelaHome" ? "#2563EB" : "#8E9AA6"}
+                    color={route.name === "TelaHome" ? activeColor : inactiveColor}
                 />
 
                 <Text
                     style={[
                         styles.tabLabel,
-                        route.name === "TelaHome" && styles.tabLabelActive,
+                        { color: route.name === "TelaHome" ? activeColor : inactiveColor },
+                        route.name === "TelaHome" && { fontWeight: "600" },
                     ]}
                 >
                     Dashboard
@@ -47,20 +54,21 @@ export const FooterScreen = () => {
             <TouchableOpacity
                 style={[
                     styles.tabItem,
-                    route.name === "Documentos" && styles.tabItemActive,
+                    route.name === "Documentos" && { backgroundColor: activeBg },
                 ]}
                 onPress={() => navigation.navigate("Documentos")}
             >
                 <Ionicons
                     name="document-text-outline"
                     size={22}
-                    color={route.name === "Documentos" ? "#2563EB" : "#8E9AA6"}
+                    color={route.name === "Documentos" ? activeColor : inactiveColor}
                 />
 
                 <Text
                     style={[
                         styles.tabLabel,
-                        route.name === "Documentos" && styles.tabLabelActive,
+                        { color: route.name === "Documentos" ? activeColor : inactiveColor },
+                        route.name === "Documentos" && { fontWeight: "600" },
                     ]}
                 >
                     Documentos
@@ -71,20 +79,21 @@ export const FooterScreen = () => {
             <TouchableOpacity
                 style={[
                     styles.tabItem,
-                    route.name === "Perfil" && styles.tabItemActive,
+                    route.name === "Perfil" && { backgroundColor: activeBg },
                 ]}
                 onPress={() => navigation.navigate("Perfil")}
             >
                 <Ionicons
                     name="person-outline"
                     size={22}
-                    color={route.name === "Perfil" ? "#2563EB" : "#8E9AA6"}
+                    color={route.name === "Perfil" ? activeColor : inactiveColor}
                 />
 
                 <Text
                     style={[
                         styles.tabLabel,
-                        route.name === "Perfil" && styles.tabLabelActive,
+                        { color: route.name === "Perfil" ? activeColor : inactiveColor },
+                        route.name === "Perfil" && { fontWeight: "600" },
                     ]}
                 >
                     Perfil
@@ -101,12 +110,10 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         height: 75,
-        backgroundColor: "#FFF",
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
         borderTopWidth: 1,
-        borderTopColor: "#E5E7EB",
         paddingBottom: 12,
     },
 
@@ -118,19 +125,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
 
-    tabItemActive: {
-        backgroundColor: "#EFF6FF",
-    },
-
     tabLabel: {
         fontSize: 11,
-        color: "#8E9AA6",
         marginTop: 4,
         fontWeight: "500",
-    },
-
-    tabLabelActive: {
-        color: "#2563EB",
-        fontWeight: "600",
     },
 });
