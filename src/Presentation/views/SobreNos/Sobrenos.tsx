@@ -1,185 +1,238 @@
-import React from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { HeaderScreen } from '../../components/Header';
-import { FooterScreen } from '../../components/Footer'; // Importando o footer global
-import { useTheme } from '../../context/ThemeContext';
-
-const { width } = Dimensions.get('window');
+import React from "react";
+import { StyleSheet, View, Text, ScrollView, Image } from "react-native";
+import { HeaderScreen } from "../../components/Header";
+import { FooterScreen } from "../../components/Footer";
 
 interface TeamMember {
-    id: string;
-    nome: string;
-    cargo: string;
-    descricao: string;
+  id: string;
+  nome: string;
+  cargo: string;
+  descricao: string;
+  foto: any;
 }
 
 export default function SobreNosScreen() {
-    const { theme, isDarkMode } = useTheme();
-    const equipe: TeamMember[] = [
-        {
-            id: '1',
-            nome: 'Nicolay',
-            cargo: 'Desenvolvedor Front-end',
-            descricao: 'Especialista em criar interfaces intuitivas, responsivas e experiências pixel-perfect.'
-        },
-        {
-            id: '2',
-            nome: 'Matheus',
-            cargo: 'Desenvolvedor Backend',
-            descricao: 'Focado na arquitetura de servidores, segurança de dados e otimização de APIs robustas.'
-        },
-        {
-            id: '3',
-            nome: 'Artur',
-            cargo: 'Desenvolvedor Full-stack',
-            descricao: 'Conectando pontas com maestria, transitando com agilidade entre a lógica de negócios e o cliente.'
-        }
-    ];
+  const equipe: TeamMember[] = [
+    {
+      id: "1",
+      nome: "Nicolay Neves",
+      cargo: "Desenvolvedor Front-end",
+      descricao:
+        "Responsável pela criação das telas e pela experiência dos usuários no aplicativo.",
+        foto: require("../../../../assets/img/Nicolay.jpg"),
+    },
+    {
+      id: "2",
+      nome: "Matheus Cantanhede",
+      cargo: "Desenvolvedor Back-end",
+      descricao:
+        "Responsável pelo desenvolvimento da API, banco de dados e segurança das informações.",
+        foto: require("../../../../assets/img/Matheus.jpg"),
+    },
+    {
+      id: "3",
+      nome: "Artur Queiroz",
+      cargo: "Desenvolvedor Full Stack",
+      descricao:
+        "Responsável pela integração entre o aplicativo, a API e o banco de dados, garantindo o funcionamento do sistema. Além disso, contribui para o desenvolvimento de novas funcionalidades e melhorias na plataforma.",
+        foto: require("../../../../assets/img/Artur.jpg"),
+    },
+  ];
 
-    return (
-        <View style={[styles.container, { backgroundColor: theme.background }]}>
-            <HeaderScreen />
+  const valores = [
+    {
+      titulo: "Segurança",
+      descricao:
+        "Protegemos as informações dos usuários com responsabilidade e confiabilidade.",
+    },
+    {
+      titulo: "Organização",
+      descricao:
+        "Facilitamos o gerenciamento de documentos de forma prática e eficiente.",
+    },
+    {
+      titulo: "Simplicidade",
+      descricao:
+        "Criamos uma experiência intuitiva para que qualquer pessoa possa utilizar o sistema.",
+    },
+  ];
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+  return (
+    <View style={styles.container}>
+      <HeaderScreen nome="CentralDocs" />
 
-                {/* HERO BANNER SUPERIOR */}
-                <View style={[styles.heroBanner, isDarkMode && { backgroundColor: theme.card }]}>
-                    <Text style={styles.heroTitle}>Sobre Nós</Text>
-                    <Text style={[styles.heroSubtitle, isDarkMode && { color: theme.textSecondary }]}>Moldando o futuro da gestão documental segura.</Text>
-                </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
 
-                {/* SEÇÃO: NOSSA MISSÃO */}
-                <View style={[styles.badgeSection, { backgroundColor: isDarkMode ? theme.borderColor : '#EFF6FF' }]}>
-                    <Text style={[styles.badgeText, { color: theme.accentColor }]}>🚀 Nossa Missão</Text>
-                </View>
+        <View style={styles.hero}>
+          <Text style={styles.heroTitle}>Sobre a CentralDocs</Text>
 
-                <View style={[styles.missionCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                    <Text style={[styles.missionTitle, { color: theme.textPrimary }]}>Garantindo o futuro digital</Text>
-                    <Text style={[styles.missionDescription, { color: theme.textSecondary }]}>
-                        Na CentralDocs, acreditamos que a segurança da informação é a espinha dorsal de qualquer organização moderna. Nossa missão é simplificar a complexidade digital, offering ferramentas que garantem soberania e acessibilidade total aos seus documentos mais preciosos.
-                    </Text>
-                    <View style={[styles.progressBarContainer, { backgroundColor: theme.borderColor }]}>
-                        <View style={[styles.progressBarFill, { backgroundColor: theme.accentColor }]} />
-                    </View>
-                </View>
-
-                {/* SEÇÃO: NOSSOS VALORES */}
-                <View style={styles.sectionHeader}>
-                    <Ionicons name="diamond-outline" size={18} color={theme.accentColor} />
-                    <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Nossos Valores</Text>
-                </View>
-
-                <View style={[styles.valueCardFull, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                    <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
-                        <Ionicons name="shield-checkmark-outline" size={22} color={theme.accentColor} />
-                    </View>
-                    <Text style={[styles.valueCardTitle, { color: theme.textPrimary }]}>Confiança</Text>
-                    <Text style={[styles.valueCardSubtitle, { color: theme.textSecondary }]}>Segurança inabalável em cada transação e armazenamento.</Text>
-                </View>
-
-                <View style={styles.gridValues}>
-                    <View style={[styles.valueCardHalf, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                        <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
-                            <Ionicons name="flash-outline" size={22} color={theme.accentColor} />
-                        </View>
-                        <Text style={[styles.valueCardTitle, { color: theme.textPrimary }]}>Utilitário</Text>
-                        <Text style={[styles.valueCardSubtitle, { color: theme.textSecondary }]}>Foco na eficiência e usabilidade extrema.</Text>
-                    </View>
-
-                    <View style={[styles.valueCardHalf, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                        <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
-                            <Ionicons name="people-outline" size={22} color={theme.accentColor} />
-                        </View>
-                        <Text style={[styles.valueCardTitle, { color: theme.textPrimary }]}>Inclusão</Text>
-                        <Text style={[styles.valueCardSubtitle, { color: theme.textSecondary }]}>Tecnologia acessível para todos.</Text>
-                    </View>
-                </View>
-
-                {/* SEÇÃO: NOSSA EQUIPE */}
-                <View style={styles.sectionHeader}>
-                    <Ionicons name="people-outline" size={18} color={theme.accentColor} />
-                    <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Nossa Equipe</Text>
-                </View>
-
-                {equipe.map((membro) => {
-                    const inicial = membro.nome ? membro.nome.charAt(0).toUpperCase() : '?';
-                    return (
-                        <View key={membro.id} style={[styles.memberCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                            <View style={[styles.avatarPlaceholder, { backgroundColor: isDarkMode ? theme.borderColor : '#1E293B' }]}>
-                                <Text style={styles.avatarText}>{inicial}</Text>
-                                <View style={[styles.verifiedBadge, { backgroundColor: theme.accentColor, borderColor: theme.card }]}>
-                                    <MaterialCommunityIcons name="check-decagram" size={12} color="#FFFFFF" />
-                                </View>
-                            </View>
-
-                            <View style={styles.memberInfo}>
-                                <Text style={[styles.memberName, { color: theme.textPrimary }]}>{membro.nome}</Text>
-                                <Text style={[styles.memberRole, { color: theme.accentColor }]}>{membro.cargo}</Text>
-                                <Text style={[styles.memberDescription, { color: theme.textSecondary }]} numberOfLines={2}>
-                                    {membro.descricao}
-                                </Text>
-                            </View>
-                        </View>
-                    );
-                })}
-            </ScrollView>
-
-            {/* ADICIONANDO O FOOTER GLOBAL */}
-            <FooterScreen />
+          <Text style={styles.heroSubtitle}>
+            Desenvolvemos uma plataforma para armazenar, organizar e acessar
+            documentos de forma simples, segura e rápida.
+          </Text>
         </View>
-    );
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Nossa missão</Text>
+
+          <View style={styles.card}>
+            <Text style={styles.cardText}>
+              Oferecer uma solução prática para o gerenciamento de documentos,
+              proporcionando mais segurança, organização e facilidade no dia a
+              dia de pessoas e empresas.
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Nossos valores</Text>
+
+          {valores.map((valor, index) => (
+            <View key={index} style={styles.card}>
+              <Text style={styles.cardTitle}>{valor.titulo}</Text>
+
+              <Text style={styles.cardText}>{valor.descricao}</Text>
+            </View>
+          ))}
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Nossa equipe</Text>
+
+          {equipe.map((membro) => (
+            <View key={membro.id} style={styles.memberCard}>
+<Image
+    source={membro.foto}
+    style={styles.avatar}
+/>
+
+              <View style={styles.memberInfo}>
+                <Text style={styles.memberName}>{membro.nome}</Text>
+
+                <Text style={styles.memberRole}>{membro.cargo}</Text>
+
+                <Text style={styles.memberDescription}>
+                  {membro.descricao}
+                </Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+
+      <FooterScreen />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F8FAFC',
-    },
-    scrollContent: {
-        paddingHorizontal: 20,
-        paddingBottom: 40,
-    },
-    // ... mantive todos os seus estilos originais, 
-    // apenas removi os estilos da 'tabBar' antiga que não são mais necessários
-    heroBanner: {
-        backgroundColor: '#1E293B',
-        borderRadius: 24,
-        paddingVertical: 45,
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 15,
-        marginBottom: 25,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
-        elevation: 4,
-    },
-    heroTitle: { color: '#FFFFFF', fontSize: 28, fontWeight: '800', marginBottom: 8, letterSpacing: -0.5 },
-    heroSubtitle: { color: '#94A3B8', fontSize: 13, textAlign: 'center', lineHeight: 18, paddingHorizontal: 15 },
-    badgeSection: { backgroundColor: '#EFF6FF', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, alignSelf: 'flex-start', marginBottom: 12 },
-    badgeText: { color: '#1D68E4', fontSize: 12, fontWeight: '700' },
-    missionCard: { backgroundColor: '#FFFFFF', borderRadius: 20, borderWidth: 1, borderColor: '#E2E8F0', padding: 20, marginBottom: 30 },
-    missionTitle: { fontSize: 20, fontWeight: '700', color: '#1E293B', marginBottom: 12 },
-    missionDescription: { fontSize: 13, color: '#64748B', lineHeight: 20, marginBottom: 18 },
-    progressBarContainer: { height: 4, backgroundColor: '#E2E8F0', borderRadius: 2, width: '100%' },
-    progressBarFill: { height: '100%', backgroundColor: '#1D68E4', borderRadius: 2, width: '65%' },
-    sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 15, paddingHorizontal: 4 },
-    sectionTitle: { fontSize: 16, fontWeight: '700', color: '#1E293B' },
-    valueCardFull: { backgroundColor: '#FFFFFF', borderRadius: 20, borderWidth: 1, borderColor: '#E2E8F0', padding: 16, marginBottom: 12 },
-    iconWrapper: { width: 40, height: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
-    valueCardTitle: { fontSize: 15, fontWeight: '700', color: '#1E293B', marginBottom: 4 },
-    valueCardSubtitle: { fontSize: 12, color: '#64748B', lineHeight: 16 },
-    gridValues: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30 },
-    valueCardHalf: { backgroundColor: '#FFFFFF', borderRadius: 20, borderWidth: 1, borderColor: '#E2E8F0', padding: 16, width: (width - 52) / 2 },
-    memberCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 20, padding: 15, borderWidth: 1, borderColor: '#E2E8F0', marginBottom: 12 },
-    avatarPlaceholder: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#1E293B', justifyContent: 'center', alignItems: 'center', position: 'relative', marginRight: 15 },
-    avatarText: { color: '#FFFFFF', fontSize: 22, fontWeight: '700' },
-    verifiedBadge: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#1D68E4', width: 18, height: 18, borderRadius: 9, justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#FFFFFF' },
-    memberInfo: { flex: 1 },
-    memberName: { fontSize: 15, fontWeight: '700', color: '#1E293B' },
-    memberRole: { fontSize: 12, fontWeight: '600', color: '#2563EB', marginTop: 2, marginBottom: 4 },
-    memberDescription: { fontSize: 11, color: '#94A3B8', lineHeight: 15 },
+  container: {
+    flex: 1,
+    backgroundColor: "#F5F7FA",
+  },
+
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 18,
+    paddingBottom: 40,
+  },
+  hero: {
+    backgroundColor: "#1D68E4",
+    borderRadius: 14,
+    paddingVertical: 30,
+    paddingHorizontal: 22,
+    marginBottom: 28,
+  },
+
+  heroTitle: {
+    fontSize: 26,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 10,
+  },
+
+  heroSubtitle: {
+    fontSize: 15,
+    lineHeight: 22,
+    color: "#E8EEF9",
+  },
+  section: {
+    marginBottom: 28,
+  },
+
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#1F2937",
+    marginBottom: 14,
+  },
+
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    padding: 18,
+    marginBottom: 12,
+  },
+
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#1D68E4",
+    marginBottom: 8,
+  },
+
+  cardText: {
+    fontSize: 14,
+    color: "#4B5563",
+    lineHeight: 22,
+  },
+
+  memberCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    padding: 16,
+    marginBottom: 14,
+  },
+
+avatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    marginRight: 16,
+    borderWidth: 2,
+    borderColor: "#E5E7EB",
+},
+
+  memberInfo: {
+    flex: 1,
+  },
+
+  memberName: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: "#111827",
+  },
+
+  memberRole: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#1D68E4",
+    marginTop: 2,
+    marginBottom: 6,
+  },
+
+  memberDescription: {
+    fontSize: 13,
+    lineHeight: 20,
+    color: "#6B7280",
+  },
 });
