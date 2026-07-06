@@ -2,29 +2,31 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { HeaderScreen } from '../../components/Header'; // Mantendo a consistência do cabeçalho
+import { useTheme } from '../../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
 export default function LerDocumentoScreen() {
+    const { theme } = useTheme();
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.background }]}>
             {/* Cabeçalho padrão do CentralDocs */}
-            <HeaderScreen nome="Nickinho" />
+            <HeaderScreen />
 
             <View style={styles.content}>
                 {/* TÍTULO E SUBTÍTULO */}
-                <Text style={styles.title}>Ler Documento</Text>
-                <Text style={styles.subtitle}>
+                <Text style={[styles.title, { color: theme.textPrimary }]}>Ler Documento</Text>
+                <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
                     Aponte a câmera para o QR Code presente no documento impresso.
                 </Text>
 
                 {/* ÁREA DO SCANNER (VIEWFINDER SIMULADO) */}
                 <View style={styles.scannerWrapper}>
                     {/* Cantos guias azuis da câmera */}
-                    <View style={[styles.corner, styles.topLeft]} />
-                    <View style={[styles.corner, styles.topRight]} />
-                    <View style={[styles.corner, styles.bottomLeft]} />
-                    <View style={[styles.corner, styles.bottomRight]} />
+                    <View style={[styles.corner, styles.topLeft, { borderColor: theme.accentColor }]} />
+                    <View style={[styles.corner, styles.topRight, { borderColor: theme.accentColor }]} />
+                    <View style={[styles.corner, styles.bottomLeft, { borderColor: theme.accentColor }]} />
+                    <View style={[styles.corner, styles.bottomRight, { borderColor: theme.accentColor }]} />
 
                     {/* Imagem interna demonstrativa do scanner */}
                     <View style={styles.imageContainer}>
@@ -43,24 +45,24 @@ export default function LerDocumentoScreen() {
                 {/* CONTROLES DA CÂMERA */}
                 <View style={styles.controlsContainer}>
                     {/* Botão da Lanterna */}
-                    <TouchableOpacity style={styles.secondaryButton} activeOpacity={0.7}>
-                        <Ionicons name="flashlight-outline" size={24} color="#1D68E4" />
+                    <TouchableOpacity style={[styles.secondaryButton, { backgroundColor: theme.card }]} activeOpacity={0.7}>
+                        <Ionicons name="flashlight-outline" size={24} color={theme.accentColor} />
                     </TouchableOpacity>
 
                     {/* Botão de Disparo Principal */}
-                    <TouchableOpacity style={styles.mainCaptureButton} activeOpacity={0.8}>
-                        <View style={styles.mainCaptureInner} />
+                    <TouchableOpacity style={[styles.mainCaptureButton, { borderColor: theme.accentColor }]} activeOpacity={0.8}>
+                        <View style={[styles.mainCaptureInner, { backgroundColor: theme.accentColor }]} />
                     </TouchableOpacity>
 
                     {/* Botão da Galeria */}
-                    <TouchableOpacity style={styles.secondaryButton} activeOpacity={0.7}>
-                        <Ionicons name="image-outline" size={24} color="#1D68E4" />
+                    <TouchableOpacity style={[styles.secondaryButton, { backgroundColor: theme.card }]} activeOpacity={0.7}>
+                        <Ionicons name="image-outline" size={24} color={theme.accentColor} />
                     </TouchableOpacity>
                 </View>
 
                 {/* TEXTO AUXILIAR INFERIOR */}
                 <TouchableOpacity activeOpacity={0.6}>
-                    <Text style={styles.galleryText}>Fazer upload da galeria</Text>
+                    <Text style={[styles.galleryText, { color: theme.textSecondary }]}>Fazer upload da galeria</Text>
                 </TouchableOpacity>
             </View>
         </View>

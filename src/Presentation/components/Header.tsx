@@ -6,6 +6,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../App";
 
 import CustomDrawer from "./CustomDrawer";
+import { useTheme } from "../context/ThemeContext";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -13,19 +14,20 @@ export function HeaderScreen() {
     const navigation = useNavigation<NavigationProp>();
     const route = useRoute();
     const [menuAberto, setMenuAberto] = useState(false);
+    const { theme } = useTheme();
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: theme.card }]}>
             {/* CABEÇALHO DA TELA */}
-            <View style={styles.headerBody}>
+            <View style={[styles.headerBody, { borderBottomColor: theme.borderColor }]}>
                 <TouchableOpacity onPress={() => setMenuAberto(true)} style={styles.menuButton}>
-                    <Ionicons name="menu" size={28} color="#1E293B" />
+                    <Ionicons name="menu" size={28} color={theme.textPrimary} />
                 </TouchableOpacity>
 
-                <Text style={styles.title}>CentralDocs</Text>
+                <Text style={[styles.title, { color: theme.textPrimary }]}>CentralDocs</Text>
 
                 <TouchableOpacity style={styles.menuButton}>
-                    <Ionicons name="notifications-outline" size={24} color="#1E293B" />
+                    <Ionicons name="notifications-outline" size={24} color={theme.textPrimary} />
                 </TouchableOpacity>
             </View>
 
@@ -58,7 +60,6 @@ export function HeaderScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#FFFFFF',
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     },
     headerBody: {
@@ -68,12 +69,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 16,
         borderBottomWidth: 1,
-        borderBottomColor: '#E2E8F0',
     },
     title: {
         fontSize: 18,
         fontWeight: '700',
-        color: '#1E293B',
     },
     menuButton: {
         padding: 4,
