@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import {StyleSheet,View,Text,TextInput,TouchableOpacity,ScrollView,Dimensions,} from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  Image,
+} from "react-native";
 import { HeaderScreen } from "../../components/Header";
 import { FooterScreen } from "../../components/Footer";
 import { useTheme } from "../../context/ThemeContext";
@@ -7,11 +16,80 @@ import { useTheme } from "../../context/ThemeContext";
 interface DocumentItem {
   id: string;
   title: string;
-  type: "TRABALHO" | "PESSOAL";
+  type: string;
   info: string;
-  iconType: "pdf" | "image" | "excel" | "folder";
+  iconType: "RG" | "CNH" | "RA" | "e-titulo";
+  foto?: any; 
 }
+
+interface DocumentVisual {
+  label: string;
+  iconBg: string;
+  iconText: string;
+  badgeBg: string;
+  badgeText: string;
+  image?: any;
+}
+
 const { width } = Dimensions.get("window");
+
+const getDocumentVisual = (
+  item: DocumentItem,
+  isDarkMode: boolean,
+): DocumentVisual => {
+  const typeColors =
+    item.type === "TRABALHO"
+      ? {
+          badgeBg: isDarkMode ? "rgba(96, 165, 250, 0.16)" : "#E8F1FF",
+          badgeText: isDarkMode ? "#93C5FD" : "#2563EB",
+        }
+      : {
+          badgeBg: isDarkMode ? "rgba(192, 132, 252, 0.16)" : "#F4E8FF",
+          badgeText: isDarkMode ? "#D8B4FE" : "#7C3AED",
+        };
+
+  switch (item.iconType) {
+    case "RG":
+      return {
+        label: "RG",
+        iconBg: isDarkMode ? "rgba(59, 130, 246, 0.14)" : "#EAF2FF",
+        iconText: isDarkMode ? "#93C5FD" : "#2563EB",
+        ...typeColors,
+      };
+
+    case "CNH":
+      return {
+        label: "CNH",
+        iconBg: isDarkMode ? "rgba(34, 197, 94, 0.14)" : "#E9F9EF",
+        iconText: isDarkMode ? "#86EFAC" : "#15803D",
+        ...typeColors,
+      };
+
+    case "RA":
+      return {
+        label: "RA",
+        iconBg: isDarkMode ? "rgba(245, 158, 11, 0.14)" : "#FFF4DE",
+        iconText: isDarkMode ? "#FCD34D" : "#D97706",
+        ...typeColors,
+      };
+
+    case "e-titulo":
+      return {
+        label: "TIT",
+        iconBg: isDarkMode ? "rgba(168, 85, 247, 0.14)" : "#F5EBFF",
+        iconText: isDarkMode ? "#D8B4FE" : "#7C3AED",
+        ...typeColors,
+      };
+
+    default:
+      return {
+        label: "DOC",
+        iconBg: isDarkMode ? "rgba(148, 163, 184, 0.18)" : "#EEF2F7",
+        iconText: isDarkMode ? "#CBD5E1" : "#475569",
+        ...typeColors,
+      };
+  }
+};
 
 export default function DocumentosScreen() {
   const [activeTab, setActiveTab] = useState<"Tudo" | "Pessoal" | "Trabalho">(
@@ -22,80 +100,41 @@ export default function DocumentosScreen() {
   const documentos: DocumentItem[] = [
     {
       id: "1",
-      title: "Relatório Financeiro do 4º Trimestre.pdf",
-      type: "TRABALHO",
+      title: "Registro Geral",
+      type: "Documento",
       info: "Modificado há 2 horas • 2,4 MB",
-      iconType: "pdf",
+      iconType: "RG",
+    
     },
     {
       id: "2",
-      title: "Passport_Scan_Front.jpg",
-      type: "PESSOAL",
+      title: "Carteira Nacional de Habilitação",
+      type: "Documento",
       info: "Modificado ontem • 1,1 MB",
-      iconType: "image",
+      iconType: "CNH",
+  
     },
     {
       id: "3",
-      title: "Project Timeline v3.xlsx",
-      type: "TRABALHO",
+      title: "Certificado de Reservista",
+      type: "Documento",
       info: "Modificado há 3 dias • 840 KB",
-      iconType: "excel",
+      iconType: "RA",
+    
     },
     {
       id: "4",
-      title: "Fotos de férias de 2024",
-      type: "PESSOAL",
+      title: "Titulo Eleitoral",
+      type: "Documento",
       info: "14 itens • Modificado há 1 semana atrás",
-      iconType: "folder",
+      iconType: "e-titulo",
+      
     },
   ];
 
- const renderIcon = (type: DocumentItem["iconType"]) => {
-    const iconBg = isDarkMode ? theme.borderColor : undefined;
-    switch (type) {
-      case "pdf":
-        return (
-          <View style={[styles.iconContainer, { backgroundColor: iconBg || "#EEF4FF" }]}>
-            <Text
-              style={{
-                color: "#2F80ED",
-                fontWeight: "bold",
-              }}
-            >
-              📄
-            </Text>
-          </View>
-        );
-
-      case "image":
-        return (
-          <View style={[styles.iconContainer, { backgroundColor: iconBg || "#F5EEFF" }]}>
-            <Text style={{ color: "#9B51E0" }}>🖼️</Text>
-          </View>
-        );
-
-      case "excel":
-        return (
-          <View style={[styles.iconContainer, { backgroundColor: iconBg || "#E6F9EE" }]}>
-            <Text style={{ color: "#27AE60" }}>📊</Text>
-          </View>
-        );
-
-      case "folder":
-        return (
-          <View style={[styles.iconContainer, { backgroundColor: iconBg || "#FFF8EC" }]}>
-            <Text style={{ color: "#F2994A" }}>📁</Text>
-          </View>
-        );
-
-      default:
-        return (
-          <View style={[styles.iconContainer, iconBg ? { backgroundColor: iconBg } : null]}>
-            <Text>📄</Text>
-          </View>
-        );
-    }
-  };
+  const softSurface = isDarkMode ? "rgba(255,255,255,0.04)" : "#F8FAFC";
+  const softBorder = isDarkMode ? "rgba(255,255,255,0.06)" : "#E2E8F0";
+  const elevatedShadow = isDarkMode ? "#000000" : "#0F172A";
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -105,36 +144,114 @@ export default function DocumentosScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <View style={[styles.searchSection, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-          <Text style={styles.searchIcon}>🔍</Text>
+        <View
+          style={[
+            styles.heroCard,
+            {
+              backgroundColor: theme.card,
+              borderColor: softBorder,
+              shadowColor: elevatedShadow,
+            },
+          ]}
+        >
+          <Text style={[styles.heroEyebrow, { color: theme.textSecondary }]}>
+            Central de documentos
+          </Text>
 
-          <TextInput
-            style={[styles.input, { color: theme.textPrimary }]}
-            placeholder="Pesquise seus arquivos..."
-            placeholderTextColor={theme.textSecondary}
-          />
+          <Text style={[styles.heroTitle, { color: theme.textPrimary }]}>
+            Organize, proteja e acesse seus arquivos com clareza.
+          </Text>
+
+          <View
+            style={[
+              styles.searchSection,
+              {
+                backgroundColor: softSurface,
+                borderColor: softBorder,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.searchIconWrapper,
+                {
+                  backgroundColor: isDarkMode
+                    ? "rgba(96, 165, 250, 0.14)"
+                    : "#EAF2FF",
+                },
+              ]}
+            >
+              <Text style={[styles.searchIcon, { color: theme.accentColor }]}>
+                ⌕
+              </Text>
+            </View>
+
+            <TextInput
+              style={[styles.input, { color: theme.textPrimary }]}
+              placeholder="Pesquise seus arquivos..."
+              placeholderTextColor={theme.textSecondary}
+            />
+          </View>
+
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={[
+              styles.addButton,
+              {
+                backgroundColor: theme.accentColor,
+                shadowColor: theme.accentColor,
+              },
+            ]}
+          >
+            <View style={styles.addButtonContent}>
+              <View style={styles.addButtonIconWrapper}>
+                <Text style={styles.addButtonIcon}>＋</Text>
+              </View>
+
+              <Text style={styles.addButtonText}>Adicionar documento</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={[styles.addButton, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
-          <Text style={styles.addButtonText}>+ Adicionar documento</Text>
-        </TouchableOpacity>
+        <View style={styles.filterHeader}>
+          <Text style={[styles.filterTitle, { color: theme.textPrimary }]}>
+            Categorias
+          </Text>
+          <Text style={[styles.filterSubtitle, { color: theme.textSecondary }]}>
+            Filtre sua biblioteca rapidamente
+          </Text>
+        </View>
 
         <View style={styles.chipsContainer}>
-          {(["Tudo", "Pessoal", "Trabalho"] as const).map((tab) => (
+          {(["Tudo",] as const).map((tab) => (
             <TouchableOpacity
               key={tab}
+              activeOpacity={0.9}
               style={[
                 styles.chip,
-                { backgroundColor: isDarkMode ? theme.borderColor : '#F1F5F9' },
-                activeTab === tab && { backgroundColor: theme.accentColor }
+                {
+                  backgroundColor:
+                    activeTab === tab
+                      ? theme.accentColor
+                      : isDarkMode
+                        ? "rgba(255,255,255,0.05)"
+                        : "#F1F5F9",
+                  borderColor:
+                    activeTab === tab
+                      ? theme.accentColor
+                      : softBorder,
+                },
               ]}
               onPress={() => setActiveTab(tab)}
             >
               <Text
                 style={[
                   styles.chipText,
-                  { color: theme.textSecondary },
-                  activeTab === tab && { color: "#FFFFFF", fontWeight: "600" },
+                  {
+                    color:
+                      activeTab === tab ? "#FFFFFF" : theme.textSecondary,
+                    fontWeight: activeTab === tab ? "700" : "600",
+                  },
                 ]}
               >
                 {tab}
@@ -144,58 +261,128 @@ export default function DocumentosScreen() {
         </View>
 
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Arquivos recentes</Text>
+          <View>
+            <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
+              Arquivos recentes
+            </Text>
+            <Text
+              style={[styles.sectionSubtitle, { color: theme.textSecondary }]}
+            >
+              Seus últimos documentos acessados
+            </Text>
+          </View>
 
-          <TouchableOpacity>
-            <Text style={[styles.viewAllText, { color: theme.accentColor }]}>Ver tudo</Text>
+          <TouchableOpacity activeOpacity={0.85} style={styles.sectionAction}>
+            <Text style={[styles.viewAllText, { color: theme.accentColor }]}>
+              Ver tudo
+            </Text>
           </TouchableOpacity>
         </View>
 
-        {documentos.map((item) => (
-          <View key={item.id} style={[styles.docCard, { backgroundColor: theme.card }]}>
-            {renderIcon(item.iconType)}
+        {documentos.map((item) => {
+          const visual = getDocumentVisual(item, isDarkMode);
 
-            <View style={styles.docInfo}>
-              <View style={styles.docTitleRow}>
-                <Text style={[styles.docTitle, { color: theme.textPrimary }]} numberOfLines={2}>
-                  {item.title}
-                </Text>
+          return (
+            <View
+              key={item.id}
+              style={[
+                styles.docCard,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: softBorder,
+                  shadowColor: elevatedShadow,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.iconContainer,
+                  { backgroundColor: visual.iconBg },
+                ]}
+              >
+                {visual.image ? (
+                  <Image source={visual.image} style={styles.iconImage} />
+                ) : (
+                  <Text style={[styles.iconLabel, { color: visual.iconText }]}>
+                    {visual.label}
+                  </Text>
+                )}
+              </View>
 
-                <View
-                  style={[
-                    styles.badge,
-                    {
-                      backgroundColor:
-                        item.type === "TRABALHO" 
-                          ? (isDarkMode ? "rgba(49, 130, 206, 0.15)" : "#EBF5FF") 
-                          : (isDarkMode ? "rgba(107, 70, 193, 0.15)" : "#F3E8FF"),
-                    },
-                  ]}
-                >
+              <View style={styles.docInfo}>
+                <View style={styles.docTopRow}>
                   <Text
+                    style={[styles.docTitle, { color: theme.textPrimary }]}
+                    numberOfLines={2}
+                  >
+                    {item.title}
+                  </Text>
+
+                  <TouchableOpacity
+                    activeOpacity={0.8}
                     style={[
-                      styles.badgeText,
+                      styles.moreButton,
                       {
-                        color: item.type === "TRABALHO" 
-                          ? (isDarkMode ? "#63B3ED" : "#3182CE") 
-                          : (isDarkMode ? "#B794F4" : "#6B46C1"),
+                        backgroundColor: isDarkMode
+                          ? "rgba(255,255,255,0.05)"
+                          : "#F8FAFC",
+                        borderColor: softBorder,
                       },
                     ]}
                   >
-                    {item.type}
+                    <Text
+                      style={[
+                        styles.moreButtonText,
+                        { color: theme.textSecondary },
+                      ]}
+                    >
+                      ⋯
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={styles.docBottomRow}>
+                  <Text
+                    style={[styles.docMeta, { color: theme.textSecondary }]}
+                    numberOfLines={1}
+                  >
+                    {item.info}
                   </Text>
+
+                  <View
+                    style={[
+                      styles.badge,
+                      { backgroundColor: visual.badgeBg },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.badgeText,
+                        { color: visual.badgeText },
+                      ]}
+                    >
+                      {item.type}
+                    </Text>
+                  </View>
                 </View>
               </View>
-
-              <Text style={[styles.docMeta, { color: theme.textSecondary }]}>{item.info}</Text>
             </View>
+          );
+        })}
 
-            <TouchableOpacity style={styles.moreButton}>
-              <Text style={[styles.moreButtonText, { color: theme.textSecondary }]}>⋮</Text>
-            </TouchableOpacity>
+        <View
+          style={[
+            styles.upgradeBanner,
+            {
+              backgroundColor: isDarkMode ? "#1D4ED8" : "#3B82F6",
+              shadowColor: isDarkMode ? "#000000" : "#2563EB",
+            },
+          ]}
+        >
+          <View style={styles.bannerPill}>
+            <Text style={styles.bannerPillText}>PRO</Text>
           </View>
-        ))}
-        <View style={styles.upgradeBanner}>
+
           <Text style={styles.bannerTitle}>Armazenamento em nuvem cheio?</Text>
 
           <Text style={styles.bannerSubtitle}>
@@ -203,20 +390,72 @@ export default function DocumentosScreen() {
             criptografado de documentos.
           </Text>
 
-          <TouchableOpacity style={styles.upgradeButton}>
+          <TouchableOpacity activeOpacity={0.9} style={styles.upgradeButton}>
             <Text style={styles.upgradeButtonText}>Atualize agora</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.gridContainer}>
-          <TouchableOpacity style={[styles.gridCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-            <Text style={styles.gridIcon}>🛡️</Text>
-            <Text style={[styles.gridText, { color: theme.textPrimary }]}>Cofre seguro</Text>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={[
+              styles.gridCard,
+              {
+                backgroundColor: theme.card,
+                borderColor: softBorder,
+                shadowColor: elevatedShadow,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.gridIconWrapper,
+                {
+                  backgroundColor: isDarkMode
+                    ? "rgba(34, 197, 94, 0.14)"
+                    : "#EAFBF1",
+                },
+              ]}
+            >
+              <Text style={[styles.gridIconText, { color: "#16A34A" }]}>
+                SAFE
+              </Text>
+            </View>
+
+            <Text style={[styles.gridText, { color: theme.textPrimary }]}>
+              Cofre seguro
+            </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.gridCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-            <Text style={styles.gridIcon}>🔗</Text>
-            <Text style={[styles.gridText, { color: theme.textPrimary }]}>Links compartilhados</Text>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={[
+              styles.gridCard,
+              {
+                backgroundColor: theme.card,
+                borderColor: softBorder,
+                shadowColor: elevatedShadow,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.gridIconWrapper,
+                {
+                  backgroundColor: isDarkMode
+                    ? "rgba(59, 130, 246, 0.14)"
+                    : "#EAF2FF",
+                },
+              ]}
+            >
+              <Text style={[styles.gridIconText, { color: "#2563EB" }]}>
+                LINK
+              </Text>
+            </View>
+
+            <Text style={[styles.gridText, { color: theme.textPrimary }]}>
+              Links compartilhados
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -234,196 +473,313 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 140,
+    paddingTop: 14,
+    paddingBottom: 148,
+  },
+
+  heroCard: {
+    borderRadius: 26,
+    padding: 18,
+    marginBottom: 24,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.08,
+    shadowRadius: 28,
+    elevation: 4,
+  },
+
+  heroEyebrow: {
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
+    marginBottom: 8,
+  },
+
+  heroTitle: {
+    fontSize: 24,
+    lineHeight: 32,
+    fontWeight: "800",
+    marginBottom: 18,
   },
 
   searchSection: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+    borderRadius: 18,
+    paddingHorizontal: 14,
+    height: 58,
+    marginBottom: 14,
+  },
+
+  searchIconWrapper: {
+    width: 34,
+    height: 34,
     borderRadius: 12,
-    marginVertical: 15,
-    paddingHorizontal: 15,
-    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
   },
 
   searchIcon: {
-    marginRight: 10,
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight: "700",
   },
 
   input: {
     flex: 1,
-    color: "#1A202C",
+    fontSize: 15,
+    fontWeight: "500",
   },
 
   addButton: {
-    backgroundColor: "#0061C4",
-    borderRadius: 12,
-    height: 50,
+    borderRadius: 18,
+    minHeight: 58,
+    justifyContent: "center",
+    paddingHorizontal: 18,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.22,
+    shadowRadius: 20,
+    elevation: 5,
+  },
+
+  addButtonContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  addButtonIconWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 10,
+    backgroundColor: "rgba(255,255,255,0.16)",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#0061C4",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 3,
+    marginRight: 10,
+  },
+
+  addButtonIcon: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
   },
 
   addButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
+    letterSpacing: 0.2,
+  },
+
+  filterHeader: {
+    marginBottom: 12,
+  },
+
+  filterTitle: {
+    fontSize: 16,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+
+  filterSubtitle: {
+    fontSize: 13,
+    fontWeight: "500",
   },
 
   chipsContainer: {
     flexDirection: "row",
-    marginVertical: 15,
+    marginBottom: 24,
   },
 
   chip: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: "#F1F5F9",
+    paddingHorizontal: 18,
+    paddingVertical: 11,
+    borderRadius: 999,
     marginRight: 10,
-  },
-
-  chipActive: {
-    backgroundColor: "#0061C4",
+    borderWidth: 1,
   },
 
   chipText: {
-    color: "#475569",
-    fontWeight: "500",
-  },
-
-  chipTextActive: {
-    color: "#FFFFFF",
+    fontSize: 13,
   },
 
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 15,
+    alignItems: "flex-end",
+    marginBottom: 16,
   },
 
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#1E293B",
+    fontSize: 20,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+
+  sectionSubtitle: {
+    fontSize: 13,
+    fontWeight: "500",
+  },
+
+  sectionAction: {
+    paddingVertical: 4,
+    paddingLeft: 12,
   },
 
   viewAllText: {
-    color: "#3B82F6",
-    fontWeight: "600",
+    fontSize: 14,
+    fontWeight: "700",
   },
 
   docCard: {
     flexDirection: "row",
-    backgroundColor: "#FFFFFF",
-    padding: 15,
-    borderRadius: 16,
-    marginBottom: 12,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
+    borderRadius: 22,
+    padding: 16,
+    marginBottom: 14,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.06,
+    shadowRadius: 22,
+    elevation: 3,
   },
 
   iconContainer: {
-    width: 45,
-    height: 45,
-    borderRadius: 10,
+    width: 52,
+    height: 52,
+    borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 15,
+    marginRight: 14,
+  },
+
+  iconLabel: {
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+  },
+
+  iconImage: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
+    resizeMode: "contain",
   },
 
   docInfo: {
     flex: 1,
   },
 
-  docTitleRow: {
+  docTopRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "flex-start",
-    paddingRight: 5,
+    marginBottom: 10,
   },
 
   docTitle: {
     flex: 1,
+    fontSize: 15,
+    lineHeight: 22,
+    fontWeight: "700",
+    marginRight: 12,
+  },
+
+  moreButton: {
+    width: 34,
+    height: 34,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  moreButtonText: {
+    fontSize: 22,
+    lineHeight: 22,
+    fontWeight: "500",
+    marginTop: -2,
+  },
+
+  docBottomRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+
+  docMeta: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: "500",
     marginRight: 10,
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1E293B",
   },
 
   badge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
   },
 
   badgeText: {
     fontSize: 10,
-    fontWeight: "700",
-  },
-
-  docMeta: {
-    marginTop: 5,
-    fontSize: 11,
-    color: "#94A3B8",
-  },
-
-  moreButton: {
-    paddingHorizontal: 5,
-  },
-
-  moreButtonText: {
-    fontSize: 20,
-    color: "#94A3B8",
+    fontWeight: "800",
+    letterSpacing: 0.4,
   },
 
   upgradeBanner: {
-    backgroundColor: "#4D84FF",
-    borderRadius: 16,
-    padding: 20,
-    marginVertical: 15,
+    borderRadius: 24,
+    padding: 22,
+    marginTop: 8,
+    marginBottom: 18,
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.2,
+    shadowRadius: 28,
+    elevation: 4,
+  },
+
+  bannerPill: {
+    alignSelf: "flex-start",
+    backgroundColor: "rgba(255,255,255,0.16)",
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginBottom: 14,
+  },
+
+  bannerPillText: {
+    color: "#FFFFFF",
+    fontSize: 10,
+    fontWeight: "800",
+    letterSpacing: 0.8,
   },
 
   bannerTitle: {
     color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: 18,
+    fontWeight: "800",
     marginBottom: 8,
   },
 
   bannerSubtitle: {
-    color: "#E0E7FF",
-    fontSize: 12,
-    lineHeight: 18,
-    marginBottom: 15,
+    color: "rgba(255,255,255,0.84)",
+    fontSize: 13,
+    lineHeight: 20,
+    marginBottom: 18,
   },
 
   upgradeButton: {
     backgroundColor: "#FFFFFF",
     alignSelf: "flex-start",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 14,
   },
 
   upgradeButtonText: {
-    color: "#4D84FF",
+    color: "#2563EB",
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "800",
   },
 
   gridContainer: {
@@ -433,25 +789,37 @@ const styles = StyleSheet.create({
   },
 
   gridCard: {
-    width: (width - 55) / 2,
-    height: 90,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
+    width: (width - 56) / 2,
+    borderRadius: 22,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
-    justifyContent: "center",
+    paddingHorizontal: 14,
+    paddingVertical: 18,
     alignItems: "center",
-    padding: 15,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.05,
+    shadowRadius: 18,
+    elevation: 2,
   },
 
-  gridIcon: {
-    fontSize: 24,
-    marginBottom: 8,
+  gridIconWrapper: {
+    minWidth: 62,
+    height: 34,
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+
+  gridIconText: {
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 0.5,
   },
 
   gridText: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#1E293B",
+    fontSize: 13,
+    fontWeight: "700",
+    textAlign: "center",
   },
 });
