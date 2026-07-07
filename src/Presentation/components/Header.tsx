@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Modal, StatusBar, Platform } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Modal, StatusBar, Platform, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -24,7 +24,7 @@ export function HeaderScreen() {
                     <Ionicons name="menu" size={28} color={theme.textPrimary} />
                 </TouchableOpacity>
 
-                <Text style={[styles.title, { color: theme.textPrimary }]}>CentralDocs</Text>
+                <Image source={require("../../../assets/img/LogoCentralDocsNova.png")} style={styles.logo} />
 
                 <TouchableOpacity style={styles.menuButton}>
                     <Ionicons name="notifications-outline" size={24} color={theme.textPrimary} />
@@ -85,4 +85,9 @@ const styles = StyleSheet.create({
     backdrop: {
         flex: 1,
     },
+    logo: {
+        width: 140,
+        height: 60,
+        resizeMode: 'contain',
+    }
 });

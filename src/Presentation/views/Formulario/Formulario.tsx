@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { CustomInput } from "../../components/CustomTextInput";
 import { CustomButton } from "../../components/CustomButton";
 import { useTheme } from "../../context/ThemeContext";
+import { HeaderScreen } from "../../components/Header";
 
 export default function FormularioScreen() {
     // 2. Iniciando a navegação
@@ -65,9 +66,8 @@ export default function FormularioScreen() {
 
     return (
         <View style={[styles.container, { backgroundColor: theme.background }]}>
-            <View style={[styles.headerSimulado, { backgroundColor: theme.card, borderBottomColor: theme.borderColor }]}>
-                <Text style={[styles.headerTitle, { color: theme.textPrimary }]}>Perfil</Text>
-            </View>
+
+            <HeaderScreen/>
 
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -80,8 +80,6 @@ export default function FormularioScreen() {
                     onPress={() => navigation.goBack()}
                     activeOpacity={0.7}
                 >
-                    <Ionicons name="arrow-back" size={22} color={theme.textPrimary} />
-                    <Text style={[styles.backButtonText, { color: theme.textPrimary }]}>Voltar</Text>
                 </TouchableOpacity>
 
                 <Text style={[styles.title, { color: theme.textPrimary }]}>Dados Pessoais</Text>
@@ -294,18 +292,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#F8FAFC",
-    },
-    headerSimulado: {
-        paddingTop: 50,
-        paddingBottom: 20,
-        backgroundColor: "#FFF",
-        alignItems: "center",
-        borderBottomWidth: 1,
-        borderBottomColor: "#E2E8F0",
-    },
-    headerTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
     },
     content: {
         padding: 16,

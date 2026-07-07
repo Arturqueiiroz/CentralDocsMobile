@@ -2,8 +2,9 @@ import React from "react";
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../../App'; // Ajuste o caminho conforme seu projeto
+import { RootStackParamList } from '../../../../App';
 import { useTheme } from "../../context/ThemeContext";
+import styles from "../../theme/TelaPrincipalCss";
 
 export const TelaPrincipalScreen = () => {
   const { theme, isDarkMode } = useTheme();
@@ -15,13 +16,16 @@ export const TelaPrincipalScreen = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.hero}>
-        <Text style={[styles.badge, { backgroundColor: isDarkMode ? theme.borderColor : '#EAF3FF', color: theme.accentColor }]}>
-          A nova era da gestão digital
-        </Text>
-
         <Text style={[styles.title, { color: theme.textPrimary }]}>
           Organize seus documentos em um só lugar
         </Text>
+
+        <View style={styles.dashboardContainer}>
+          <Image
+            source={require("../../../../assets/img/telahome.png")}
+            style={styles.dashboard}
+          />
+        </View>        
 
         <Text style={[styles.description, { color: theme.textSecondary }]}>
           Segurança, velocidade e organização para sua vida digital.
@@ -35,10 +39,7 @@ export const TelaPrincipalScreen = () => {
           <Text style={styles.buttonText}>Comece agora</Text>
         </TouchableOpacity>
 
-        <Image
-          source={require("../../../../assets/img/ChatGPT Image 23 de abr. de 2026, 15_03_20.png")}
-          style={styles.dashboard}
-        />
+
       </View>
 
       <View style={styles.section}>
@@ -85,136 +86,3 @@ export const TelaPrincipalScreen = () => {
 };
 
 export default TelaPrincipalScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
-  hero: {
-    paddingHorizontal: 25,
-    paddingTop: 60, // Aumentado para não ficar colado no topo (sem o header)
-    alignItems: "center",
-  },
-  badge: {
-    backgroundColor: "#EAF3FF",
-    color: "#3478F6",
-    paddingHorizontal: 18,
-    paddingVertical: 7,
-    borderRadius: 20,
-    fontWeight: "600",
-    fontSize: 12,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 34,
-    fontWeight: "bold",
-    textAlign: "center",
-    lineHeight: 42,
-  },
-  description: {
-    marginTop: 18,
-    textAlign: "center",
-    lineHeight: 24,
-    fontSize: 15,
-    width: "95%",
-  },
-  button: {
-    marginTop: 25,
-    width: "100%",
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#FFF",
-    fontWeight: "700",
-    fontSize: 16,
-  },
-  dashboard: {
-    width: "100%",
-    height: 250,
-    resizeMode: "contain",
-    marginTop: 25,
-  },
-  section: {
-    marginTop: 25,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginBottom: 25,
-  },
-  card: {
-    borderRadius: 18,
-    padding: 20,
-    marginBottom: 18,
-  },
-  cardBlue: {
-    borderRadius: 18,
-    padding: 20,
-    marginBottom: 18,
-  },
-  icon: {
-    width: 34,
-    height: 34,
-    resizeMode: "contain",
-    marginBottom: 15,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 10,
-  },
-  cardText: {
-    lineHeight: 22,
-    fontSize: 14,
-  },
-  cardBlueTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 10,
-    color: "#FFF",
-  },
-  cardBlueText: {
-    color: "#FFF",
-    lineHeight: 22,
-    fontSize: 14,
-  },
-  cta: {
-    marginHorizontal: 20,
-    marginTop: 10,
-    marginBottom: 50, // Espaço extra no final
-    backgroundColor: "#2563EB",
-    borderRadius: 18,
-    padding: 25,
-    alignItems: "center",
-  },
-  ctaTitle: {
-    color: "#FFF",
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-    lineHeight: 36,
-  },
-  ctaDescription: {
-    color: "#FFF",
-    textAlign: "center",
-    marginTop: 18,
-    lineHeight: 24,
-    fontSize: 15,
-  },
-  ctaButton: {
-    marginTop: 25,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 28,
-    paddingVertical: 15,
-    borderRadius: 12,
-  },
-  ctaButtonText: {
-    fontWeight: "700",
-    fontSize: 15,
-  },
-});
