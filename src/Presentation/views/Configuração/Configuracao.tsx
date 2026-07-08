@@ -3,38 +3,38 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch } from 're
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from '../../components/Footer';
-
-// IMPORTANDO O HOOK DE TEMA GLOBAL
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../../../App';
 import { useTheme } from '../../context/ThemeContext';
 
 export default function ConfiguracoesScreen() {
-    // CONSUMINDO O TEMA GLOBAL
+
     const { isDarkMode, toggleTheme, theme } = useTheme();
 
-    // Estados para os outros Switches interativos
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
     const [alertasEmail, setAlertasEmail] = useState(true);
     const [pushNotifications, setPushNotifications] = useState(true);
     const [biometria, setBiometria] = useState(false);
 
     return (
-        // APLICANDO FUNDO GLOBAL DINÂMICO
+
         <View style={[styles.container, { backgroundColor: theme.background }]}>
 
-            {/* CORREÇÃO APLICADA: Chamando o cabeçalho global sem propriedades incompatíveis */}
             <HeaderScreen />
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
-                {/* TEXTO DO TÍTULO DINÂMICO */}
                 <Text style={[styles.mainTitle, { color: theme.textPrimary }]}>Configurações</Text>
 
-                {/* CARD DE PERFIL DO USUÁRIO DINÂMICO */}
                 <TouchableOpacity
                     style={[styles.profileCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}
                     activeOpacity={0.9}
+                    onPress={() => navigation.navigate('Perfil')}
                 >
                     <View style={styles.profileInfoContainer}>
-                        {/* Avatar Interno do Card */}
+
                         <View style={[styles.profileAvatar, { backgroundColor: isDarkMode ? theme.borderColor : '#1E293B' }]}>
                             <Text style={styles.profileAvatarText}>N</Text>
                         </View>
@@ -46,13 +46,11 @@ export default function ConfiguracoesScreen() {
                     <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
                 </TouchableOpacity>
 
-                {/* SEÇÃO: APARÊNCIA */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="eye-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>APARÊNCIA</Text>
                 </View>
 
-                {/* CONTAINER DO GRUPO DE OPÇÕES */}
                 <View style={[styles.optionsGroup, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
                     <View style={styles.optionRow}>
                         <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? '#1E293B' : '#EEF4FF' }]}>
@@ -62,7 +60,7 @@ export default function ConfiguracoesScreen() {
                             <Text style={[styles.optionTitle, { color: theme.textPrimary }]}>Modo escuro</Text>
                             <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Reduza o brilho e o cansaço visual</Text>
                         </View>
-                        {/* SWITCH QUE ALTERA O TEMA GLOBALMENTE */}
+
                         <Switch
                             value={isDarkMode}
                             onValueChange={toggleTheme}
@@ -85,7 +83,6 @@ export default function ConfiguracoesScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* SEÇÃO: NOTIFICAÇÃO */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="notifications-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>NOTIFICAÇÃO</Text>
@@ -127,7 +124,6 @@ export default function ConfiguracoesScreen() {
                     </View>
                 </View>
 
-                {/* SEÇÃO: SEGURANÇA */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="shield-checkmark-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>SEGURANÇA</Text>
@@ -164,7 +160,7 @@ export default function ConfiguracoesScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* BANNER: PRECISAR DE AJUDA? */}
+
                 <View style={[styles.helpBanner, { backgroundColor: isDarkMode ? theme.borderColor : theme.accentColor }]}>
                     <Text style={styles.helpTitle}>Precisar de ajuda?</Text>
                     <Text style={[styles.helpSubtitle, { color: isDarkMode ? theme.textSecondary : '#E0E7FF' }]}>
@@ -172,17 +168,18 @@ export default function ConfiguracoesScreen() {
                     </Text>
                 </View>
 
-                {/* RODAPÉ DO CONTEÚDO (Versão e Logout) */}
                 <View style={styles.footerInfo}>
                     <Text style={[styles.versionText, { color: theme.textSecondary }]}>CentralDocs v2.4.1</Text>
-                    <TouchableOpacity activeOpacity={0.6}>
+                    <TouchableOpacity
+                        activeOpacity={0.6}
+                        onPress={() => navigation.navigate('TelaPrincipal')} 
+                    >
                         <Text style={[styles.logoutText, { color: theme.accentColor }]}>Logout</Text>
                     </TouchableOpacity>
                 </View>
 
             </ScrollView>
 
-            {/* ADICIONANDO O FOOTER GLOBAL AQUI */}
             <FooterScreen />
         </View>
     );

@@ -120,11 +120,11 @@ export default function SobreNosScreen() {
 
   return (
     <View
-  style={[
-    styles.container,
-    { backgroundColor: theme.background }
-  ]}
->
+      style={[
+        styles.container,
+        { backgroundColor: theme.background }
+      ]}
+    >
       <HeaderScreen nome="CentralDocs" />
 
       <ScrollView
@@ -166,26 +166,26 @@ export default function SobreNosScreen() {
 
         <Animated.View style={[styles.section, fadeUp(missionAnim)]}>
           <View style={styles.sectionHeader}>
-           <Text
-  style={[
-    styles.sectionTitle,
-    { color: theme.textPrimary }
-  ]}
-> Nossa missão</Text>
             <Text
-  style={[
-    styles.sectionSubtitle,
-    { color: theme.textSecondary }
-  ]}
->
+              style={[
+                styles.sectionTitle,
+                { color: theme.textPrimary }
+              ]}
+            > Nossa missão</Text>
+            <Text
+              style={[
+                styles.sectionSubtitle,
+                { color: theme.textSecondary }
+              ]}
+            >
               O que orienta cada decisão de produto e experiência.
             </Text>
           </View>
 
-          <View style={[styles.card,     {
-      backgroundColor: theme.card,
-      borderColor: theme.borderColor,
-    }, styles.missionCard]}>
+          <View style={[styles.card, {
+            backgroundColor: theme.card,
+            borderColor: theme.borderColor,
+          }, styles.missionCard]}>
             <View style={styles.missionAccent} />
             <Text style={styles.cardTextStrong}>
               Oferecer uma solução prática para o gerenciamento de documentos,

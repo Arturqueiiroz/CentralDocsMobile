@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../../../App'; // Ajuste o caminho conforme seu projeto
+import { RootStackParamList } from '../../../../App'; // Caminho mantido conforme seu projeto
 import { useTheme } from "../../context/ThemeContext";
 
 export const TelaPrincipalScreen = () => {
@@ -30,6 +30,7 @@ export const TelaPrincipalScreen = () => {
 
         <TouchableOpacity
           style={[styles.button, { backgroundColor: theme.accentColor }]}
+          activeOpacity={0.85}
           onPress={() => navigation.navigate('Login')}
         >
           <Text style={styles.buttonText}>Comece agora</Text>
@@ -76,7 +77,11 @@ export const TelaPrincipalScreen = () => {
         <Text style={styles.ctaDescription}>
           Junte-se a mais de 10.000 usuários que já simplificaram sua gestão de documentos.
         </Text>
-        <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity 
+          style={styles.ctaButton} 
+          activeOpacity={0.9}
+          onPress={() => navigation.navigate('Login')}
+        >
           <Text style={[styles.ctaButtonText, { color: theme.accentColor }]}>Experimente Grátis</Text>
         </TouchableOpacity>
       </View>
@@ -93,12 +98,10 @@ const styles = StyleSheet.create({
   },
   hero: {
     paddingHorizontal: 25,
-    paddingTop: 60, // Aumentado para não ficar colado no topo (sem o header)
+    paddingTop: 60,
     alignItems: "center",
   },
   badge: {
-    backgroundColor: "#EAF3FF",
-    color: "#3478F6",
     paddingHorizontal: 18,
     paddingVertical: 7,
     borderRadius: 20,
@@ -186,7 +189,7 @@ const styles = StyleSheet.create({
   cta: {
     marginHorizontal: 20,
     marginTop: 10,
-    marginBottom: 50, // Espaço extra no final
+    marginBottom: 50,
     backgroundColor: "#2563EB",
     borderRadius: 18,
     padding: 25,

@@ -14,12 +14,11 @@ interface CustomDrawerProps {
 export default function CustomDrawer({ currentScreen, onNavigate, onClose }: CustomDrawerProps) {
     const { theme, isDarkMode } = useTheme();
 
-    // Lista de navegação atualizada apenas com os itens desejados
-    const menuItems = [
-        { id: 'TelaHome', label: 'Home', icon: 'home-outline' },
-        { id: 'Configuraçoes', label: 'Configurações', icon: 'settings-outline' },
-        { id: 'SobreNos', label: 'Sobre nós', icon: 'information-circle-outline' },
-    ];
+const menuItems = [
+    { id: 'TelaHome', label: 'Home', icon: 'home-outline' },
+    { id: 'Configuracoes', label: 'Configurações', icon: 'settings-outline' }, 
+    { id: 'SobreNos', label: 'Sobre nós', icon: 'information-circle-outline' },
+];
 
     const activeBg = isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#EFF6FF';
     const activeColor = theme.accentColor;
@@ -27,7 +26,7 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
 
     return (
         <View style={[styles.drawerContainer, { backgroundColor: theme.card, borderRightColor: theme.borderColor }]}>
-            {/* TOPO: LOGO CENTRALDOCS E BOTÃO DE FECHAR */}
+       
             <View style={styles.header}>
                 <Image
                     source={require('../../../assets/img/LogoCentralDocsNova.png')}
@@ -39,7 +38,6 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                 </TouchableOpacity>
             </View>
 
-            {/* CORPO: ITENS DE MENU */}
             <View style={styles.navContainer}>
                 {menuItems.map((item) => {
                     const isActive = currentScreen === item.id;
@@ -72,7 +70,6 @@ export default function CustomDrawer({ currentScreen, onNavigate, onClose }: Cus
                 })}
             </View>
 
-            {/* RODAPÉ: PERFIL E SAIR DA CONTA */}
             <View style={[styles.footer, { borderTopColor: theme.borderColor }]}>
                 <View style={[styles.userCard, { backgroundColor: isDarkMode ? theme.background : '#F8FAFC' }]}>
                     <View style={[styles.avatar, { backgroundColor: theme.accentColor }]}>
