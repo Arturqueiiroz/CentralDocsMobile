@@ -320,3 +320,5 @@ const styles = StyleSheet.create({
     color: "#64748B",
   },
 });
+
+export default styles;

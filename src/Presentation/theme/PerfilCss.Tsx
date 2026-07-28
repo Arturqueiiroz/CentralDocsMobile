@@ -219,3 +219,5 @@ const styles = StyleSheet.create({
         letterSpacing: 0.8,
     },
 });
+
+export default styles;

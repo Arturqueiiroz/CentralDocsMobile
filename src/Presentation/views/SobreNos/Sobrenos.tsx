@@ -116,7 +116,7 @@ export default function SobreNosScreen() {
     { backgroundColor: theme.background }
   ]}
 >
-      <HeaderScreen nome="CentralDocs" />
+      <HeaderScreen />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
