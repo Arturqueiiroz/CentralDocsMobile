@@ -8,9 +8,9 @@ import {
     Animated,
     Easing,
 } from "react-native";
-import { HeaderScreen } from "../CentralDocsMobile/src/Presentation/components/Header";
-import { FooterScreen } from "../CentralDocsMobile/src/Presentation/components/Footer";
-import { useTheme } from '../CentralDocsMobile/src/Presentation/context/ThemeContext';
+import { HeaderScreen } from "./src/Presentation/components/Header";
+import { FooterScreen } from "./src/Presentation/components/Footer";
+import { useTheme } from "./src/Presentation/context/ThemeContext";
 
 
 
@@ -31,7 +31,7 @@ export default function SobreNosScreen() {
             cargo: "Desenvolvedor Front-end",
             descricao:
                 "Responsável pela criação das telas e pela experiência dos usuários no aplicativo.",
-            foto: require("../../../../assets/img/Nicolay.jpg"),
+            foto: require("./assets/img/Nicolay.jpg"),
         },
         {
             id: "2",
@@ -39,7 +39,7 @@ export default function SobreNosScreen() {
             cargo: "Desenvolvedor Back-end",
             descricao:
                 "Responsável pelo desenvolvimento da API, banco de dados e segurança das informações.",
-            foto: require("../../../../assets/img/Matheus.jpg"),
+            foto: require("./assets/img/Matheus.jpg"),
         },
         {
             id: "3",
@@ -47,7 +47,7 @@ export default function SobreNosScreen() {
             cargo: "Desenvolvedor Full Stack",
             descricao:
                 "Responsável pela integração entre o aplicativo, a API e o banco de dados, garantindo o funcionamento do sistema.",
-            foto: require("../../../../assets/img/Artur.jpg"),
+            foto: require("./assets/img/Artur.jpg"),
         },
     ];
 
@@ -125,7 +125,7 @@ export default function SobreNosScreen() {
                 { backgroundColor: theme.background }
             ]}
         >
-            <HeaderScreen nome="CentralDocs" />
+            <HeaderScreen />
 
             <ScrollView
                 showsVerticalScrollIndicator={false}

@@ -1,0 +1,223 @@
+import { StyleSheet } from "react-native";
+
+const badgeStyles = StyleSheet.create({
+    badgeRow: {
+        flexDirection: 'row',
+        gap: 8,
+        marginTop: 12,
+    },
+});
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#F8FAFC',
+    },
+    scrollContent: {
+        paddingHorizontal: 20,
+        paddingBottom: 140, // Respiro confortável no final da rolagem
+    },
+    profileHeaderContainer: {
+        alignItems: 'center',
+        marginVertical: 25,
+    },
+    avatarLargeContainer: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: '#1D68E4',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        shadowColor: '#1D68E4',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+        elevation: 4,
+    },
+    avatarLargeText: {
+        color: '#FFFFFF',
+        fontSize: 38,
+        fontWeight: '700',
+    },
+    editBadge: {
+        position: 'absolute',
+        bottom: 0,
+        right: 2,
+        backgroundColor: '#1D68E4',
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#F8FAFC',
+    },
+    profileName: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#1E293B',
+        marginTop: 12,
+    },
+    profileRole: {
+        fontSize: 14,
+        color: '#64748B',
+        marginTop: 4,
+    },
+    badgeRow: {
+        flexDirection: 'row',
+        gap: 8,
+        marginTop: 12,
+    },
+    statusBadge: {
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 12,
+    },
+    statusBadgeText: {
+        fontSize: 10,
+        fontWeight: '700',
+        letterSpacing: 0.5,
+    },
+    card: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.04,
+        shadowRadius: 4,
+        elevation: 1,
+    },
+    cardHeaderRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    cardTitle: {
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#1E293B',
+        marginBottom: 10,
+    },
+    storageTextRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    storageLabel: {
+        fontSize: 13,
+        color: '#64748B',
+    },
+    storageValue: {
+        fontSize: 14,
+        fontWeight: '700',
+        color: '#1E293B',
+    },
+    progressBarBackground: {
+        height: 8,
+        backgroundColor: '#F1F5F9',
+        borderRadius: 4,
+        overflow: 'hidden',
+        marginBottom: 15,
+    },
+    progressBarFill: {
+        height: '100%',
+        backgroundColor: '#1D68E4',
+        borderRadius: 4,
+    },
+    upgradeLink: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    upgradeLinkText: {
+        color: '#1D68E4',
+        fontSize: 13,
+        fontWeight: '600',
+    },
+    infoRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F1F5F9',
+    },
+    infoIconBox: {
+        width: 40,
+        height: 40,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    infoContent: {
+        flex: 1,
+    },
+    infoLabel: {
+        fontSize: 10,
+        color: '#94A3B8',
+        fontWeight: '700',
+    },
+    infoValue: {
+        fontSize: 14,
+        color: '#334155',
+        marginTop: 2,
+    },
+    securityRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 14,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F1F5F9',
+    },
+    securityLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    securityText: {
+        fontSize: 14,
+        color: '#334155',
+        fontWeight: '500',
+    },
+    habilitadoBadge: {
+        backgroundColor: '#EFF6FF',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 6,
+    },
+    habilitadoText: {
+        color: '#1D68E4',
+        fontSize: 10,
+        fontWeight: '700',
+    },
+    logoutButton: {
+        flexDirection: 'row',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        height: 54,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 20,
+        borderWidth: 1,
+        borderColor: '#F1F5F9',
+    },
+    logoutText: {
+        color: '#DC2626',
+        fontSize: 16,
+        fontWeight: '700',
+    },
+    versionText: {
+        textAlign: 'center',
+        color: '#94A3B8',
+        fontSize: 10,
+        fontWeight: '600',
+        letterSpacing: 0.8,
+    },
+});
+
+export default styles;
