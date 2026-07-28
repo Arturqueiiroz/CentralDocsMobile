@@ -68,7 +68,7 @@ export default function PerfilScreen() {
             {
                 text: 'Sair',
                 style: 'destructive',
-                onPress: () => navigation.navigate('Login'),
+                onPress: () => navigation.navigate('TelaPrincipal'),
             },
         ]);
     }
