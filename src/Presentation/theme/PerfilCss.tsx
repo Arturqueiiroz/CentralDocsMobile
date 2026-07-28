@@ -1,13 +1,5 @@
 import { StyleSheet } from "react-native";
 
-const badgeStyles = StyleSheet.create({
-    badgeRow: {
-        flexDirection: 'row',
-        gap: 8,
-        marginTop: 12,
-    },
-});
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -15,7 +7,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: 20,
-        paddingBottom: 140, // Respiro confortável no final da rolagem
+        paddingBottom: 140,
     },
     profileHeaderContainer: {
         alignItems: 'center',
@@ -102,42 +94,6 @@ const styles = StyleSheet.create({
         color: '#1E293B',
         marginBottom: 10,
     },
-    storageTextRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    storageLabel: {
-        fontSize: 13,
-        color: '#64748B',
-    },
-    storageValue: {
-        fontSize: 14,
-        fontWeight: '700',
-        color: '#1E293B',
-    },
-    progressBarBackground: {
-        height: 8,
-        backgroundColor: '#F1F5F9',
-        borderRadius: 4,
-        overflow: 'hidden',
-        marginBottom: 15,
-    },
-    progressBarFill: {
-        height: '100%',
-        backgroundColor: '#1D68E4',
-        borderRadius: 4,
-    },
-    upgradeLink: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    upgradeLinkText: {
-        color: '#1D68E4',
-        fontSize: 13,
-        fontWeight: '600',
-    },
     infoRow: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -211,12 +167,47 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '700',
     },
-    versionText: {
-        textAlign: 'center',
-        color: '#94A3B8',
-        fontSize: 10,
+    editarLink: {
+        fontSize: 13,
         fontWeight: '600',
-        letterSpacing: 0.8,
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    },
+    modalCard: {
+        backgroundColor: '#FFFFFF',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 30,
+        maxHeight: '85%',
+    },
+    modalHeaderRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    modalTitle: {
+        fontSize: 17,
+        fontWeight: '700',
+    },
+    modalButtonsRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+        marginTop: 6,
+    },
+    modalCancelButton: {
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+    },
+    modalCancelText: {
+        fontSize: 15,
+        fontWeight: '600',
     },
 });
 
