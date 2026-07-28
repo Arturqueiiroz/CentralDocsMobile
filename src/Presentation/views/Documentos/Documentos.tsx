@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import {StyleSheet,View,Text,TextInput,TouchableOpacity,ScrollView,Dimensions,Image,Alert,} from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  Image,
+  Alert,
+} from "react-native";
 import { HeaderScreen } from "../../components/Header";
 import { FooterScreen } from "../../components/Footer";
 import { useTheme } from "../../context/ThemeContext";
@@ -12,8 +22,9 @@ interface DocumentItem {
   type: string;
   info: string;
   iconType: "RG" | "CNH" | "RA" | "e-titulo" | "DOC";
-  uri?: string; 
+  uri?: string;
 }
+
 interface DocumentVisual {
   label: string;
   iconBg: string;
@@ -36,13 +47,13 @@ const getDocumentVisual = (item: DocumentItem, isDarkMode: boolean): DocumentVis
   const typeColors =
     item.type === "TRABALHO"
       ? {
-          badgeBg: isDarkMode ? "rgba(96, 165, 250, 0.16)" : "#E8F1FF",
-          badgeText: isDarkMode ? "#93C5FD" : "#2563EB",
-        }
+        badgeBg: isDarkMode ? "rgba(96, 165, 250, 0.16)" : "#E8F1FF",
+        badgeText: isDarkMode ? "#93C5FD" : "#2563EB",
+      }
       : {
-          badgeBg: isDarkMode ? "rgba(192, 132, 252, 0.16)" : "#F4E8FF",
-          badgeText: isDarkMode ? "#D8B4FE" : "#7C3AED",
-        };
+        badgeBg: isDarkMode ? "rgba(192, 132, 252, 0.16)" : "#F4E8FF",
+        badgeText: isDarkMode ? "#D8B4FE" : "#7C3AED",
+      };
 
   switch (item.iconType) {
     case "RG":
@@ -80,19 +91,18 @@ export default function DocumentosScreen() {
     loadDocuments();
   }, []);
 
-  
-const adicionarDocumentoGaleira = async () => {
+  const adicionarDocumentoGaleria = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
+
     if (status !== "granted") {
       Alert.alert("Permissão necessária", "Precisamos de acesso à sua galeria para adicionar documentos.");
       return;
     }
 
     const resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All, 
-      allowsEditing: true, 
-      quality: 0.8, 
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
     });
 
     if (!resultado.canceled && resultado.assets && resultado.assets.length > 0) {
@@ -100,11 +110,11 @@ const adicionarDocumentoGaleira = async () => {
 
       const novoDocumento: DocumentItem = {
         id: Date.now().toString(),
-        title: `Novo Documento Anexado`,
+        title: "Novo Documento Anexado",
         type: "Pessoal",
-        info: `Adicionado hoje • Recém-criado`,
-        iconType: "DOC", 
-        uri: uriImagem,  
+        info: "Adicionado hoje • Recém-criado",
+        iconType: "DOC",
+        uri: uriImagem,
       };
 
       const listaAtualizada = [novoDocumento, ...documentos];
@@ -117,6 +127,35 @@ const adicionarDocumentoGaleira = async () => {
       }
     }
   };
+
+  const removerDocumento = (id: string) => {
+    Alert.alert(
+      "Retirar documento",
+      "Deseja realmente retirar este documento?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Retirar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              const novaLista = documentos.filter((doc) => doc.id !== id);
+
+              setDocumentos(novaLista);
+
+              await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(novaLista));
+            } catch (error) {
+              console.error("Erro ao remover documento:", error);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const softSurface = isDarkMode ? "rgba(255,255,255,0.04)" : "#F8FAFC";
   const softBorder = isDarkMode ? "rgba(255,255,255,0.06)" : "#E2E8F0";
   const elevatedShadow = isDarkMode ? "#000000" : "#0F172A";
@@ -125,11 +164,7 @@ const adicionarDocumentoGaleira = async () => {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <HeaderScreen />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={[styles.heroCard, { backgroundColor: theme.card, borderColor: softBorder, shadowColor: elevatedShadow }]}>
           <Text style={[styles.heroEyebrow, { color: theme.textSecondary }]}>Central de documentos</Text>
           <Text style={[styles.heroTitle, { color: theme.textPrimary }]}>
@@ -147,10 +182,9 @@ const adicionarDocumentoGaleira = async () => {
             />
           </View>
 
-        
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={adicionarDocumentoGaleira}
+            onPress={adicionarDocumentoGaleria}
             style={[styles.addButton, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}
           >
             <View style={styles.addButtonContent}>
@@ -168,7 +202,7 @@ const adicionarDocumentoGaleira = async () => {
         </View>
 
         <View style={styles.chipsContainer}>
-          {(["Tudo",] as const).map((tab) => (
+          {(["Tudo"] as const).map((tab) => (
             <TouchableOpacity
               key={tab}
               activeOpacity={0.9}
@@ -205,7 +239,6 @@ const adicionarDocumentoGaleira = async () => {
 
             return (
               <View key={item.id} style={[styles.docCard, { backgroundColor: theme.card, borderColor: softBorder, shadowColor: elevatedShadow }]}>
-                
                 <View style={[styles.iconContainer, { backgroundColor: visual.iconBg }]}>
                   <Text style={[styles.iconLabel, { color: visual.iconText }]}>{visual.label}</Text>
                 </View>
@@ -215,7 +248,11 @@ const adicionarDocumentoGaleira = async () => {
                     <Text style={[styles.docTitle, { color: theme.textPrimary }]} numberOfLines={2}>
                       {item.title}
                     </Text>
-                    <TouchableOpacity activeOpacity={0.8} style={[styles.moreButton, { backgroundColor: isDarkMode ? "rgba(255,255,255,0.05)" : "#F8FAFC", borderColor: softBorder }]}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => removerDocumento(item.id)}
+                      style={[styles.moreButton, { backgroundColor: isDarkMode ? "rgba(255,255,255,0.05)" : "#F8FAFC", borderColor: softBorder }]}
+                    >
                       <Text style={[styles.moreButtonText, { color: theme.textSecondary }]}>⋯</Text>
                     </TouchableOpacity>
                   </View>
@@ -298,14 +335,11 @@ const styles = StyleSheet.create({
   sectionSubtitle: { fontSize: 13, fontWeight: "500" },
   sectionAction: { paddingVertical: 4, paddingLeft: 12 },
   viewAllText: { fontSize: 14, fontWeight: "700" },
-  
   docCard: { flexDirection: "row", alignItems: "flex-start", borderRadius: 22, padding: 16, marginBottom: 14, borderWidth: 1, shadowOffset: { width: 0, height: 12 }, shadowOpacity: 0.06, shadowRadius: 22, elevation: 3 },
   iconContainer: { width: 48, height: 48, borderRadius: 24, justifyContent: "center", alignItems: "center", marginRight: 14, overflow: "hidden" },
   iconLabel: { fontSize: 12, fontWeight: "800", letterSpacing: 0.5 },
-  
   previewImageContainer: { width: "100%", height: 140, borderRadius: 14, borderWidth: 1, overflow: "hidden", marginBottom: 12, marginTop: 2 },
   previewImage: { width: "100%", height: "100%", resizeMode: "cover" },
-  
   docInfo: { flex: 1 },
   docTopRow: { flexDirection: "row", alignItems: "flex-start", marginBottom: 6 },
   docTitle: { flex: 1, fontSize: 15, lineHeight: 22, fontWeight: "700", marginRight: 12 },
