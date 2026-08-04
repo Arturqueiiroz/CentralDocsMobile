@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from '../../components/Footer';
 import { useNavigation } from '@react-navigation/native';
@@ -8,24 +11,95 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
 import { useTheme } from '../../context/ThemeContext';
 
+const NOTIFICATIONS_SETTINGS_KEY = '@user_notifications_settings';
+
+// Checa se a aplicação está rodando no Expo Go
+const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
 export default function ConfiguracoesScreen() {
-
     const { isDarkMode, toggleTheme, theme } = useTheme();
-
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const [alertasEmail, setAlertasEmail] = useState(true);
     const [pushNotifications, setPushNotifications] = useState(true);
     const [biometria, setBiometria] = useState(false);
 
+    // Carrega as preferências salvas no dispositivo
+    useEffect(() => {
+        const loadSettings = async () => {
+            try {
+                const storedSettings = await AsyncStorage.getItem(NOTIFICATIONS_SETTINGS_KEY);
+                if (storedSettings !== null) {
+                    const { email, push, bio } = JSON.parse(storedSettings);
+                    if (email !== undefined) setAlertasEmail(email);
+                    if (push !== undefined) setPushNotifications(push);
+                    if (bio !== undefined) setBiometria(bio);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar configurações:', error);
+            }
+        };
+
+        loadSettings();
+    }, []);
+
+    // Salva as configurações localmente
+    const saveSettings = async (emailVal: boolean, pushVal: boolean, bioVal: boolean) => {
+        try {
+            await AsyncStorage.setItem(
+                NOTIFICATIONS_SETTINGS_KEY,
+                JSON.stringify({ email: emailVal, push: pushVal, bio: bioVal })
+            );
+        } catch (error) {
+            console.error('Erro ao salvar configurações:', error);
+        }
+    };
+
+    const handleToggleEmail = (value: boolean) => {
+        setAlertasEmail(value);
+        saveSettings(value, pushNotifications, biometria);
+    };
+
+    const handleTogglePush = async (value: boolean) => {
+        if (value) {
+            // Se estiver no Expo Go, avisa o usuário e ignora a chamada de permissão nativa para evitar o erro
+            if (isExpoGo) {
+                Alert.alert(
+                    'Modo Expo Go',
+                    'Push notifications remotas não são suportadas dentro do Expo Go no SDK 53+. Para testar notificações reais, utilize uma Development Build.'
+                );
+                setPushNotifications(true);
+                saveSettings(alertasEmail, true, biometria);
+                return;
+            }
+
+            // Se for em Build de Desenvolvimento ou Produção, pede a permissão normalmente
+            try {
+                const { status } = await Notifications.requestPermissionsAsync();
+                if (status !== 'granted') {
+                    Alert.alert('Atenção', 'A permissão para enviar notificações foi negada no dispositivo.');
+                    setPushNotifications(false);
+                    saveSettings(alertasEmail, false, biometria);
+                    return;
+                }
+            } catch (error) {
+                console.warn('Erro ao solicitar permissões de notificação:', error);
+            }
+        }
+        setPushNotifications(value);
+        saveSettings(alertasEmail, value, biometria);
+    };
+
+    const handleToggleBiometria = (value: boolean) => {
+        setBiometria(value);
+        saveSettings(alertasEmail, pushNotifications, value);
+    };
+
     return (
-
         <View style={[styles.container, { backgroundColor: theme.background }]}>
-
             <HeaderScreen />
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-
                 <Text style={[styles.mainTitle, { color: theme.textPrimary }]}>Configurações</Text>
 
                 <TouchableOpacity
@@ -34,7 +108,6 @@ export default function ConfiguracoesScreen() {
                     onPress={() => navigation.navigate('Perfil')}
                 >
                     <View style={styles.profileInfoContainer}>
-
                         <View style={[styles.profileAvatar, { backgroundColor: isDarkMode ? theme.borderColor : '#1E293B' }]}>
                             <Text style={styles.profileAvatarText}>N</Text>
                         </View>
@@ -46,6 +119,7 @@ export default function ConfiguracoesScreen() {
                     <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
                 </TouchableOpacity>
 
+                {/* SEÇÃO APARÊNCIA */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="eye-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>APARÊNCIA</Text>
@@ -83,6 +157,7 @@ export default function ConfiguracoesScreen() {
                     </TouchableOpacity>
                 </View>
 
+                {/* SEÇÃO NOTIFICAÇÃO */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="notifications-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>NOTIFICAÇÃO</Text>
@@ -99,7 +174,7 @@ export default function ConfiguracoesScreen() {
                         </View>
                         <Switch
                             value={alertasEmail}
-                            onValueChange={setAlertasEmail}
+                            onValueChange={handleToggleEmail}
                             trackColor={{ false: '#CBD5E1', true: theme.accentColor }}
                             thumbColor="#FFFFFF"
                         />
@@ -117,13 +192,14 @@ export default function ConfiguracoesScreen() {
                         </View>
                         <Switch
                             value={pushNotifications}
-                            onValueChange={setPushNotifications}
+                            onValueChange={handleTogglePush}
                             trackColor={{ false: '#CBD5E1', true: theme.accentColor }}
                             thumbColor="#FFFFFF"
                         />
                     </View>
                 </View>
 
+                {/* SEÇÃO SEGURANÇA */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="shield-checkmark-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>SEGURANÇA</Text>
@@ -140,7 +216,7 @@ export default function ConfiguracoesScreen() {
                         </View>
                         <Switch
                             value={biometria}
-                            onValueChange={setBiometria}
+                            onValueChange={handleToggleBiometria}
                             trackColor={{ false: '#CBD5E1', true: theme.accentColor }}
                             thumbColor="#FFFFFF"
                         />
@@ -160,7 +236,6 @@ export default function ConfiguracoesScreen() {
                     </TouchableOpacity>
                 </View>
 
-
                 <View style={[styles.helpBanner, { backgroundColor: isDarkMode ? theme.borderColor : theme.accentColor }]}>
                     <Text style={styles.helpTitle}>Precisar de ajuda?</Text>
                     <Text style={[styles.helpSubtitle, { color: isDarkMode ? theme.textSecondary : '#E0E7FF' }]}>
@@ -172,7 +247,7 @@ export default function ConfiguracoesScreen() {
                     <Text style={[styles.versionText, { color: theme.textSecondary }]}>CentralDocs v2.4.1</Text>
                     <TouchableOpacity
                         activeOpacity={0.6}
-                        onPress={() => navigation.navigate('TelaPrincipal')} 
+                        onPress={() => navigation.navigate('TelaPrincipal')}
                     >
                         <Text style={[styles.logoutText, { color: theme.accentColor }]}>Logout</Text>
                     </TouchableOpacity>
