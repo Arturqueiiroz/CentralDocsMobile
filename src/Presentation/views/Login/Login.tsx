@@ -32,7 +32,7 @@ export const LoginScreen = () => {
                         style={styles.logo}
                     />
                     <Text style={[styles.subtitle, { color: theme.textPrimary }]}>
-                        Gerenciamento de documentos
+                        Gerencie seus documentos de forma simples e segura
                     </Text>
                 </View>
 

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Modal, StatusBar, Platform, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute, CommonActions } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RootStackParamList } from "../../../App";
 
 import CustomDrawer from "./CustomDrawer";
@@ -15,6 +16,21 @@ export function HeaderScreen() {
     const route = useRoute();
     const [menuAberto, setMenuAberto] = useState(false);
     const { theme } = useTheme();
+
+    const handleLogout = async () => {
+        setMenuAberto(false);
+
+        // limpar token, AsyncStorage, contexto de auth, etc.
+        await AsyncStorage.removeItem('userToken');
+        // ou: await signOut(); se você tiver um AuthContext
+
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            })
+        );
+    };
 
     return (
         <View style={[styles.container, { backgroundColor: theme.card }]}>
@@ -44,6 +60,7 @@ export function HeaderScreen() {
                         currentScreen={route.name}
                         onNavigate={(nomeDaTela) => navigation.navigate(nomeDaTela)}
                         onClose={() => setMenuAberto(false)}
+                        onLogout={handleLogout}
                     />
 
                     {/* Fundo escurecido clicável para fechar o menu */}
