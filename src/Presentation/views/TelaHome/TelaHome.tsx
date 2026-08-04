@@ -51,8 +51,8 @@ export const TelaHomeScreen = () => {
                         <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
                             <Feather name="users" size={20} color={theme.accentColor} />
                         </View>
-                        <Text style={[styles.number, { color: theme.textPrimary }]}>2</Text>
-                        <Text style={[styles.label, { color: theme.textSecondary }]}>Contribuidores</Text>
+                        <Text style={[styles.number, { color: theme.textPrimary }]}>1</Text>
+                        <Text style={[styles.label, { color: theme.textSecondary }]}>   Contribuidores</Text>
                     </View>
                 </View>
 
