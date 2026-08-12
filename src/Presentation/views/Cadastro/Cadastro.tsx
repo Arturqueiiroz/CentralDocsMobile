@@ -3,13 +3,14 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { RootStackParamList } from '../../../../App';
 
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { useState } from 'react';
 
 // ✅ Caminhos corrigidos
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
 import { useTheme } from '../../context/ThemeContext';
+import { register as registerService } from '../../../services/AuthServices';
 
 export default function RegisterScreen() {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -17,7 +18,50 @@ export default function RegisterScreen() {
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const { theme } = useTheme();
+
+    const handleRegister = async () => {
+        if (!email || !cpf || !password || !confirmPassword) {
+            Alert.alert('Atenção', 'Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Alert.alert('Atenção', 'As senhas não conferem.');
+            return;
+        }
+
+        // Mapeando dados do formulário para o formato da API.
+        const nomeDerivado = email.split('@')[0];
+        const cpfLimpo = cpf.replace(/[^\d]/g, '');
+        const nomeUsuario = cpfLimpo || email;
+
+        setLoading(true);
+        try {
+            await registerService({
+                nome: nomeDerivado,
+                nomeUsuario: nomeUsuario,
+                email: email,
+                telefone: null,
+                senha: password,
+                imagemUrl: null,
+            });
+
+            Alert.alert('Sucesso', 'Conta criada com sucesso!', [
+                {
+                    text: 'Ok',
+                    onPress: () => {
+                        navigation.navigate('Login');
+                    }
+                }
+            ]);
+        } catch (error: any) {
+            Alert.alert('Erro no Cadastro', error.message || 'Não foi possível realizar o cadastro.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -69,8 +113,8 @@ export default function RegisterScreen() {
                 />
 
                 <CustomButton
-                    title="Criar Conta"
-                    onPress={() => { }}
+                    title={loading ? "Cadastrando..." : "Criar Conta"}
+                    onPress={handleRegister}
                 />
 
                 <View style={styles.loginContainer}>

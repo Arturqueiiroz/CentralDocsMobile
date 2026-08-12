@@ -1,25 +1,48 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
 import { useTheme } from '../../context/ThemeContext';
+import { login as loginService } from '../../../services/AuthServices';
 
 export const LoginScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const { theme } = useTheme();
 
     // Função de login que navega para a Home
-    const handleLogin = () => {
-        // Aqui você pode adicionar a lógica de autenticação futuramente
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'TelaHome' as any }], // Garante que o usuário não volte para o login
-        });
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert('Atenção', 'Por favor, digite seu e-mail e sua senha.');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const data = await loginService({ email, senha: password });
+            console.log('Login bem sucedido:', data);
+
+            Alert.alert('Sucesso', `Bem-vindo, ${data.usuario?.nome || 'usuário'}!`, [
+                {
+                    text: 'Ok',
+                    onPress: () => {
+                        navigation.reset({
+                            index: 0,
+                            routes: [{ name: 'TelaHome' as any }], // Garante que o usuário não volte para o login
+                        });
+                    }
+                }
+            ]);
+        } catch (error: any) {
+            Alert.alert('Erro no Login', error.message || 'Erro ao conectar com o servidor.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
