@@ -58,7 +58,7 @@ export function HeaderScreen() {
                     {/* Componente do Menu Lateral */}
                     <CustomDrawer
                         currentScreen={route.name}
-                        onNavigate={(nomeDaTela) => navigation.navigate(nomeDaTela)}
+                        onNavigate={(nomeDaTela) => navigation.navigate(nomeDaTela as any)}
                         onClose={() => setMenuAberto(false)}
                         onLogout={handleLogout}
                     />

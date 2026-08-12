@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from 'expo-notifications';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from '../../components/Footer';
@@ -15,6 +14,9 @@ const NOTIFICATIONS_SETTINGS_KEY = '@user_notifications_settings';
 
 // Checa se a aplicação está rodando no Expo Go
 const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
+// Evita importar expo-notifications no Expo Go (Android) para não disparar o erro nativo do SDK 53+
+const Notifications = !isExpoGo ? require('expo-notifications') : null;
 
 export default function ConfiguracoesScreen() {
     const { isDarkMode, toggleTheme, theme } = useTheme();
