@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Notifications from 'expo-notifications';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from '../../components/Footer';
@@ -75,6 +74,9 @@ export default function ConfiguracoesScreen() {
 
             // Se for em Build de Desenvolvimento ou Produção, pede a permissão normalmente
             try {
+                // Import dinâmico: evita que o módulo expo-notifications
+                // seja carregado (e quebre) quando estiver rodando no Expo Go
+                const Notifications = await import('expo-notifications');
                 const { status } = await Notifications.requestPermissionsAsync();
                 if (status !== 'granted') {
                     Alert.alert('Atenção', 'A permissão para enviar notificações foi negada no dispositivo.');
