@@ -135,16 +135,26 @@ export default function PerfilScreen() {
                         <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.infoRow, { borderBottomColor: theme.borderColor }]} onPress={abrirEdicao}>
+                    <TouchableOpacity
+                        style={[styles.infoRow, { borderBottomColor: theme.borderColor }]}
+                        activeOpacity={1}
+                    >
                         <View style={[styles.infoIconBox, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
                             <Ionicons name="location-outline" size={20} color={theme.accentColor} />
                         </View>
+
                         <View style={styles.infoContent}>
-                            <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>LOCALIZAÇÃO</Text>
-                            <Text style={[styles.infoValue, { color: theme.textPrimary }]}>{perfil.localizacao}</Text>
+                            <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>
+                                LOCALIZAÇÃO
+                            </Text>
+
+                            <Text style={[styles.infoValue, { color: theme.textPrimary }]}>
+                                {perfil.localizacao}
+                            </Text>
                         </View>
-                        <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
                     </TouchableOpacity>
+
+
                 </View>
 
                 {/* Segurança */}
@@ -246,13 +256,6 @@ export default function PerfilScreen() {
                                 value={rascunho.telefone}
                                 onChangeText={atualizarCampo}
                                 keyboardType="phone-pad"
-                            />
-                            <CustomInput
-                                label="Localização"
-                                placeholder="Cidade - UF"
-                                property="localizacao"
-                                value={rascunho.localizacao}
-                                onChangeText={atualizarCampo}
                             />
                         </ScrollView>
 

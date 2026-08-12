@@ -6,18 +6,18 @@ import {
 
 const styles = StyleSheet.create({
     drawerContainer: {
-        width: 290,
-        paddingTop:
-            Platform.OS === "android"
-                ? (StatusBar.currentHeight ?? 0) + 20
-                : 0,
-        paddingHorizontal: 20,
-        borderRightWidth: 1,
-        shadowColor: "#000",
-        shadowOffset: { width: 4, height: 0 },
-        shadowOpacity: 0.12,
-        shadowRadius: 12,
-        elevation: 16,
+    width: 290,
+    paddingTop:
+        Platform.OS === "android"
+            ? (StatusBar.currentHeight ?? 0) + 4 
+            : 8,
+    paddingHorizontal: 20,
+    borderRightWidth: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 4, height: 0 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 16,
     },
 
     header: {
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         marginBottom: 8,
-        paddingBottom: 24,
+        paddingBottom: 12,
     },
 
     logo: {
