@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
 import { useTheme } from '../../context/ThemeContext';
+import styles from "../../theme/LoginCss";
 
 export const LoginScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -95,84 +96,3 @@ export const LoginScreen = () => {
         </ScrollView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingHorizontal: 20,
-    },
-    card: {
-        borderRadius: 20,
-        padding: 25,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-    },
-    logoContainer: {
-        alignItems: 'center',
-        marginBottom: 30,
-    },
-    logo: {
-        width: 250,
-        height: 60,
-        resizeMode: 'contain',
-    },
-    subtitle: {
-        marginTop: 10,
-        fontSize: 17,
-        fontWeight: '600',
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: '500',
-    },
-    passwordHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    forgotPasswordContainer: {
-        alignSelf: 'flex-end',
-        marginTop: 5,
-        marginBottom: 15,
-    },
-    forgotPassword: {
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    registerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 20,
-    },
-    registerText: {
-        fontSize: 16,
-    },
-    registerLink: {
-        fontWeight: 'bold',
-        marginLeft: 5,
-        fontSize: 16,
-    },
-    google: {
-        alignItems: 'center',
-        marginTop: 25,
-    },
-    googleButton: {
-        width: 55,
-        height: 55,
-        borderRadius: 27.5,
-        borderWidth: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginTop: 15,
-    },
-    googleIcon: {
-        width: 28,
-        height: 28,
-        resizeMode: 'contain',
-    },
-});
