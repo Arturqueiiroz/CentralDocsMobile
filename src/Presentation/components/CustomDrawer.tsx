@@ -24,6 +24,7 @@ export default function CustomDrawer({
         { id: 'TelaHome', label: 'Home', icon: 'home-outline' },
         { id: 'Configuracoes', label: 'Configurações', icon: 'settings-outline' },
         { id: 'SobreNos', label: 'Sobre nós', icon: 'information-circle-outline' },
+        { id: 'PerguntasFrequentes', label: 'Perguntas Frequentes', icon: 'help-circle-outline' },
     ];
 
     const activeBg = isDarkMode

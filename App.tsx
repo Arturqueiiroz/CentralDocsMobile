@@ -15,6 +15,7 @@ import PerfilScreen from "./src/Presentation/views/Perfil/Perfil";
 import ConfiguracoesScreen from "./src/Presentation/views/Configuração/Configuracao";
 import LerDocumentoScreen from "./src/Presentation/views/QRcode/Qrcode";
 import SobreNosScreen from "./src/Presentation/views/SobreNos/Sobrenos";
+import PerguntasFrequentesScreen from "./src/Presentation/views/PerguntasFrequentes/PerguntasFrequentes";
 
 export type RootStackParamList = {
     Login: undefined;
@@ -28,6 +29,7 @@ export type RootStackParamList = {
     Configuracoes: undefined;
     QRcode: undefined;
     SobreNos: undefined;
+    PerguntasFrequentes: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -86,6 +88,10 @@ export default function App() {
                     <Stack.Screen
                         name="SobreNos"
                         component={SobreNosScreen}
+                    />
+                    <Stack.Screen
+                        name="PerguntasFrequentes"
+                        component={PerguntasFrequentesScreen}
                     />
                 </Stack.Navigator>
             </NavigationContainer>
