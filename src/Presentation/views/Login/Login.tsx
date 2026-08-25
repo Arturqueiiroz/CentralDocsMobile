@@ -14,12 +14,10 @@ export const LoginScreen = () => {
     const [password, setPassword] = useState('');
     const { theme } = useTheme();
 
-    // Função de login que navega para a Home
     const handleLogin = () => {
-        // Aqui você pode adicionar a lógica de autenticação futuramente
         navigation.reset({
             index: 0,
-            routes: [{ name: 'TelaHome' as any }], // Garante que o usuário não volte para o login
+            routes: [{ name: 'TelaHome' as any }],
         });
     };
 

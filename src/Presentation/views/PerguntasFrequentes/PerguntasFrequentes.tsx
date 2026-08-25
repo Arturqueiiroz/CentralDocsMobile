@@ -2,12 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView, StatusBar,  LayoutAnimation, Platform, UIManager, Animated, } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '../../context/ThemeContext'; // Ajuste o caminho se necessário
+import { useTheme } from '../../context/ThemeContext';
 import { HeaderScreen } from "../../components/Header";
 import { FooterScreen } from "../../components/Footer";
 import styles from '../../theme/PerguntasFrequentesCss';
 
-// Habilita animações no Android
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }

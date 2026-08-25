@@ -13,10 +13,8 @@ import styles from '../../theme/ConfiguracaoCss';
 
 const NOTIFICATIONS_SETTINGS_KEY = '@user_notifications_settings';
 
-// Checa se a aplicação está rodando no Expo Go
 const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 
-// Evita importar expo-notifications no Expo Go (Android) para não disparar o erro nativo do SDK 53+
 const Notifications = !isExpoGo ? require('expo-notifications') : null;
 
 export default function ConfiguracoesScreen() {
@@ -27,7 +25,6 @@ export default function ConfiguracoesScreen() {
     const [pushNotifications, setPushNotifications] = useState(true);
     const [biometria, setBiometria] = useState(false);
 
-    // Carrega as preferências salvas no dispositivo
     useEffect(() => {
         const loadSettings = async () => {
             try {
@@ -46,7 +43,6 @@ export default function ConfiguracoesScreen() {
         loadSettings();
     }, []);
 
-    // Salva as configurações localmente
     const saveSettings = async (emailVal: boolean, pushVal: boolean, bioVal: boolean) => {
         try {
             await AsyncStorage.setItem(
@@ -65,7 +61,6 @@ export default function ConfiguracoesScreen() {
 
     const handleTogglePush = async (value: boolean) => {
         if (value) {
-            // Se estiver no Expo Go, avisa o usuário e ignora a chamada de permissão nativa para evitar o erro
             if (isExpoGo) {
                 Alert.alert(
                     'Modo Expo Go',
@@ -76,10 +71,7 @@ export default function ConfiguracoesScreen() {
                 return;
             }
 
-            // Se for em Build de Desenvolvimento ou Produção, pede a permissão normalmente
             try {
-                // Import dinâmico: evita que o módulo expo-notifications
-                // seja carregado (e quebre) quando estiver rodando no Expo Go
                 const Notifications = await import('expo-notifications');
                 const { status } = await Notifications.requestPermissionsAsync();
                 if (status !== 'granted') {

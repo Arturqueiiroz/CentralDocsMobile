@@ -9,8 +9,8 @@ const { width } = Dimensions.get('window');
 
 export default function LerDocumentoScreen() {
     const { theme } = useTheme();
-    const navigation = useNavigation(); // Hook de navegação
-
+    const navigation = useNavigation(); 
+    
     return (
         <View style={[styles.container, { backgroundColor: theme.background }]}>
             {/* BOTÃO DE VOLTAR */}

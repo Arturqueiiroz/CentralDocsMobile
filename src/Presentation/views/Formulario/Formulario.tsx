@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-// 1. Importando o hook de navegação
 import { useNavigation } from "@react-navigation/native";
 
 import { CustomInput } from "../../components/CustomTextInput";
@@ -11,7 +10,6 @@ import { HeaderScreen } from "../../components/Header";
 import styles from '../../theme/FormularioCss'
 
 export default function FormularioScreen() {
-    // 2. Iniciando a navegação
     const navigation = useNavigation<any>();
     const { theme, isDarkMode } = useTheme();
 
@@ -19,7 +17,6 @@ export default function FormularioScreen() {
     const [cpf, setCpf] = useState("");
     const [dataNascimento, setDataNascimento] = useState("");
 
-    // Estados do Gênero
     const [genero, setGenero] = useState("Masculino");
     const [dropdownAberto, setDropdownAberto] = useState(false);
 

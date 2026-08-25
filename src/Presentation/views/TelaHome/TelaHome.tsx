@@ -98,7 +98,6 @@ export const TelaHomeScreen = () => {
                 </View>
             </ScrollView>
 
-            {/* BOTÃO FLUTUANTE BASE (FAB) - Sempre fixo e visível abaixo ou acima do modal */}
             <TouchableOpacity
                 style={[styles.fab, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}
                 activeOpacity={0.8}
@@ -109,14 +108,12 @@ export const TelaHomeScreen = () => {
 
             <FooterScreen />
 
-            {/* === SPEED DIAL MODAL TOTALMENTE TRANSPARENTE === */}
             <Modal
                 transparent={true}
                 visible={menuVisivel}
                 animationType="fade"
                 onRequestClose={() => setMenuVisivel(false)}
             >
-                {/* Modificado para transparent conforme pedido da imagem (1).png */}
                 <Pressable style={styles.modalOverlayTransparent} onPress={() => setMenuVisivel(false)}>
 
                     {/* Container das opções posicionado logo acima do botão fixo */}

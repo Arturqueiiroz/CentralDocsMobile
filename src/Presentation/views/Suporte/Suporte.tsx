@@ -72,7 +72,7 @@ export default function SuporteTecnicoScreen() {
 
         setEnviando(true);
         try {
-            // TODO: substituir pela chamada real à API de suporte
+            
             await new Promise((resolve) => setTimeout(resolve, 900));
             Alert.alert('Mensagem enviada', 'Nossa equipe vai te responder em breve.');
             setNome('');
