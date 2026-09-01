@@ -17,6 +17,7 @@ import LerDocumentoScreen from "./src/Presentation/views/QRcode/Qrcode";
 import SobreNosScreen from "./src/Presentation/views/SobreNos/Sobrenos";
 import PerguntasFrequentesScreen from "./src/Presentation/views/PerguntasFrequentes/PerguntasFrequentes";
 import SuporteScreen from "./src/Presentation/views/Suporte/Suporte";
+import EsqueceuSenhaScreen from "./src/Presentation/views/EsqueceuSenha/EsqueceuSenha";
 
 export type RootStackParamList = {
     Login: undefined;
@@ -32,6 +33,7 @@ export type RootStackParamList = {
     SobreNos: undefined;
     PerguntasFrequentes: undefined;
     Suporte: undefined;
+    EsqueceuSenha: { email?: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -98,6 +100,10 @@ export default function App() {
                     <Stack.Screen
                         name="Suporte"
                         component={SuporteScreen}
+                    />
+                    <Stack.Screen
+                        name="EsqueceuSenha"
+                        component={EsqueceuSenhaScreen}
                     />
                 </Stack.Navigator>
             </NavigationContainer>
