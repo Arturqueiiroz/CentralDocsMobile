@@ -21,7 +21,7 @@ export default function EsqueceuSenhaScreen() {
     const [linkEnviado, setLinkEnviado] = useState(false);
 
     function handleEnviarLink() {
-        if (!email.trim() || !email.includes('@')) {
+        if (!email.trim() || !email.includes('@') || !email.includes('.') || email.length <= 5) {
             Alert.alert('Email inválido', 'Digite um email válido para receber o link de recuperação.');
             return;
         }
@@ -33,13 +33,6 @@ export default function EsqueceuSenhaScreen() {
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }} style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={[styles.card, { backgroundColor: theme.card }]}>
-
-                <TouchableOpacity
-                    style={[styles.backButton, { backgroundColor: theme.borderColor }]}
-                    onPress={() => navigation.goBack()}
-                >
-                    <Ionicons name="arrow-back" size={20} color={theme.textPrimary} />
-                </TouchableOpacity>
 
                 {!linkEnviado ? (
                     <>
@@ -93,13 +86,23 @@ export default function EsqueceuSenhaScreen() {
                         <Text style={[styles.confirmationText, { color: theme.textSecondary }]}>
                             Enviamos as instruções de recuperação para{' '}
                             <Text style={[styles.confirmationEmail, { color: theme.textPrimary }]}>{email}</Text>.
-                            {'\n'}Pode levar alguns minutos para chegar.
                         </Text>
+                        <Text style={[styles.confirmationTime, { color: theme.textSecondary }]}>
+                            Pode levar alguns minutos para chegar.
+                        </Text>                        
 
-                        <CustomButton
+                        {/* <CustomButton
                             title="Voltar para o login"
                             onPress={() => navigation.navigate('Login')}
-                        />
+                        /> */}
+                        <TouchableOpacity 
+                            style={{ backgroundColor: theme.accentColor, paddingVertical: 12, paddingHorizontal: 20,borderRadius: 8, alignItems: 'center', marginTop: 20,}} 
+                            onPress={() => navigation.navigate('Login')}
+                        >
+                            <Text style={{ color: '#FFFFFF', fontWeight: 'bold', fontSize: 16 }}>
+                                Voltar para o login
+                            </Text>
+                        </TouchableOpacity>           
 
                         <TouchableOpacity style={styles.resendLink} onPress={() => setLinkEnviado(false)}>
                             <Text style={[styles.resendLinkText, { color: theme.accentColor }]}>

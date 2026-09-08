@@ -3,13 +3,15 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { RootStackParamList } from '../../../../App';
 
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { useState } from 'react';
 
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
 import { useTheme } from '../../context/ThemeContext';
 import styles from '../../theme/CadastroCss';
+
+import { api } from '../../services/api';
 
 export default function RegisterScreen() {
     const navigation =
@@ -19,8 +21,99 @@ export default function RegisterScreen() {
     const [cpf, setCpf] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [nome, setNome] = useState('');
 
     const { theme } = useTheme();
+
+async function handleRegister() {
+    const cpfLimpo = cpf.replace(/\D/g, '');
+
+    if (
+        !nome.trim() ||
+        !email.trim() ||
+        !cpfLimpo.trim() ||
+        !password.trim() ||
+        !confirmPassword.trim()
+    ) {
+        Alert.alert(
+            'Erro de cadastro',
+            'Por favor, preencha todos os campos.'
+        );
+        return;
+    }
+
+    if (
+        !email.includes('@') ||
+        !email.includes('.') ||
+        email.length <= 5
+    ) {
+        Alert.alert(
+            'Erro de cadastro',
+            'Por favor, insira um email válido.'
+        );
+        return;
+    }
+
+    if (cpfLimpo.length !== 11) {
+        Alert.alert(
+            'Erro de cadastro',
+            'Por favor, insira um CPF válido.'
+        );
+        return;
+    }
+
+    if (password.length < 6) {
+        Alert.alert(
+            'Erro de cadastro',
+            'A senha deve ter pelo menos 6 caracteres.'
+        );
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        Alert.alert(
+            'Erro de cadastro',
+            'As senhas não coincidem.'
+        );
+        return;
+    }
+
+    try {
+        const response = await api.post('/CriarUsuario', {
+            nome: nome.trim(),
+            email: email.trim(),
+            cpf: cpfLimpo,
+            senha: password,
+            confirmarSenha: confirmPassword,
+        });
+
+        console.log('Resposta da API:', response.data);
+
+        if (!response.data.erro) {
+            Alert.alert(
+                'Cadastro realizado!',
+                'Sua conta foi criada com sucesso.',
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => navigation.navigate('Login'),
+                    },
+                ]
+            );
+        }
+    } catch (error: any) {
+        console.log('Erro no cadastro:', error);
+
+        const mensagem =
+            error.response?.data?.mensagem ||
+            'Não foi possível realizar o cadastro.';
+
+        Alert.alert(
+            'Erro de cadastro',
+            mensagem
+        );
+    }
+}
 
     return (
         <View
@@ -51,6 +144,13 @@ export default function RegisterScreen() {
                         Gerenciamento de documentos
                     </Text>
                 </View>
+                <CustomInput
+                    label="Nome"
+                    placeholder="Digite seu nome"
+                    value={nome}
+                    property="nome"
+                    onChangeText={(property, value) => setNome(value)}
+                />                
 
                 <CustomInput
                     label="Email"
@@ -90,7 +190,7 @@ export default function RegisterScreen() {
 
                 <CustomButton
                     title="Criar Conta"
-                    onPress={() => {}}
+                    onPress={handleRegister}
                 />
 
                 <View style={styles.loginContainer}>

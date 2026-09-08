@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     confirmationText: {
         fontSize: 14,
         textAlign: 'center',
-        marginTop: 10,
+        marginTop: 12,
         lineHeight: 20,
         paddingHorizontal: 10,
     },
@@ -85,12 +85,15 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
     resendLink: {
-        marginTop: 18,
+        marginTop: 15,
     },
     resendLinkText: {
         fontSize: 14,
         fontWeight: '600',
     },
+    confirmationTime: {
+        marginTop: 7,
+    }
 });
 
 export default styles;

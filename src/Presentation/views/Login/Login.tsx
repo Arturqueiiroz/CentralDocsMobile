@@ -1,12 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
 import { useTheme } from '../../context/ThemeContext';
 import styles from "../../theme/LoginCss";
+import { api } from '../../services/api';
 
 export const LoginScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -14,12 +15,80 @@ export const LoginScreen = () => {
     const [password, setPassword] = useState('');
     const { theme } = useTheme();
 
-    const handleLogin = () => {
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'TelaHome' as any }],
+const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+        Alert.alert(
+            'Erro de login',
+            'Por favor, preencha todos os campos.'
+        );
+        return;
+    }
+
+    if (
+        !email.includes('@') ||
+        !email.includes('.') ||
+        email.length <= 5
+    ) {
+        Alert.alert(
+            'Erro de login',
+            'Por favor, insira um email válido.'
+        );
+        return;
+    }
+
+    if (password.length < 6) {
+        Alert.alert(
+            'Erro de login',
+            'A senha deve ter pelo menos 6 caracteres.'
+        );
+        return;
+    }
+
+    try {
+        const response = await api.post('/login', {
+            email: email.trim(),
+            senha: password,
         });
-    };
+
+        console.log('Resposta do login:', response.data);
+
+        if (!response.data.erro) {
+            const token = response.data.token;
+            const usuario = response.data.usuario;
+
+            console.log('Token:', token);
+            console.log('Usuário:', usuario);
+
+            Alert.alert(
+                'Login realizado!',
+                `Bem-vindo, ${usuario.nome}!`,
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'TelaHome' as any }],
+                            });
+                        },
+                    },
+                ]
+            );
+        }
+
+    } catch (error: any) {
+        console.log('Erro no login:', error);
+
+        const mensagem =
+            error.response?.data?.mensagem ||
+            'Não foi possível realizar o login.';
+
+        Alert.alert(
+            'Erro de login',
+            mensagem
+        );
+    }
+};
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }} style={[styles.container, { backgroundColor: theme.background }]}>
