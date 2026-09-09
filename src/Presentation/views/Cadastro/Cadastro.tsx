@@ -28,53 +28,30 @@ export default function RegisterScreen() {
 async function handleRegister() {
     const cpfLimpo = cpf.replace(/\D/g, '');
 
-    if (
-        !nome.trim() ||
-        !email.trim() ||
-        !cpfLimpo.trim() ||
-        !password.trim() ||
-        !confirmPassword.trim()
+    if ( !nome.trim() || !email.trim() || !cpfLimpo.trim() || !password.trim() || !confirmPassword.trim()
     ) {
-        Alert.alert(
-            'Erro de cadastro',
-            'Por favor, preencha todos os campos.'
-        );
+        Alert.alert('Erro de cadastro', 'Por favor, preencha todos os campos.' );
         return;
     }
 
-    if (
-        !email.includes('@') ||
-        !email.includes('.') ||
-        email.length <= 5
+    if ( !email.includes('@') || !email.includes('.') || email.length <= 5
     ) {
-        Alert.alert(
-            'Erro de cadastro',
-            'Por favor, insira um email válido.'
-        );
+        Alert.alert('Erro de cadastro','Por favor, insira um email válido.');
         return;
     }
 
     if (cpfLimpo.length !== 11) {
-        Alert.alert(
-            'Erro de cadastro',
-            'Por favor, insira um CPF válido.'
-        );
+        Alert.alert( 'Erro de cadastro', 'Por favor, insira um CPF válido.' );
         return;
     }
 
     if (password.length < 6) {
-        Alert.alert(
-            'Erro de cadastro',
-            'A senha deve ter pelo menos 6 caracteres.'
-        );
+        Alert.alert( 'Erro de cadastro', 'A senha deve ter pelo menos 6 caracteres.' );
         return;
     }
 
     if (password !== confirmPassword) {
-        Alert.alert(
-            'Erro de cadastro',
-            'As senhas não coincidem.'
-        );
+        Alert.alert( 'Erro de cadastro', 'As senhas não coincidem.' );
         return;
     }
 
@@ -90,9 +67,7 @@ async function handleRegister() {
         console.log('Resposta da API:', response.data);
 
         if (!response.data.erro) {
-            Alert.alert(
-                'Cadastro realizado!',
-                'Sua conta foi criada com sucesso.',
+            Alert.alert( 'Cadastro realizado!', 'Sua conta foi criada com sucesso.',
                 [
                     {
                         text: 'OK',

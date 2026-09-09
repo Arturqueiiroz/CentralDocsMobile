@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
@@ -53,11 +54,14 @@ const handleLogin = async () => {
         console.log('Resposta do login:', response.data);
 
         if (!response.data.erro) {
-            const token = response.data.token;
-            const usuario = response.data.usuario;
+        const token = response.data.token;
+        const usuario = response.data.usuario;
 
-            console.log('Token:', token);
-            console.log('Usuário:', usuario);
+        await AsyncStorage.setItem('token', token);
+        await AsyncStorage.setItem('usuario', JSON.stringify(usuario));
+
+        console.log('Token salvo!');
+        console.log('Usuário:', usuario);
 
             Alert.alert(
                 'Login realizado!',
