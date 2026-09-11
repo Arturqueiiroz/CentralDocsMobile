@@ -8,10 +8,10 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingTop: 15,
-    paddingBottom: 140,
+    paddingBottom: 120,
   },
   welcomeContainer: { 
-    marginBottom: 25 
+    marginBottom: 20 
   },
   welcomeText: { 
     fontSize: 16, 
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   welcomeName: { 
     color: '#0061C4', 
-    fontWeight: '600' 
+    fontWeight: '700' 
   },
   cardsRow: { 
     flexDirection: 'row', 
@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
     marginBottom: 20 
   },
   infoCard: { 
-    width: '47%', 
+    width: '48%', 
     backgroundColor: '#FFF', 
-    borderRadius: 20, 
+    borderRadius: 16, 
     padding: 16, 
     borderWidth: 1, 
     borderColor: '#EDF2F7', 
@@ -41,12 +41,12 @@ const styles = StyleSheet.create({
     elevation: 1 
   },
   cardIconCircle: { 
-    width: 36, 
-    height: 36, 
-    borderRadius: 18, 
+    width: 38, 
+    height: 38, 
+    borderRadius: 12, 
     justifyContent: 'center', 
     alignItems: 'center', 
-    marginBottom: 12 
+    marginBottom: 10 
   },
   number: { 
     fontSize: 22, 
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   modalOverlayTransparent: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(0,0,0,0.15)',
   },
   floatingMenu: {
     position: 'absolute',
@@ -214,7 +214,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
-    marginRight: 8, 
   },
   floatingLabelBlue: {
     backgroundColor: '#3B82F6',

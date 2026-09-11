@@ -7,6 +7,31 @@ import { FooterScreen } from "../../components/Footer";
 import { useTheme } from '../../context/ThemeContext';
 import styles from "../../theme/HomeCss";
 
+// Dados mockados para exibição de atividades
+const MOCK_ATIVIDADES = [
+    {
+        id: '1',
+        title: 'Currículo_2026.pdf',
+        subtitle: 'Editado há 2 horas',
+        icon: 'file-text',
+        badgeColor: '#EBF5FF',
+    },
+    {
+        id: '2',
+        title: 'Comprovante_Residencia.png',
+        subtitle: 'Enviado ontem',
+        icon: 'image',
+        badgeColor: '#E1F5FE',
+    },
+    {
+        id: '3',
+        title: 'Formulário_Inscrição',
+        subtitle: 'Concluído há 3 dias',
+        icon: 'check-square',
+        badgeColor: '#E8F5E9',
+    },
+];
+
 export const TelaHomeScreen = () => {
     const navigation = useNavigation<any>();
     const [menuVisivel, setMenuVisivel] = useState(false);
@@ -37,7 +62,7 @@ export const TelaHomeScreen = () => {
                     </Text>
                 </View>
 
-                {/* CARDS SUPERIORES */}
+                {/* CARDS SUPERIORES - SEM CONTRIBUINTE */}
                 <View style={styles.cardsRow}>
                     <View style={[styles.infoCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
                         <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
@@ -48,11 +73,11 @@ export const TelaHomeScreen = () => {
                     </View>
 
                     <View style={[styles.infoCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                        <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
-                            <Feather name="users" size={20} color={theme.accentColor} />
+                        <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#FFF8E1' }]}>
+                            <Feather name="clock" size={20} color="#F59E0B" />
                         </View>
-                        <Text style={[styles.number, { color: theme.textPrimary }]}>1</Text>
-                        <Text style={[styles.label, { color: theme.textSecondary }]}>   Contribuidores</Text>
+                        <Text style={[styles.number, { color: theme.textPrimary }]}>2</Text>
+                        <Text style={[styles.label, { color: theme.textSecondary }]}>Pendentes</Text>
                     </View>
                 </View>
 
@@ -81,23 +106,30 @@ export const TelaHomeScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                {/* ATIVIDADE */}
-                <View style={[styles.activityCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                    <View style={[styles.activityIconContainer, { backgroundColor: isDarkMode ? theme.borderColor : '#EBF5FF' }]}>
-                        <Feather name="file-text" size={20} color={theme.accentColor} />
-                    </View>
-                    <View style={styles.activityBody}>
-                        <View style={styles.activityHeader}>
-                            <Text style={[styles.activityTitle, { color: theme.textPrimary }]} numberOfLines={1}>Curriculaum.</Text>
-                            <TouchableOpacity style={styles.moreButton}>
-                                <Ionicons name="ellipsis-vertical" size={18} color={theme.textSecondary} />
-                            </TouchableOpacity>
+                {/* LISTA DE ATIVIDADES MOCKADAS */}
+                {MOCK_ATIVIDADES.map((item) => (
+                    <View key={item.id} style={[styles.activityCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                        <View style={[styles.activityIconContainer, { backgroundColor: isDarkMode ? theme.borderColor : item.badgeColor }]}>
+                            <Feather name={item.icon as any} size={20} color={theme.accentColor} />
                         </View>
-                        <Text style={[styles.activitySubtitle, { color: theme.textSecondary }]}>Editado há 2 horas</Text>
+                        <View style={styles.activityBody}>
+                            <View style={styles.activityHeader}>
+                                <Text style={[styles.activityTitle, { color: theme.textPrimary }]} numberOfLines={1}>
+                                    {item.title}
+                                </Text>
+                                <TouchableOpacity style={styles.moreButton}>
+                                    <Ionicons name="ellipsis-vertical" size={18} color={theme.textSecondary} />
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={[styles.activitySubtitle, { color: theme.textSecondary }]}>
+                                {item.subtitle}
+                            </Text>
+                        </View>
                     </View>
-                </View>
+                ))}
             </ScrollView>
 
+            {/* BOTÃO FLUTUANTE (FAB) */}
             <TouchableOpacity
                 style={[styles.fab, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}
                 activeOpacity={0.8}
@@ -108,6 +140,7 @@ export const TelaHomeScreen = () => {
 
             <FooterScreen />
 
+            {/* MODAL DO MENU RAPIDO */}
             <Modal
                 transparent={true}
                 visible={menuVisivel}
@@ -115,11 +148,7 @@ export const TelaHomeScreen = () => {
                 onRequestClose={() => setMenuVisivel(false)}
             >
                 <Pressable style={styles.modalOverlayTransparent} onPress={() => setMenuVisivel(false)}>
-
-                    {/* Container das opções posicionado logo acima do botão fixo */}
                     <View style={styles.floatingMenu}>
-
-                        {/* Opção 1: Adicionar Documento */}
                         <TouchableOpacity
                             style={styles.speedDialRow}
                             activeOpacity={0.7}
@@ -133,7 +162,6 @@ export const TelaHomeScreen = () => {
                             </View>
                         </TouchableOpacity>
 
-                        {/* Opção 2: Formulário */}
                         <TouchableOpacity
                             style={styles.speedDialRow}
                             activeOpacity={0.7}
@@ -146,9 +174,7 @@ export const TelaHomeScreen = () => {
                                 <Feather name="clipboard" size={18} color="#FFF" />
                             </View>
                         </TouchableOpacity>
-
                     </View>
-
                 </Pressable>
             </Modal>
         </View>
