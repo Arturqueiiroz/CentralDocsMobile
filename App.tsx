@@ -19,88 +19,48 @@ import PerguntasFrequentesScreen from "./src/Presentation/views/PerguntasFrequen
 import SuporteScreen from "./src/Presentation/views/Suporte/Suporte";
 
 export type RootStackParamList = {
-    Login: undefined;
-    Cadastro: undefined;
-    Biometria: undefined;
-    TelaHome: undefined;
-    TelaPrincipal: undefined;
-    Formulario: undefined;
-    Documentos: undefined;
-    Perfil: undefined;
-    Configuracoes: undefined;
-    QRcode: undefined;
-    SobreNos: undefined;
-    PerguntasFrequentes: undefined;
-    Suporte: undefined;
+  Login: undefined;
+  Cadastro: undefined;
+  Biometria: undefined;
+  TelaHome: undefined;
+  TelaPrincipal: undefined;
+  Formulario: undefined;
+  Documentos: undefined;
+  Perfil: undefined;
+  Configuracoes: undefined;
+  QRcode: undefined;
+  SobreNos: undefined;
+  PerguntasFrequentes: undefined;
+  Suporte: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-    return (
-
-        <ThemeProvider>
-            <NavigationContainer>
-                <Stack.Navigator
-                    initialRouteName="TelaPrincipal"
-                    screenOptions={{
-                        headerShown: false,
-                    }}
-                >
-                    <Stack.Screen
-                        name="TelaPrincipal"
-                        component={TelaPrincipalScreen}
-                    />
-                    <Stack.Screen
-                        name="TelaHome"
-                        component={TelaHomeScreen}
-                    />
-                    <Stack.Screen
-                        name="Login"
-                        component={LoginScreen}
-                    />
-                    <Stack.Screen
-                        name="Cadastro"
-                        component={RegisterScreen}
-                    />
-                    <Stack.Screen
-                        name="Biometria"
-                        component={ConfirmacaoBiometrica}
-                    />
-                    <Stack.Screen
-                        name="Formulario"
-                        component={FormularioScreen}
-                    />
-                    <Stack.Screen
-                        name="Documentos"
-                        component={DocumentosScreen}
-                    />
-                    <Stack.Screen
-                        name="Perfil"
-                        component={PerfilScreen}
-                    />
-                    <Stack.Screen
-                        name="Configuracoes"
-                        component={ConfiguracoesScreen}
-                    />
-                    <Stack.Screen
-                        name="QRcode"
-                        component={LerDocumentoScreen}
-                    />
-                    <Stack.Screen
-                        name="SobreNos"
-                        component={SobreNosScreen}
-                    />
-                    <Stack.Screen
-                        name="PerguntasFrequentes"
-                        component={PerguntasFrequentesScreen}
-                    />
-                    <Stack.Screen
-                        name="Suporte"
-                        component={SuporteScreen}
-                    />
-                </Stack.Navigator>
-            </NavigationContainer>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="TelaPrincipal" component={TelaPrincipalScreen} />
+          <Stack.Screen name="TelaHome" component={TelaHomeScreen} />
+          <Stack.Screen name="Cadastro" component={RegisterScreen} />
+          <Stack.Screen name="Biometria" component={ConfirmacaoBiometrica} />
+          <Stack.Screen name="Formulario" component={FormularioScreen} />
+          <Stack.Screen name="Documentos" component={DocumentosScreen} />
+          <Stack.Screen name="Perfil" component={PerfilScreen} />
+          <Stack.Screen name="Configuracoes" component={ConfiguracoesScreen} />
+          <Stack.Screen name="QRcode" component={LerDocumentoScreen} />
+          <Stack.Screen name="SobreNos" component={SobreNosScreen} />
+          <Stack.Screen name="PerguntasFrequentes" component={PerguntasFrequentesScreen} />
+          <Stack.Screen name="Suporte" component={SuporteScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
+  );
 }
