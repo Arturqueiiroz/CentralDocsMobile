@@ -10,12 +10,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
 import { useTheme } from '../../context/ThemeContext';
 import styles from '../../theme/ConfiguracaoCss';
+import { BiometricService } from '../../services/BiometricService';
 
 const NOTIFICATIONS_SETTINGS_KEY = '@user_notifications_settings';
 
 const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
-
-const Notifications = !isExpoGo ? require('expo-notifications') : null;
 
 export default function ConfiguracoesScreen() {
     const { isDarkMode, toggleTheme, theme } = useTheme();
@@ -88,7 +87,16 @@ export default function ConfiguracoesScreen() {
         saveSettings(alertasEmail, value, biometria);
     };
 
-    const handleToggleBiometria = (value: boolean) => {
+    const handleToggleBiometria = async (value: boolean) => {
+        if (value) {
+            const disponivel = await BiometricService.isBiometricAvaliable();
+            if (!disponivel) {
+                Alert.alert('Biometria Indisponível', 'Seu aparelho não possui suporte ou biometria cadastrada.');
+                setBiometria(false);
+                saveSettings(alertasEmail, pushNotifications, false);
+                return;
+            }
+        }
         setBiometria(value);
         saveSettings(alertasEmail, pushNotifications, value);
     };
@@ -117,7 +125,7 @@ export default function ConfiguracoesScreen() {
                     <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
                 </TouchableOpacity>
 
-                {/* SEÇÃO APARÊNCIA */}
+                {/* APARÊNCIA */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="eye-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>APARÊNCIA</Text>
@@ -132,7 +140,6 @@ export default function ConfiguracoesScreen() {
                             <Text style={[styles.optionTitle, { color: theme.textPrimary }]}>Modo escuro</Text>
                             <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Reduza o brilho e o cansaço visual</Text>
                         </View>
-
                         <Switch
                             value={isDarkMode}
                             onValueChange={toggleTheme}
@@ -140,22 +147,9 @@ export default function ConfiguracoesScreen() {
                             thumbColor="#FFFFFF"
                         />
                     </View>
-
-                    <View style={[styles.divider, { backgroundColor: theme.borderColor }]} />
-
-                    <TouchableOpacity style={styles.optionRow} activeOpacity={0.7}>
-                        <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? '#1E293B' : '#EEF4FF' }]}>
-                            <MaterialCommunityIcons name="format-size" size={20} color={theme.accentColor} />
-                        </View>
-                        <View style={styles.optionTextContainer}>
-                            <Text style={[styles.optionTitle, { color: theme.textPrimary }]}>Tamanho do texto</Text>
-                            <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Médio</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
-                    </TouchableOpacity>
                 </View>
 
-                {/* SEÇÃO NOTIFICAÇÃO */}
+                {/* NOTIFICAÇÃO */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="notifications-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>NOTIFICAÇÃO</Text>
@@ -197,7 +191,7 @@ export default function ConfiguracoesScreen() {
                     </View>
                 </View>
 
-                {/* SEÇÃO SEGURANÇA */}
+                {/* SEGURANÇA */}
                 <View style={styles.sectionHeader}>
                     <Ionicons name="shield-checkmark-outline" size={18} color={theme.accentColor} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>SEGURANÇA</Text>
@@ -219,38 +213,7 @@ export default function ConfiguracoesScreen() {
                             thumbColor="#FFFFFF"
                         />
                     </View>
-
-                    <View style={[styles.divider, { backgroundColor: theme.borderColor }]} />
-
-                    <TouchableOpacity style={styles.optionRow} activeOpacity={0.7}>
-                        <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? '#1E293B' : '#EEF4FF' }]}>
-                            <Ionicons name="key-outline" size={20} color={theme.accentColor} />
-                        </View>
-                        <View style={styles.optionTextContainer}>
-                            <Text style={[styles.optionTitle, { color: theme.textPrimary }]}>Mudar senha</Text>
-                            <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Última atualização há 3 meses</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
-                    </TouchableOpacity>
                 </View>
-
-                <View style={[styles.helpBanner, { backgroundColor: isDarkMode ? theme.borderColor : theme.accentColor }]}>
-                    <Text style={styles.helpTitle}>Precisar de ajuda?</Text>
-                    <Text style={[styles.helpSubtitle, { color: isDarkMode ? theme.textSecondary : '#E0E7FF' }]}>
-                        Nossa equipe de suporte está à sua disposição 24 horas por dia, 7 dias por semana.
-                    </Text>
-                </View>
-
-                <View style={styles.footerInfo}>
-                    <Text style={[styles.versionText, { color: theme.textSecondary }]}>CentralDocs v2.4.1</Text>
-                    <TouchableOpacity
-                        activeOpacity={0.6}
-                        onPress={() => navigation.navigate('TelaPrincipal')}
-                    >
-                        <Text style={[styles.logoutText, { color: theme.accentColor }]}>Logout</Text>
-                    </TouchableOpacity>
-                </View>
-
             </ScrollView>
 
             <FooterScreen />

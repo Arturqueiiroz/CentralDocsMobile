@@ -4,12 +4,17 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
 import { useTheme } from '../../context/ThemeContext';
 import styles from "../../theme/LoginCss";
-import { api } from '../../services/api';
+import { BiometricService } from '../../services/BiometricService';
 
+const NOTIFICATIONS_SETTINGS_KEY = '@user_notifications_settings';
+
+import { api } from '../../services/api';
 export const LoginScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const [email, setEmail] = useState('');
@@ -94,6 +99,33 @@ const handleLogin = async () => {
     }
 };
 
+    const handleBiometricLogin = async () => {
+        // 1. Verifica se o usuário ativou a biometria nas Configurações
+        const storedSettings = await AsyncStorage.getItem(NOTIFICATIONS_SETTINGS_KEY);
+        if (storedSettings) {
+            const { bio } = JSON.parse(storedSettings);
+            if (bio === false) {
+                Alert.alert("Biometria Desativada", "Ative a biometria nas configurações do aplicativo para utilizar esse recurso.");
+                return;
+            }
+        }
+
+        // 2. Verifica se o dispositivo possui suporte
+        const disponivel = await BiometricService.isBiometricAvaliable();
+        if (!disponivel) {
+            Alert.alert("Biometria Indisponível", "Seu dispositivo não possui biometria configurada.");
+            return;
+        }
+
+        // 3. Solicita autenticação biométrica
+        const autenticado = await BiometricService.autenticarComBiometria("Biometria CentralDocs");
+        if (autenticado) {
+            handleLogin();
+        } else {
+            Alert.alert("Erro", "Autenticação biométrica falhou ou foi cancelada.");
+        }
+    };
+
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }} style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={[styles.card, { backgroundColor: theme.card }]}>
@@ -137,11 +169,21 @@ const handleLogin = async () => {
                     </Text>
                 </TouchableOpacity>
 
-                {/* Botão configurado para chamar o handleLogin */}
                 <CustomButton
                     title="Entrar"
                     onPress={handleLogin}
                 />
+
+                {/* Acesso por Biometria / Face ID */}
+                <TouchableOpacity
+                    style={{ marginTop: 20, alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}
+                    onPress={handleBiometricLogin}
+                >
+                    <Ionicons name="finger-print-outline" size={24} color={theme.accentColor} style={{ marginRight: 8 }} />
+                    <Text style={{ color: theme.accentColor, fontWeight: 'bold', fontSize: 14 }}>
+                        Entrar com Biometria / Face ID
+                    </Text>
+                </TouchableOpacity>
 
                 <View style={styles.registerContainer}>
                     <Text style={[styles.registerText, { color: theme.textSecondary }]}>
@@ -156,16 +198,6 @@ const handleLogin = async () => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.google}>
-                    <Text style={{ color: theme.textSecondary }}>Ou entre com</Text>
-                </View>
-
-                <TouchableOpacity style={[styles.googleButton, { borderColor: theme.borderColor }]}>
-                    <Image
-                        source={require('../../../../assets/img/google-icon-1.png')}
-                        style={styles.googleIcon}
-                    />
-                </TouchableOpacity>
             </View>
         </ScrollView>
     );
