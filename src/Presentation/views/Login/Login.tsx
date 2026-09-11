@@ -1,9 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../../../App';
-import { View, Text, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 import { CustomInput } from '../../components/CustomTextInput';
@@ -14,18 +14,90 @@ import { BiometricService } from '../../services/BiometricService';
 
 const NOTIFICATIONS_SETTINGS_KEY = '@user_notifications_settings';
 
+import { api } from '../../services/api';
 export const LoginScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { theme } = useTheme();
 
-    const handleLogin = () => {
-        navigation.reset({
-            index: 0,
-            routes: [{ name: 'TelaHome' as any }],
+const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+        Alert.alert(
+            'Erro de login',
+            'Por favor, preencha todos os campos.'
+        );
+        return;
+    }
+
+    if (
+        !email.includes('@') ||
+        !email.includes('.') ||
+        email.length <= 5
+    ) {
+        Alert.alert(
+            'Erro de login',
+            'Por favor, insira um email válido.'
+        );
+        return;
+    }
+
+    if (password.length < 6) {
+        Alert.alert(
+            'Erro de login',
+            'A senha deve ter pelo menos 6 caracteres.'
+        );
+        return;
+    }
+
+    try {
+        const response = await api.post('/login', {
+            email: email.trim(),
+            senha: password,
         });
-    };
+
+        console.log('Resposta do login:', response.data);
+
+        if (!response.data.erro) {
+        const token = response.data.token;
+        const usuario = response.data.usuario;
+
+        await AsyncStorage.setItem('token', token);
+        await AsyncStorage.setItem('usuario', JSON.stringify(usuario));
+
+        console.log('Token salvo!');
+        console.log('Usuário:', usuario);
+
+            Alert.alert(
+                'Login realizado!',
+                `Bem-vindo, ${usuario.nome}!`,
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'TelaHome' as any }],
+                            });
+                        },
+                    },
+                ]
+            );
+        }
+
+    } catch (error: any) {
+        console.log('Erro no login:', error);
+
+        const mensagem =
+            error.response?.data?.mensagem ||
+            'Não foi possível realizar o login.';
+
+        Alert.alert(
+            'Erro de login',
+            mensagem
+        );
+    }
+};
 
     const handleBiometricLogin = async () => {
         // 1. Verifica se o usuário ativou a biometria nas Configurações
@@ -88,7 +160,10 @@ export const LoginScreen = () => {
                     onChangeText={(property, value) => setPassword(value)}
                 />
 
-                <TouchableOpacity style={styles.forgotPasswordContainer}>
+                <TouchableOpacity
+                    style={styles.forgotPasswordContainer}
+                    onPress={() => navigation.navigate('EsqueceuSenha', { email })}
+                >
                     <Text style={[styles.forgotPassword, { color: theme.accentColor }]}>
                         Esqueceu a senha?
                     </Text>
