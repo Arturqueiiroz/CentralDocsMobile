@@ -1,43 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Modal, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from "../../components/Footer";
 import { CustomInput } from '../../components/CustomTextInput';
 import { CustomButton } from '../../components/CustomButton';
 import { useTheme } from '../../context/ThemeContext';
 import { RootStackParamList } from '../../../../App';
+import { api } from '../../services/api';
 import styles from "../../theme/PerfilCss";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 type DadosPerfil = {
+    id: number | null;
     nome: string;
     email: string;
     telefone: string;
     localizacao: string;
 };
 
-const perfilInicial: DadosPerfil = {
-    nome: 'Nickinho',
-    email: 'nickinho@email.com',
-    telefone: '(11) 98765-4312',
-    localizacao: 'São Paulo - SP',
+const PERFIL_EXTRA_STORAGE_KEY = '@perfil_extra_v1';
+
+const perfilVazio: DadosPerfil = {
+    id: null,
+    nome: '',
+    email: '',
+    telefone: 'Não informado',
+    localizacao: 'Não informado',
 };
 
 export default function PerfilScreen() {
     const { theme, isDarkMode } = useTheme();
     const navigation = useNavigation<NavigationProp>();
 
-    const [perfil, setPerfil] = useState<DadosPerfil>(perfilInicial);
-    const [rascunho, setRascunho] = useState<DadosPerfil>(perfilInicial);
+    const [perfil, setPerfil] = useState<DadosPerfil>(perfilVazio);
+    const [rascunho, setRascunho] = useState<DadosPerfil>(perfilVazio);
     const [modalEdicaoAberto, setModalEdicaoAberto] = useState(false);
+    const [salvando, setSalvando] = useState(false);
 
     const [biometriaAtiva, setBiometriaAtiva] = useState(true);
 
     const inicialAvatar = perfil.nome.trim().charAt(0).toUpperCase() || '?';
+
+    /**
+     * Carrega o usuário logado (salvo pelo Login) e os
+     * dados extras que só existem localmente (telefone/localização).
+     */
+    useEffect(() => {
+        async function carregarPerfil() {
+            try {
+                const usuarioSalvo = await AsyncStorage.getItem('usuario');
+                const extraSalvo = await AsyncStorage.getItem(PERFIL_EXTRA_STORAGE_KEY);
+
+                const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+                const extra = extraSalvo ? JSON.parse(extraSalvo) : null;
+
+                if (usuario) {
+                    setPerfil({
+                        id: usuario.id,
+                        nome: usuario.nome ?? '',
+                        email: usuario.email ?? '',
+                        telefone: extra?.telefone || 'Não informado',
+                        localizacao: extra?.localizacao || 'Não informado',
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar perfil:', error);
+            }
+        }
+
+        carregarPerfil();
+    }, []);
 
     function abrirEdicao() {
         setRascunho(perfil);
@@ -48,7 +85,7 @@ export default function PerfilScreen() {
         setRascunho((atual) => ({ ...atual, [campo]: valor }));
     }
 
-    function salvarEdicao() {
+    async function salvarEdicao() {
         if (!rascunho.nome.trim() || !rascunho.email.trim()) {
             Alert.alert('Faltou algo', 'Nome e email não podem ficar em branco.');
             return;
@@ -57,9 +94,55 @@ export default function PerfilScreen() {
             Alert.alert('Email inválido', 'Confere se digitou o email certinho.');
             return;
         }
+        if (!rascunho.id) {
+            Alert.alert('Erro', 'Usuário não identificado. Faça login novamente.');
+            return;
+        }
 
-        setPerfil(rascunho);
-        setModalEdicaoAberto(false);
+        try {
+            setSalvando(true);
+
+            await api.put(`/Usuario/AtualizarUsuario/${rascunho.id}`, {
+                nome: rascunho.nome,
+                email: rascunho.email,
+                senha: '',
+            });
+
+            // Telefone e localização ainda não existem no back-end,
+            // então continuam sendo salvos só localmente.
+            await AsyncStorage.setItem(
+                PERFIL_EXTRA_STORAGE_KEY,
+                JSON.stringify({
+                    telefone: rascunho.telefone,
+                    localizacao: rascunho.localizacao,
+                })
+            );
+
+            const usuarioSalvo = await AsyncStorage.getItem('usuario');
+            const usuarioAtual = usuarioSalvo ? JSON.parse(usuarioSalvo) : {};
+
+            await AsyncStorage.setItem(
+                'usuario',
+                JSON.stringify({
+                    ...usuarioAtual,
+                    nome: rascunho.nome,
+                    email: rascunho.email,
+                })
+            );
+
+            setPerfil(rascunho);
+            setModalEdicaoAberto(false);
+        } catch (error: any) {
+            console.error('Erro ao atualizar perfil:', error);
+
+            const mensagem =
+                error.response?.data?.mensagem ||
+                'Não foi possível atualizar seu perfil.';
+
+            Alert.alert('Erro', mensagem);
+        } finally {
+            setSalvando(false);
+        }
     }
 
     function confirmarLogout() {
@@ -68,7 +151,11 @@ export default function PerfilScreen() {
             {
                 text: 'Sair',
                 style: 'destructive',
-                onPress: () => navigation.navigate('TelaPrincipal'),
+                onPress: async () => {
+                    await AsyncStorage.removeItem('token');
+                    await AsyncStorage.removeItem('usuario');
+                    navigation.navigate('TelaPrincipal');
+                },
             },
         ]);
     }
@@ -260,11 +347,11 @@ export default function PerfilScreen() {
                         </ScrollView>
 
                         <View style={styles.modalButtonsRow}>
-                            <TouchableOpacity style={styles.modalCancelButton} onPress={() => setModalEdicaoAberto(false)}>
+                            <TouchableOpacity style={styles.modalCancelButton} onPress={() => setModalEdicaoAberto(false)} disabled={salvando}>
                                 <Text style={[styles.modalCancelText, { color: theme.textSecondary }]}>Cancelar</Text>
                             </TouchableOpacity>
                             <View style={{ flex: 1 }}>
-                                <CustomButton title="Salvar" onPress={salvarEdicao} />
+                                <CustomButton title={salvando ? 'Salvando...' : 'Salvar'} onPress={salvarEdicao} />
                             </View>
                         </View>
                     </View>

@@ -305,6 +305,9 @@ import { FooterScreen } from "../../components/Footer";
 import { useTheme } from "../../context/ThemeContext";
 import styles from "../../theme/DocumentosCss";
 import { api } from "../../services/api";
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../../../App';
 
 interface DocumentoAPI {
     id: number;
@@ -328,6 +331,9 @@ const STORAGE_KEY = "@meus_documentos_v1";
 
 export default function DocumentosScreen() {
     const { theme, isDarkMode } = useTheme();
+    type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
+    const navigation = useNavigation<NavigationProp>();
 
     const [documentos, setDocumentos] = useState<DocumentItem[]>([]);
     const [busca, setBusca] = useState("");
@@ -493,11 +499,12 @@ export default function DocumentosScreen() {
     /**
      * Remove documento.
      *
-     * IMPORTANTE:
-     * Por enquanto essa função continua local.
-     * Depois vamos trocar pelo DELETE da API.
+     * Documentos que vieram da API (sem "uri") são removidos
+     * de verdade via DELETE. Os adicionados localmente pela
+     * galeria (ainda sem tela própria de cadastro) continuam
+     * sendo removidos só do estado local.
      */
-    const removerDocumento = (id: string) => {
+    const removerDocumento = (documento: DocumentItem) => {
         Alert.alert(
             "Retirar documento",
             "Deseja realmente retirar este documento?",
@@ -510,23 +517,46 @@ export default function DocumentosScreen() {
                     text: "Retirar",
                     style: "destructive",
                     onPress: async () => {
-                        try {
-                            const novaLista =
-                                documentos.filter(
-                                    (doc) => doc.id !== id
+                        const ehDocumentoLocal = !!documento.uri;
+
+                        if (ehDocumentoLocal) {
+                            try {
+                                const novaLista = documentos.filter(
+                                    (doc) => doc.id !== documento.id
                                 );
 
-                            setDocumentos(novaLista);
+                                setDocumentos(novaLista);
 
-                            await AsyncStorage.setItem(
-                                STORAGE_KEY,
-                                JSON.stringify(novaLista)
+                                await AsyncStorage.setItem(
+                                    STORAGE_KEY,
+                                    JSON.stringify(novaLista)
+                                );
+                            } catch (error) {
+                                console.error(
+                                    "Erro ao remover documento local:",
+                                    error
+                                );
+                            }
+                            return;
+                        }
+
+                        try {
+                            await api.delete(`/Documento/${documento.id}`);
+
+                            setDocumentos((atual) =>
+                                atual.filter((doc) => doc.id !== documento.id)
                             );
-                        } catch (error) {
+                        } catch (error: any) {
                             console.error(
                                 "Erro ao remover documento:",
                                 error
                             );
+
+                            const mensagem =
+                                error.response?.data?.mensagem ||
+                                "Não foi possível remover o documento.";
+
+                            Alert.alert("Erro", mensagem);
                         }
                     },
                 },
@@ -676,7 +706,7 @@ export default function DocumentosScreen() {
                         />
                     </View>
 
-                    {/* ADICIONAR */}
+                    {/* ADICIONAR 
                     <TouchableOpacity
                         style={[
                             styles.addButton,
@@ -688,6 +718,12 @@ export default function DocumentosScreen() {
                         activeOpacity={0.8}
                         onPress={adicionarDocumentoGaleria}
                     >
+                        */}
+                    <TouchableOpacity
+                        style={[styles.addButton, { backgroundColor: theme.accentColor }]}
+                        activeOpacity={0.8}
+                        onPress={() => navigation.navigate('AdicionarDocumento')}
+                    ></TouchableOpacity>                        
                         <View style={styles.addButtonContent}>
                             <View
                                 style={
@@ -906,7 +942,7 @@ export default function DocumentosScreen() {
                                         ]}
                                         onPress={() =>
                                             removerDocumento(
-                                                documento.id
+                                                documento
                                             )
                                         }
                                     >

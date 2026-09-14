@@ -51,7 +51,7 @@ const handleLogin = async () => {
     }
 
     try {
-        const response = await api.post('/login', {
+        const response = await api.post('/Usuario/login', {
             email: email.trim(),
             senha: password,
         });

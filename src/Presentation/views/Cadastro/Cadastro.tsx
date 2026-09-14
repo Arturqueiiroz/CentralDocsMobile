@@ -56,7 +56,7 @@ async function handleRegister() {
     }
 
     try {
-        const response = await api.post('/CriarUsuario', {
+        const response = await api.post('/Usuario/CriarUsuario', {
             nome: nome.trim(), email: email.trim(), cpf: cpfLimpo, senha: password, confirmarSenha: confirmPassword,
         });
 
