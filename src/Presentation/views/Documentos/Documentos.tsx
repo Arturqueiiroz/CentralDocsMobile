@@ -706,30 +706,14 @@ export default function DocumentosScreen() {
                         />
                     </View>
 
-                    {/* ADICIONAR 
-                    <TouchableOpacity
-                        style={[
-                            styles.addButton,
-                            {
-                                backgroundColor:
-                                    theme.accentColor,
-                            },
-                        ]}
-                        activeOpacity={0.8}
-                        onPress={adicionarDocumentoGaleria}
-                    >
-                        */}
+                    {/* ADICIONAR */}
                     <TouchableOpacity
                         style={[styles.addButton, { backgroundColor: theme.accentColor }]}
                         activeOpacity={0.8}
                         onPress={() => navigation.navigate('AdicionarDocumento')}
-                    ></TouchableOpacity>                        
+                    >
                         <View style={styles.addButtonContent}>
-                            <View
-                                style={
-                                    styles.addButtonIconWrapper
-                                }
-                            >
+                            <View style={styles.addButtonIconWrapper}>
                                 <Ionicons
                                     name="add"
                                     size={18}
@@ -737,9 +721,7 @@ export default function DocumentosScreen() {
                                 />
                             </View>
 
-                            <Text
-                                style={styles.addButtonText}
-                            >
+                            <Text style={styles.addButtonText}>
                                 Adicionar documento
                             </Text>
                         </View>
