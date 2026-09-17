@@ -128,18 +128,21 @@ export default function DocumentosScreen() {
     /**
      * Busca os documentos na API.
      */
+    /**
+     * Busca os documentos: da API e também os anexados
+     * localmente pela galeria (que não somem mais ao navegar).
+     */
     async function carregarDocumentos() {
         try {
             setCarregando(true);
 
             const response = await api.get<DocumentoAPI[]>("/Documento");
+            const documentosConvertidos = response.data.map(converterDocumento);
 
-            console.log("Documentos recebidos da API:", response.data);
+            const localSalvo = await AsyncStorage.getItem(STORAGE_KEY);
+            const documentosLocais: DocumentItem[] = localSalvo ? JSON.parse(localSalvo) : [];
 
-            const documentosConvertidos =
-                response.data.map(converterDocumento);
-
-            setDocumentos(documentosConvertidos);
+            setDocumentos([...documentosLocais, ...documentosConvertidos]);
         } catch (error: any) {
             console.error("Erro ao carregar documentos:", error);
 

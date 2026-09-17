@@ -20,14 +20,14 @@ export function HeaderScreen() {
     const handleLogout = async () => {
         setMenuAberto(false);
 
-        // limpar token, AsyncStorage, contexto de auth, etc.
-        await AsyncStorage.removeItem('userToken');
-        // ou: await signOut(); se você tiver um AuthContext
+        // Mesmas chaves usadas no Login/Perfil para salvar a sessão.
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('usuario');
 
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Login' }],
+                routes: [{ name: 'TelaPrincipal' }],
             })
         );
     };
