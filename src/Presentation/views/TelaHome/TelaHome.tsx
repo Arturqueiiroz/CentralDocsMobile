@@ -1,51 +1,99 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Pressable } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from "../../components/Footer";
 import { useTheme } from '../../context/ThemeContext';
 import styles from "../../theme/HomeCss";
+import { api } from '../../services/api';
+import { RootStackParamList } from '../../../../App';
 
-// Dados mockados para exibição de atividades
-const MOCK_ATIVIDADES = [
-    {
-        id: '1',
-        title: 'Currículo_2026.pdf',
-        subtitle: 'Editado há 2 horas',
-        icon: 'file-text',
-        badgeColor: '#EBF5FF',
-    },
-    {
-        id: '2',
-        title: 'Comprovante_Residencia.png',
-        subtitle: 'Enviado ontem',
-        icon: 'image',
-        badgeColor: '#E1F5FE',
-    },
-    {
-        id: '3',
-        title: 'Formulário_Inscrição',
-        subtitle: 'Concluído há 3 dias',
-        icon: 'check-square',
-        badgeColor: '#E8F5E9',
-    },
-];
+interface DocumentoAPI {
+    id: number;
+    numero: string;
+    orgaoEmissor: string;
+    cidadeEmissao: string;
+    dataEmissao: string;
+    usuario?: string;
+    tipo?: string;
+}
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 export const TelaHomeScreen = () => {
-    const navigation = useNavigation<any>();
-    const [menuVisivel, setMenuVisivel] = useState(false);
+    const navigation = useNavigation<NavigationProp>();
     const { theme, isDarkMode } = useTheme();
 
-    const irParaFormulario = () => {
-        setMenuVisivel(false);
-        navigation.navigate('Formulario');
+    const [nomeUsuario, setNomeUsuario] = useState('');
+    const [documentos, setDocumentos] = useState<DocumentoAPI[]>([]);
+    const [carregando, setCarregando] = useState(true);
+
+    /**
+     * Carrega o nome do usuário logado e os documentos reais.
+     * Roda toda vez que a tela ganha foco, pra refletir
+     * documentos criados/excluídos em outras telas.
+     */
+    const carregarDados = useCallback(async () => {
+        try {
+            const usuarioSalvo = await AsyncStorage.getItem('usuario');
+            const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+            setNomeUsuario(usuario?.nome?.split(' ')[0] || 'Usuário');
+        } catch (error) {
+            console.error('Erro ao carregar usuário:', error);
+        }
+
+        try {
+            setCarregando(true);
+            const response = await api.get<DocumentoAPI[]>('/Documento');
+            setDocumentos(response.data);
+        } catch (error) {
+            console.error('Erro ao carregar documentos na Home:', error);
+        } finally {
+            setCarregando(false);
+        }
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            carregarDados();
+        }, [carregarDados])
+    );
+
+    const irParaAdicionarDocumento = () => {
+        navigation.navigate('AdicionarDocumento');
     };
 
-    const irParaQR = () => {
-        setMenuVisivel(false);
-        navigation.navigate('QRcode');
+    const irParaDocumentos = () => {
+        navigation.navigate('Documentos');
     };
+
+    function excluirDocumento(documento: DocumentoAPI) {
+        Alert.alert(
+            'Excluir documento',
+            'Deseja realmente excluir este documento?',
+            [
+                { text: 'Cancelar', style: 'cancel' },
+                {
+                    text: 'Excluir',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await api.delete(`/Documento/${documento.id}`);
+                            setDocumentos((atual) => atual.filter((doc) => doc.id !== documento.id));
+                        } catch (error) {
+                            console.error('Erro ao excluir documento:', error);
+                            Alert.alert('Erro', 'Não foi possível excluir o documento.');
+                        }
+                    },
+                },
+            ]
+        );
+    }
+
+    const atividadesRecentes = documentos.slice(0, 4);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.background }]}>
@@ -58,125 +106,112 @@ export const TelaHomeScreen = () => {
                 {/* SAUDAÇÃO */}
                 <View style={styles.welcomeContainer}>
                     <Text style={[styles.welcomeText, { color: theme.textPrimary }]}>
-                        Olá, <Text style={[styles.welcomeName, { color: theme.accentColor }]}>Usuário</Text>
+                        Olá, <Text style={[styles.welcomeName, { color: theme.accentColor }]}>{nomeUsuario}</Text>
                     </Text>
                 </View>
 
-                {/* CARDS SUPERIORES - SEM CONTRIBUINTE */}
-                <View style={styles.cardsRow}>
-                    <View style={[styles.infoCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                        <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
-                            <Feather name="file-text" size={20} color={theme.accentColor} />
-                        </View>
-                        <Text style={[styles.number, { color: theme.textPrimary }]}>8</Text>
-                        <Text style={[styles.label, { color: theme.textSecondary }]}>Documentos</Text>
+                {/* CARD DE DOCUMENTOS (dado real) */}
+                <View style={[styles.infoCardFull, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                    <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF', marginBottom: 0 }]}>
+                        <Feather name="file-text" size={20} color={theme.accentColor} />
                     </View>
-
-                    <View style={[styles.infoCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                        <View style={[styles.cardIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#FFF8E1' }]}>
-                            <Feather name="clock" size={20} color="#F59E0B" />
-                        </View>
-                        <Text style={[styles.number, { color: theme.textPrimary }]}>2</Text>
-                        <Text style={[styles.label, { color: theme.textSecondary }]}>Pendentes</Text>
+                    <View style={styles.infoCardFullTextBox}>
+                        <Text style={[styles.number, { color: theme.textPrimary }]}>
+                            {carregando ? '-' : documentos.length}
+                        </Text>
+                        <Text style={[styles.label, { color: theme.textSecondary }]}>
+                            documento{documentos.length !== 1 ? 's' : ''} cadastrado{documentos.length !== 1 ? 's' : ''}
+                        </Text>
                     </View>
                 </View>
 
-                {/* CARD DE ARMAZENAMENTO */}
-                <View style={styles.storageCard}>
-                    <View style={styles.storageHeader}>
-                        <View style={styles.storageTitleRow}>
-                            <Feather name="cloud" size={18} color="#FFF" style={{ marginRight: 8 }} />
-                            <Text style={styles.storageTitle}>Armazenamento</Text>
+                {/* LEMBRETE — só aparece enquanto não houver nenhum documento */}
+                {!carregando && documentos.length === 0 && (
+                    <View style={[styles.pendingBanner, { backgroundColor: isDarkMode ? theme.card : '#FFF8E1', borderColor: isDarkMode ? theme.borderColor : '#FDE68A' }]}>
+                        <View style={styles.pendingBannerRow}>
+                            <View style={[styles.pendingIconCircle, { backgroundColor: isDarkMode ? theme.borderColor : '#FEF3C7' }]}>
+                                <Feather name="alert-circle" size={20} color="#D97706" />
+                            </View>
+                            <View style={styles.pendingTextBox}>
+                                <Text style={[styles.pendingTitle, { color: theme.textPrimary }]}>
+                                    Comece cadastrando seu primeiro documento
+                                </Text>
+                                <Text style={[styles.pendingSubtitle, { color: theme.textSecondary }]}>
+                                    Leva menos de um minuto.
+                                </Text>
+                            </View>
                         </View>
-                        <Text style={styles.percent}>82%</Text>
+                        <TouchableOpacity
+                            style={[styles.pendingButton, { backgroundColor: theme.accentColor }]}
+                            activeOpacity={0.85}
+                            onPress={irParaAdicionarDocumento}
+                        >
+                            <Text style={styles.pendingButtonText}>Adicionar documento</Text>
+                        </TouchableOpacity>
                     </View>
-
-                    <View style={styles.progressBackground}>
-                        <View style={styles.progressFill} />
-                    </View>
-
-                    <Text style={styles.storageText}>4,1 GB de 5 GB utilizados</Text>
-                </View>
+                )}
 
                 {/* SEÇÃO ATIVIDADE RECENTE */}
                 <View style={styles.sectionHeader}>
                     <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Atividade recente</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={irParaDocumentos}>
                         <Text style={[styles.seeAll, { color: theme.accentColor }]}>Ver tudo</Text>
                     </TouchableOpacity>
                 </View>
 
-                {/* LISTA DE ATIVIDADES MOCKADAS */}
-                {MOCK_ATIVIDADES.map((item) => (
-                    <View key={item.id} style={[styles.activityCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
-                        <View style={[styles.activityIconContainer, { backgroundColor: isDarkMode ? theme.borderColor : item.badgeColor }]}>
-                            <Feather name={item.icon as any} size={20} color={theme.accentColor} />
-                        </View>
-                        <View style={styles.activityBody}>
-                            <View style={styles.activityHeader}>
-                                <Text style={[styles.activityTitle, { color: theme.textPrimary }]} numberOfLines={1}>
-                                    {item.title}
-                                </Text>
-                                <TouchableOpacity style={styles.moreButton}>
-                                    <Ionicons name="ellipsis-vertical" size={18} color={theme.textSecondary} />
-                                </TouchableOpacity>
-                            </View>
-                            <Text style={[styles.activitySubtitle, { color: theme.textSecondary }]}>
-                                {item.subtitle}
-                            </Text>
-                        </View>
+                {carregando ? (
+                    <View style={styles.emptyStateBox}>
+                        <ActivityIndicator size="small" color={theme.accentColor} />
                     </View>
-                ))}
+                ) : atividadesRecentes.length === 0 ? (
+                    <View style={styles.emptyStateBox}>
+                        <Feather name="inbox" size={32} color={theme.textSecondary} />
+                        <Text style={[styles.emptyStateText, { color: theme.textSecondary }]}>
+                            Seus documentos recentes vão aparecer aqui.
+                        </Text>
+                    </View>
+                ) : (
+                    atividadesRecentes.map((documento) => (
+                        <TouchableOpacity
+                            key={documento.id}
+                            style={[styles.activityCard, { backgroundColor: theme.card, borderColor: theme.borderColor }]}
+                            activeOpacity={0.85}
+                            onPress={irParaDocumentos}
+                        >
+                            <View style={[styles.activityIconContainer, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
+                                <Feather name="file-text" size={20} color={theme.accentColor} />
+                            </View>
+                            <View style={styles.activityBody}>
+                                <View style={styles.activityHeader}>
+                                    <Text style={[styles.activityTitle, { color: theme.textPrimary }]} numberOfLines={1}>
+                                        {documento.tipo || 'Documento'}
+                                    </Text>
+                                    <TouchableOpacity
+                                        style={styles.deleteActivityButton}
+                                        onPress={() => excluirDocumento(documento)}
+                                    >
+                                        <Ionicons name="trash-outline" size={18} color="#DC2626" />
+                                    </TouchableOpacity>
+                                </View>
+                                <Text style={[styles.activitySubtitle, { color: theme.textSecondary }]} numberOfLines={1}>
+                                    {documento.numero} • {documento.orgaoEmissor}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    ))
+                )}
             </ScrollView>
 
-            {/* BOTÃO FLUTUANTE (FAB) */}
+            {/* BOTÃO FLUTUANTE — vai direto para Adicionar Documento */}
             <TouchableOpacity
                 style={[styles.fab, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}
                 activeOpacity={0.8}
-                onPress={() => setMenuVisivel(!menuVisivel)}
+                onPress={irParaAdicionarDocumento}
             >
-                <Text style={styles.fabText}>{menuVisivel ? '×' : '+'}</Text>
+                <Text style={styles.fabText}>+</Text>
             </TouchableOpacity>
 
             <FooterScreen />
-
-            {/* MODAL DO MENU RAPIDO */}
-            <Modal
-                transparent={true}
-                visible={menuVisivel}
-                animationType="fade"
-                onRequestClose={() => setMenuVisivel(false)}
-            >
-                <Pressable style={styles.modalOverlayTransparent} onPress={() => setMenuVisivel(false)}>
-                    <View style={styles.floatingMenu}>
-                        <TouchableOpacity
-                            style={styles.speedDialRow}
-                            activeOpacity={0.7}
-                            onPress={irParaQR}
-                        >
-                            <View style={[styles.floatingLabelBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
-                                <Text style={styles.floatingLabelTextWhite}>Adicionar Documento</Text>
-                            </View>
-                            <View style={[styles.miniFabBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
-                                <Ionicons name="qr-code-outline" size={18} color="#FFF" />
-                            </View>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            style={styles.speedDialRow}
-                            activeOpacity={0.7}
-                            onPress={irParaFormulario}
-                        >
-                            <View style={[styles.floatingLabelBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
-                                <Text style={styles.floatingLabelTextWhite}>Formulário</Text>
-                            </View>
-                            <View style={[styles.miniFabBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
-                                <Feather name="clipboard" size={18} color="#FFF" />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </Pressable>
-            </Modal>
         </View>
     );
 };

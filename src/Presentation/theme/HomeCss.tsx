@@ -232,6 +232,72 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#FFFFFF',
   },
+  infoCardFull: {
+    width: '100%',
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#EDF2F7',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  infoCardFullTextBox: {
+    marginLeft: 14,
+  },
+  pendingBanner: {
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 25,
+    borderWidth: 1,
+  },
+  pendingBannerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  pendingIconCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  pendingTextBox: {
+    flex: 1,
+  },
+  pendingTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  pendingSubtitle: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  pendingButton: {
+    borderRadius: 12,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  pendingButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  emptyStateBox: {
+    alignItems: 'center',
+    paddingVertical: 30,
+  },
+  emptyStateText: {
+    marginTop: 10,
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  deleteActivityButton: {
+    padding: 4,
+  },  
 });
 
 export default styles;

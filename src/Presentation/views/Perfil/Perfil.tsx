@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from "../../components/Footer";
 import { CustomInput } from '../../components/CustomTextInput';
@@ -19,18 +20,14 @@ type DadosPerfil = {
     id: number | null;
     nome: string;
     email: string;
-    telefone: string;
-    localizacao: string;
 };
 
-const PERFIL_EXTRA_STORAGE_KEY = '@perfil_extra_v1';
+const BIOMETRIA_STORAGE_KEY = '@biometria_ativa_v1';
 
 const perfilVazio: DadosPerfil = {
     id: null,
     nome: '',
     email: '',
-    telefone: 'Não informado',
-    localizacao: 'Não informado',
 };
 
 export default function PerfilScreen() {
@@ -42,32 +39,37 @@ export default function PerfilScreen() {
     const [modalEdicaoAberto, setModalEdicaoAberto] = useState(false);
     const [salvando, setSalvando] = useState(false);
 
-    const [biometriaAtiva, setBiometriaAtiva] = useState(true);
+    const [biometriaAtiva, setBiometriaAtiva] = useState(false);
+    const [alterandoBiometria, setAlterandoBiometria] = useState(false);
+
+    const [modalSenhaAberto, setModalSenhaAberto] = useState(false);
+    const [senhaAtual, setSenhaAtual] = useState('');
+    const [novaSenha, setNovaSenha] = useState('');
+    const [confirmarNovaSenha, setConfirmarNovaSenha] = useState('');
+    const [trocandoSenha, setTrocandoSenha] = useState(false);
 
     const inicialAvatar = perfil.nome.trim().charAt(0).toUpperCase() || '?';
 
     /**
-     * Carrega o usuário logado (salvo pelo Login) e os
-     * dados extras que só existem localmente (telefone/localização).
+     * Carrega o usuário logado (salvo pelo Login) e a
+     * preferência de login biométrico salva no aparelho.
      */
     useEffect(() => {
         async function carregarPerfil() {
             try {
                 const usuarioSalvo = await AsyncStorage.getItem('usuario');
-                const extraSalvo = await AsyncStorage.getItem(PERFIL_EXTRA_STORAGE_KEY);
-
                 const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
-                const extra = extraSalvo ? JSON.parse(extraSalvo) : null;
 
                 if (usuario) {
                     setPerfil({
                         id: usuario.id,
                         nome: usuario.nome ?? '',
                         email: usuario.email ?? '',
-                        telefone: extra?.telefone || 'Não informado',
-                        localizacao: extra?.localizacao || 'Não informado',
                     });
                 }
+
+                const biometriaSalva = await AsyncStorage.getItem(BIOMETRIA_STORAGE_KEY);
+                setBiometriaAtiva(biometriaSalva === 'true');
             } catch (error) {
                 console.error('Erro ao carregar perfil:', error);
             }
@@ -108,16 +110,6 @@ export default function PerfilScreen() {
                 senha: '',
             });
 
-            // Telefone e localização ainda não existem no back-end,
-            // então continuam sendo salvos só localmente.
-            await AsyncStorage.setItem(
-                PERFIL_EXTRA_STORAGE_KEY,
-                JSON.stringify({
-                    telefone: rascunho.telefone,
-                    localizacao: rascunho.localizacao,
-                })
-            );
-
             const usuarioSalvo = await AsyncStorage.getItem('usuario');
             const usuarioAtual = usuarioSalvo ? JSON.parse(usuarioSalvo) : {};
 
@@ -142,6 +134,113 @@ export default function PerfilScreen() {
             Alert.alert('Erro', mensagem);
         } finally {
             setSalvando(false);
+        }
+    }
+
+    /**
+     * Abre o modal de troca de senha, limpando os campos.
+     */
+    function abrirTrocaSenha() {
+        setSenhaAtual('');
+        setNovaSenha('');
+        setConfirmarNovaSenha('');
+        setModalSenhaAberto(true);
+    }
+
+    async function confirmarTrocaSenha() {
+        if (!perfil.id) {
+            Alert.alert('Erro', 'Usuário não identificado. Faça login novamente.');
+            return;
+        }
+        if (!senhaAtual || !novaSenha || !confirmarNovaSenha) {
+            Alert.alert('Faltou algo', 'Preencha todos os campos.');
+            return;
+        }
+        if (novaSenha.length < 6) {
+            Alert.alert('Senha muito curta', 'A nova senha deve ter pelo menos 6 caracteres.');
+            return;
+        }
+        if (novaSenha !== confirmarNovaSenha) {
+            Alert.alert('As senhas não coincidem', 'A nova senha e a confirmação precisam ser iguais.');
+            return;
+        }
+
+        try {
+            setTrocandoSenha(true);
+
+            await api.put(`/Usuario/AlterarSenha/${perfil.id}`, {
+                senhaAtual,
+                novaSenha,
+            });
+
+            Alert.alert('Pronto', 'Sua senha foi alterada com sucesso.');
+            setModalSenhaAberto(false);
+        } catch (error: any) {
+            console.error('Erro ao trocar senha:', error);
+
+            const mensagem =
+                error.response?.data?.mensagem ||
+                'Não foi possível alterar sua senha.';
+
+            Alert.alert('Erro', mensagem);
+        } finally {
+            setTrocandoSenha(false);
+        }
+    }
+
+    /**
+     * Ativa ou desativa o login biométrico de verdade:
+     * checa se o aparelho suporta e tem biometria cadastrada,
+     * pede a confirmação biométrica antes de ativar, e persiste
+     * a preferência localmente.
+     */
+    async function alternarBiometria() {
+        if (alterandoBiometria) {
+            return;
+        }
+
+        try {
+            setAlterandoBiometria(true);
+
+            if (biometriaAtiva) {
+                setBiometriaAtiva(false);
+                await AsyncStorage.setItem(BIOMETRIA_STORAGE_KEY, 'false');
+                return;
+            }
+
+            const suportado = await LocalAuthentication.hasHardwareAsync();
+
+            if (!suportado) {
+                Alert.alert('Indisponível', 'Este aparelho não tem sensor de biometria.');
+                return;
+            }
+
+            const cadastrado = await LocalAuthentication.isEnrolledAsync();
+
+            if (!cadastrado) {
+                Alert.alert(
+                    'Nenhuma biometria cadastrada',
+                    'Cadastre uma digital ou reconhecimento facial nas configurações do aparelho antes de ativar.'
+                );
+                return;
+            }
+
+            const resultado = await LocalAuthentication.authenticateAsync({
+                promptMessage: 'Confirme sua identidade para ativar o login biométrico',
+                cancelLabel: 'Cancelar',
+            });
+
+            if (!resultado.success) {
+                return;
+            }
+
+            setBiometriaAtiva(true);
+            await AsyncStorage.setItem(BIOMETRIA_STORAGE_KEY, 'true');
+        } catch (error) {
+            console.error('Erro ao alternar biometria:', error);
+            Alert.alert('Erro', 'Não foi possível alterar a configuração de biometria.');
+        } finally {
+            setAlterandoBiometria(false);
         }
     }
 
@@ -179,14 +278,10 @@ export default function PerfilScreen() {
                         </TouchableOpacity>
                     </View>
                     <Text style={[styles.profileName, { color: theme.textPrimary }]}>{perfil.nome}</Text>
-                    <Text style={[styles.profileRole, { color: theme.textSecondary }]}>Plano Membro</Text>
 
                     <View style={styles.badgeRow}>
                         <View style={[styles.statusBadge, { backgroundColor: isDarkMode ? theme.borderColor : '#EBF5FF' }]}>
                             <Text style={[styles.statusBadgeText, { color: theme.accentColor }]}>VERIFICADO</Text>
-                        </View>
-                        <View style={[styles.statusBadge, { backgroundColor: isDarkMode ? theme.borderColor : '#F1F5F9' }]}>
-                            <Text style={[styles.statusBadgeText, { color: theme.textSecondary }]}>MEMBRO DESDE 2025</Text>
                         </View>
                     </View>
                 </View>
@@ -200,7 +295,26 @@ export default function PerfilScreen() {
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity style={[styles.infoRow, { borderBottomColor: theme.borderColor }]} onPress={abrirEdicao}>
+                    <TouchableOpacity
+                        style={[styles.infoRow, { borderBottomColor: theme.borderColor }]}
+                        onPress={abrirEdicao}
+                        activeOpacity={0.7}
+                    >
+                        <View style={[styles.infoIconBox, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
+                            <Ionicons name="person-outline" size={20} color={theme.accentColor} />
+                        </View>
+                        <View style={styles.infoContent}>
+                            <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>NOME</Text>
+                            <Text style={[styles.infoValue, { color: theme.textPrimary }]}>{perfil.nome}</Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[styles.infoRow, { borderBottomColor: theme.borderColor, borderBottomWidth: 0 }]}
+                        onPress={abrirEdicao}
+                        activeOpacity={0.7}
+                    >
                         <View style={[styles.infoIconBox, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
                             <Ionicons name="mail-outline" size={20} color={theme.accentColor} />
                         </View>
@@ -210,38 +324,6 @@ export default function PerfilScreen() {
                         </View>
                         <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
                     </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.infoRow, { borderBottomColor: theme.borderColor }]} onPress={abrirEdicao}>
-                        <View style={[styles.infoIconBox, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
-                            <Ionicons name="call-outline" size={20} color={theme.accentColor} />
-                        </View>
-                        <View style={styles.infoContent}>
-                            <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>NÚMERO DE TELEFONE</Text>
-                            <Text style={[styles.infoValue, { color: theme.textPrimary }]}>{perfil.telefone}</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={18} color={theme.textSecondary} />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[styles.infoRow, { borderBottomColor: theme.borderColor }]}
-                        activeOpacity={1}
-                    >
-                        <View style={[styles.infoIconBox, { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' }]}>
-                            <Ionicons name="location-outline" size={20} color={theme.accentColor} />
-                        </View>
-
-                        <View style={styles.infoContent}>
-                            <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>
-                                LOCALIZAÇÃO
-                            </Text>
-
-                            <Text style={[styles.infoValue, { color: theme.textPrimary }]}>
-                                {perfil.localizacao}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-
-
                 </View>
 
                 {/* Segurança */}
@@ -250,7 +332,7 @@ export default function PerfilScreen() {
 
                     <TouchableOpacity
                         style={[styles.securityRow, { borderBottomColor: theme.borderColor }]}
-                        onPress={() => Alert.alert('Alterar senha', 'Indisponível no momento.')}
+                        onPress={abrirTrocaSenha}
                     >
                         <View style={styles.securityLeft}>
                             <Ionicons name="refresh-outline" size={20} color={theme.textSecondary} style={{ marginRight: 12 }} />
@@ -260,8 +342,9 @@ export default function PerfilScreen() {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={[styles.securityRow, { borderBottomColor: theme.borderColor }]}
-                        onPress={() => setBiometriaAtiva((atual) => !atual)}
+                        style={[styles.securityRow, { borderBottomColor: theme.borderColor, borderBottomWidth: 0 }]}
+                        onPress={alternarBiometria}
+                        disabled={alterandoBiometria}
                     >
                         <View style={styles.securityLeft}>
                             <Ionicons name="finger-print-outline" size={20} color={theme.textSecondary} style={{ marginRight: 12 }} />
@@ -275,17 +358,6 @@ export default function PerfilScreen() {
                                 {biometriaAtiva ? 'HABILITADO' : 'DESATIVADO'}
                             </Text>
                         </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[styles.securityRow, { borderBottomColor: theme.borderColor }]}
-                        onPress={() => Alert.alert('Autenticação de dois fatores', 'Indisponível no momento.')}
-                    >
-                        <View style={styles.securityLeft}>
-                            <Ionicons name="shield-checkmark-outline" size={20} color={theme.textSecondary} style={{ marginRight: 12 }} />
-                            <Text style={[styles.securityText, { color: theme.textPrimary }]}>Autenticação de dois fatores</Text>
-                        </View>
-                        <Ionicons name="arrow-forward" size={18} color={theme.textSecondary} />
                     </TouchableOpacity>
                 </View>
 
@@ -336,14 +408,6 @@ export default function PerfilScreen() {
                                 onChangeText={atualizarCampo}
                                 keyboardType="email-address"
                             />
-                            <CustomInput
-                                label="Telefone"
-                                placeholder="(11) 98765-4312"
-                                property="telefone"
-                                value={rascunho.telefone}
-                                onChangeText={atualizarCampo}
-                                keyboardType="phone-pad"
-                            />
                         </ScrollView>
 
                         <View style={styles.modalButtonsRow}>
@@ -352,6 +416,64 @@ export default function PerfilScreen() {
                             </TouchableOpacity>
                             <View style={{ flex: 1 }}>
                                 <CustomButton title={salvando ? 'Salvando...' : 'Salvar'} onPress={salvarEdicao} />
+                            </View>
+                        </View>
+                    </View>
+                </KeyboardAvoidingView>
+            </Modal>
+
+            {/* Modal de troca de senha */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalSenhaAberto}
+                onRequestClose={() => setModalSenhaAberto(false)}
+            >
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    style={styles.modalOverlay}
+                >
+                    <View style={[styles.modalCard, { backgroundColor: theme.card }]}>
+                        <View style={styles.modalHeaderRow}>
+                            <Text style={[styles.modalTitle, { color: theme.textPrimary }]}>Alterar senha</Text>
+                            <TouchableOpacity onPress={() => setModalSenhaAberto(false)}>
+                                <Ionicons name="close" size={24} color={theme.textSecondary} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <CustomInput
+                                label="Senha atual"
+                                placeholder="Digite sua senha atual"
+                                property="senhaAtual"
+                                value={senhaAtual}
+                                onChangeText={(_, valor) => setSenhaAtual(valor)}
+                                secureTextEntry
+                            />
+                            <CustomInput
+                                label="Nova senha"
+                                placeholder="Mínimo de 6 caracteres"
+                                property="novaSenha"
+                                value={novaSenha}
+                                onChangeText={(_, valor) => setNovaSenha(valor)}
+                                secureTextEntry
+                            />
+                            <CustomInput
+                                label="Confirmar nova senha"
+                                placeholder="Repita a nova senha"
+                                property="confirmarNovaSenha"
+                                value={confirmarNovaSenha}
+                                onChangeText={(_, valor) => setConfirmarNovaSenha(valor)}
+                                secureTextEntry
+                            />
+                        </ScrollView>
+
+                        <View style={styles.modalButtonsRow}>
+                            <TouchableOpacity style={styles.modalCancelButton} onPress={() => setModalSenhaAberto(false)} disabled={trocandoSenha}>
+                                <Text style={[styles.modalCancelText, { color: theme.textSecondary }]}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <View style={{ flex: 1 }}>
+                                <CustomButton title={trocandoSenha ? 'Salvando...' : 'Salvar'} onPress={confirmarTrocaSenha} />
                             </View>
                         </View>
                     </View>
