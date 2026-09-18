@@ -69,7 +69,11 @@ export default function CustomDrawer({
             {/* Header */}
             <View style={styles.header}>
                 <Image
-                    source={require('../../../assets/img/LogoCentralDocsNova.png')}
+                    source={
+                        isDarkMode
+                            ? require('../../../assets/img/LogoParaTemaClaro.png')
+                            : require('../../../assets/img/LogoCentralDocsNova.png')
+                    }
                     style={styles.logo}
                     resizeMode="contain"
                 />

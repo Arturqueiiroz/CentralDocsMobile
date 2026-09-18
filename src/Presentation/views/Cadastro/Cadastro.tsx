@@ -22,9 +22,8 @@ export default function RegisterScreen() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [nome, setNome] = useState('');
-
-    const { theme } = useTheme();
-
+    const { theme, isDarkMode } = useTheme();
+    
 async function handleRegister() {
     const cpfLimpo = cpf.replace(/\D/g, '');
 
@@ -102,7 +101,11 @@ async function handleRegister() {
 
                 <View style={styles.logoContainer}>
                     <Image
-                        source={require('../../../../assets/img/LogoCentralDocsNova.png')}
+                        source={
+                            isDarkMode
+                                ? require('../../../../assets/img/LogoParaTemaClaro.png')
+                                : require('../../../../assets/img/LogoCentralDocsNova.png')
+                        }
                         style={styles.logo}
                     />
 

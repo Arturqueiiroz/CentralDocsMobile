@@ -50,11 +50,6 @@ export const TelaHomeScreen = () => {
     const [carregando, setCarregando] = useState(true);
     const [menuVisivel, setMenuVisivel] = useState(false);
 
-    /**
-     * Carrega o nome do usuário logado, os documentos reais (API)
-     * e os documentos anexados pela galeria (locais). Roda toda vez
-     * que a tela ganha foco, pra refletir o que mudou em outras telas.
-     */
     const carregarDados = useCallback(async () => {
         try {
             const usuarioSalvo = await AsyncStorage.getItem('usuario');
@@ -234,6 +229,23 @@ export const TelaHomeScreen = () => {
                         </TouchableOpacity>
                     </View>
                 )}
+
+                {/* CARD DE ARMAZENAMENTO */}
+                <View style={styles.storageCard}>
+                    <View style={styles.storageHeader}>
+                        <View style={styles.storageTitleRow}>
+                            <Feather name="cloud" size={18} color="#FFF" style={{ marginRight: 8 }} />
+                            <Text style={styles.storageTitle}>Armazenamento</Text>
+                        </View>
+                        <Text style={styles.percent}>82%</Text>
+                    </View>
+
+                    <View style={styles.progressBackground}>
+                        <View style={styles.progressFill} />
+                    </View>
+
+                    <Text style={styles.storageText}>4,1 GB de 5 GB utilizados</Text>
+                </View>
 
                 {/* SEÇÃO ATIVIDADE RECENTE */}
                 <View style={styles.sectionHeader}>

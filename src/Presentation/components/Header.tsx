@@ -15,7 +15,7 @@ export function HeaderScreen() {
     const navigation = useNavigation<NavigationProp>();
     const route = useRoute();
     const [menuAberto, setMenuAberto] = useState(false);
-    const { theme } = useTheme();
+    const { theme, isDarkMode } = useTheme();
 
     const handleLogout = async () => {
         setMenuAberto(false);
@@ -40,7 +40,14 @@ export function HeaderScreen() {
                     <Ionicons name="menu" size={28} color={theme.textPrimary} />
                 </TouchableOpacity>
 
-                <Image source={require("../../../assets/img/LogoCentralDocsNova.png")} style={styles.logo} />
+        <Image
+            source={
+                isDarkMode
+                    ? require("../../../assets/img/LogoParaTemaClaro.png")
+                    : require("../../../assets/img/LogoCentralDocsNova.png")
+            }
+            style={styles.logo}
+        />
 
                 <TouchableOpacity style={styles.menuButton}>
                     <Ionicons name="notifications-outline" size={24} color={theme.textPrimary} />

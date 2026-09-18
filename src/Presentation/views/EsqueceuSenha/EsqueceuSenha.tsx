@@ -15,7 +15,7 @@ type RouteProps = RouteProp<RootStackParamList, 'EsqueceuSenha'>;
 export default function EsqueceuSenhaScreen() {
     const navigation = useNavigation<NavigationProp>();
     const route = useRoute<RouteProps>();
-    const { theme } = useTheme();
+    const { theme, isDarkMode } = useTheme();
 
     const [email, setEmail] = useState(route.params?.email ?? '');
     const [linkEnviado, setLinkEnviado] = useState(false);
@@ -38,7 +38,11 @@ export default function EsqueceuSenhaScreen() {
                     <>
                         <View style={styles.logoContainer}>
                             <Image
-                                source={require('../../../../assets/img/LogoCentralDocsNova.png')}
+                                source={
+                                    isDarkMode
+                                        ? require('../../../../assets/img/LogoParaTemaClaro.png')
+                                        : require('../../../../assets/img/LogoCentralDocsNova.png')
+                                }
                                 style={styles.logo}
                             />
                             <Text style={[styles.title, { color: theme.textPrimary }]}>
