@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const IP_SERVIDOR = '10.0.2.2';
-const PORTA = '5083';
+const PORTA = '5000';
 
 export const API_BASE_URL = `http://${IP_SERVIDOR}:${PORTA}/api`;
 

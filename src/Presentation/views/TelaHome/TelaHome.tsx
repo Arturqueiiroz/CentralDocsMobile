@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Pressable, Image } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { HeaderScreen } from '../../components/Header';
@@ -45,6 +45,12 @@ export const TelaHomeScreen = () => {
     const irParaQR = () => {
         setMenuVisivel(false);
         navigation.navigate('QRcode');
+    };
+
+    // NAVEGAÇÃO PARA O CHATBOT DO DOC
+    const irParaChatbot = () => {
+        setMenuVisivel(false);
+        navigation.navigate('Chatbot');
     };
 
     return (
@@ -140,7 +146,7 @@ export const TelaHomeScreen = () => {
 
             <FooterScreen />
 
-            {/* MODAL DO MENU RAPIDO */}
+            {/* MODAL DO MENU RÁPIDO COM OPÇÃO DO DOC */}
             <Modal
                 transparent={true}
                 visible={menuVisivel}
@@ -149,6 +155,22 @@ export const TelaHomeScreen = () => {
             >
                 <Pressable style={styles.modalOverlayTransparent} onPress={() => setMenuVisivel(false)}>
                     <View style={styles.floatingMenu}>
+                        
+                        {/* OPÇÃO 1: FALAR COM O DOC */}
+                        <TouchableOpacity
+                            style={styles.speedDialRow}
+                            activeOpacity={0.7}
+                            onPress={irParaChatbot}
+                        >
+                            <View style={[styles.floatingLabelBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
+                                <Text style={styles.floatingLabelTextWhite}>Falar com o Doc</Text>
+                            </View>
+                            <View style={[styles.miniFabBlue, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}>
+                                <Ionicons name="chatbubble-ellipses-outline" size={18} color="#FFF" />
+                            </View>
+                        </TouchableOpacity>
+
+                        {/* OPÇÃO 2: ADICIONAR DOCUMENTO (QR CODE) */}
                         <TouchableOpacity
                             style={styles.speedDialRow}
                             activeOpacity={0.7}
@@ -162,6 +184,7 @@ export const TelaHomeScreen = () => {
                             </View>
                         </TouchableOpacity>
 
+                        {/* OPÇÃO 3: FORMULÁRIO */}
                         <TouchableOpacity
                             style={styles.speedDialRow}
                             activeOpacity={0.7}
@@ -174,6 +197,7 @@ export const TelaHomeScreen = () => {
                                 <Feather name="clipboard" size={18} color="#FFF" />
                             </View>
                         </TouchableOpacity>
+
                     </View>
                 </Pressable>
             </Modal>
