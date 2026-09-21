@@ -15,19 +15,19 @@ export function HeaderScreen() {
     const navigation = useNavigation<NavigationProp>();
     const route = useRoute();
     const [menuAberto, setMenuAberto] = useState(false);
-    const { theme } = useTheme();
+    const { theme, isDarkMode } = useTheme();
 
     const handleLogout = async () => {
         setMenuAberto(false);
 
-        // limpar token, AsyncStorage, contexto de auth, etc.
-        await AsyncStorage.removeItem('userToken');
-        // ou: await signOut(); se você tiver um AuthContext
+        // Mesmas chaves usadas no Login/Perfil para salvar a sessão.
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('usuario');
 
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Login' }],
+                routes: [{ name: 'TelaPrincipal' }],
             })
         );
     };
@@ -40,7 +40,14 @@ export function HeaderScreen() {
                     <Ionicons name="menu" size={28} color={theme.textPrimary} />
                 </TouchableOpacity>
 
-                <Image source={require("../../../assets/img/LogoCentralDocsNova.png")} style={styles.logo} />
+        <Image
+            source={
+                isDarkMode
+                    ? require("../../../assets/img/LogoParaTemaClaro.png")
+                    : require("../../../assets/img/LogoCentralDocsNova.png")
+            }
+            style={styles.logo}
+        />
 
                 <TouchableOpacity style={styles.menuButton}>
                     <Ionicons name="notifications-outline" size={24} color={theme.textPrimary} />

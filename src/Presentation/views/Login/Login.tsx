@@ -19,7 +19,7 @@ export const LoginScreen = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { theme } = useTheme();
+    const { theme, isDarkMode } = useTheme();
 
 const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
@@ -132,7 +132,11 @@ const handleLogin = async () => {
 
                 <View style={styles.logoContainer}>
                     <Image
-                        source={require('../../../../assets/img/LogoCentralDocsNova.png')}
+                        source={
+                            isDarkMode
+                                ? require('../../../../assets/img/LogoParaTemaClaro.png')
+                                : require('../../../../assets/img/LogoCentralDocsNova.png')
+                        }
                         style={styles.logo}
                     />
                     <Text style={[styles.subtitle, { color: theme.textPrimary }]}>

@@ -1,291 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import { View, Text, TextInput, TouchableOpacity, ScrollView, Dimensions, Image, Alert, } from "react-native";
-// import styles from "../../theme/DocumentosCss";
-// import { HeaderScreen } from "../../components/Header";
-// import { FooterScreen } from "../../components/Footer";
-// import { useTheme } from "../../context/ThemeContext";
-// import * as ImagePicker from "expo-image-picker";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// interface DocumentItem {
-//   id: string;
-//   title: string;
-//   type: string;
-//   info: string;
-//   iconType: "RG" | "CNH" | "RA" | "e-titulo" | "DOC";
-//   uri?: string;
-// }
-
-// interface DocumentVisual {
-//   label: string;
-//   iconBg: string;
-//   iconText: string;
-//   badgeBg: string;
-//   badgeText: string;
-// }
-
-// const { width } = Dimensions.get("window");
-// const STORAGE_KEY = "@meus_documentos_v1";
-
-// const INITIAL_DOCUMENTS: DocumentItem[] = [
-//   { id: "1", title: "Registro Geral", type: "Documento", info: "Modificado há 2 horas • 2,4 MB", iconType: "RG" },
-//   { id: "2", title: "Carteira Nacional de Habilitação", type: "Documento", info: "Modificado ontem • 1,1 MB", iconType: "CNH" },
-//   { id: "3", title: "Certificado de Reservista", type: "Documento", info: "Modificado há 3 dias • 840 KB", iconType: "RA" },
-//   { id: "4", title: "Título Eleitoral", type: "Documento", info: "Modificado há 1 semana • 1,3 MB", iconType: "e-titulo" },
-// ];
-
-// const getDocumentVisual = (item: DocumentItem, isDarkMode: boolean): DocumentVisual => {
-//   const typeColors =
-//     item.type === "TRABALHO"
-//       ? {
-//         badgeBg: isDarkMode ? "rgba(96, 165, 250, 0.16)" : "#E8F1FF",
-//         badgeText: isDarkMode ? "#93C5FD" : "#2563EB",
-//       }
-//       : {
-//         badgeBg: isDarkMode ? "rgba(192, 132, 252, 0.16)" : "#F4E8FF",
-//         badgeText: isDarkMode ? "#D8B4FE" : "#7C3AED",
-//       };
-
-//   switch (item.iconType) {
-//     case "RG":
-//       return { label: "RG", iconBg: isDarkMode ? "rgba(59, 130, 246, 0.14)" : "#EAF2FF", iconText: isDarkMode ? "#93C5FD" : "#2563EB", ...typeColors };
-//     case "CNH":
-//       return { label: "CNH", iconBg: isDarkMode ? "rgba(34, 197, 94, 0.14)" : "#E9F9EF", iconText: isDarkMode ? "#86EFAC" : "#15803D", ...typeColors };
-//     case "RA":
-//       return { label: "RA", iconBg: isDarkMode ? "rgba(245, 158, 11, 0.14)" : "#FFF4DE", iconText: isDarkMode ? "#FCD34D" : "#D97706", ...typeColors };
-//     case "e-titulo":
-//       return { label: "TIT", iconBg: isDarkMode ? "rgba(168, 85, 247, 0.14)" : "#F5EBFF", iconText: isDarkMode ? "#D8B4FE" : "#7C3AED", ...typeColors };
-//     default:
-//       return { label: "DOC", iconBg: isDarkMode ? "rgba(148, 163, 184, 0.18)" : "#EEF2F7", iconText: isDarkMode ? "#CBD5E1" : "#475569", ...typeColors };
-//   }
-// };
-
-// export default function DocumentosScreen() {
-//   const [documentos, setDocumentos] = useState<DocumentItem[]>([]);
-//   const [activeTab, setActiveTab] = useState<"Tudo" | "Pessoal" | "Trabalho">("Tudo");
-//   const { theme, isDarkMode } = useTheme();
-
-//   useEffect(() => {
-//     const loadDocuments = async () => {
-//       try {
-//         const storedData = await AsyncStorage.getItem(STORAGE_KEY);
-//         if (storedData) {
-//           setDocumentos(JSON.parse(storedData));
-//         } else {
-//           setDocumentos(INITIAL_DOCUMENTS);
-//         }
-//       } catch (error) {
-//         console.error("Erro ao carregar documentos", error);
-//         setDocumentos(INITIAL_DOCUMENTS);
-//       }
-//     };
-//     loadDocuments();
-//   }, []);
-
-//   const adicionarDocumentoGaleria = async () => {
-//     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-//     if (status !== "granted") {
-//       Alert.alert("Permissão necessária", "Precisamos de acesso à sua galeria para adicionar documentos.");
-//       return;
-//     }
-
-//     const resultado = await ImagePicker.launchImageLibraryAsync({
-//       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-//       allowsEditing: true,
-//       quality: 0.8,
-//     });
-
-//     if (!resultado.canceled && resultado.assets && resultado.assets.length > 0) {
-//       const uriImagem = resultado.assets[0].uri;
-
-//       const novoDocumento: DocumentItem = {
-//         id: Date.now().toString(),
-//         title: "Novo Documento Anexado",
-//         type: "Pessoal",
-//         info: "Adicionado hoje • Recém-criado",
-//         iconType: "DOC",
-//         uri: uriImagem,
-//       };
-
-//       const listaAtualizada = [novoDocumento, ...documentos];
-//       setDocumentos(listaAtualizada);
-
-//       try {
-//         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(listaAtualizada));
-//       } catch (error) {
-//         console.error("Erro ao salvar documento", error);
-//       }
-//     }
-//   };
-
-//   const removerDocumento = (id: string) => {
-//     Alert.alert(
-//       "Retirar documento",
-//       "Deseja realmente retirar este documento?",
-//       [
-//         {
-//           text: "Cancelar",
-//           style: "cancel",
-//         },
-//         {
-//           text: "Retirar",
-//           style: "destructive",
-//           onPress: async () => {
-//             try {
-//               const novaLista = documentos.filter((doc) => doc.id !== id);
-
-//               setDocumentos(novaLista);
-
-//               await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(novaLista));
-//             } catch (error) {
-//               console.error("Erro ao remover documento:", error);
-//             }
-//           },
-//         },
-//       ]
-//     );
-//   };
-
-//   const softSurface = isDarkMode ? "rgba(255,255,255,0.04)" : "#F8FAFC";
-//   const softBorder = isDarkMode ? "rgba(255,255,255,0.06)" : "#E2E8F0";
-//   const elevatedShadow = isDarkMode ? "#000000" : "#0F172A";
-
-//   return (
-//     <View style={[styles.container, { backgroundColor: theme.background }]}>
-//       <HeaderScreen />
-
-//       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-//         <View style={[styles.heroCard, { backgroundColor: theme.card, borderColor: softBorder, shadowColor: elevatedShadow }]}>
-//           <Text style={[styles.heroEyebrow, { color: theme.textSecondary }]}>Central de documentos</Text>
-//           <Text style={[styles.heroTitle, { color: theme.textPrimary }]}>
-//             Organize, proteja e acesse seus arquivos com clareza.
-//           </Text>
-
-//           <View style={[styles.searchSection, { backgroundColor: softSurface, borderColor: softBorder }]}>
-//             <View style={[styles.searchIconWrapper, { backgroundColor: isDarkMode ? "rgba(96, 165, 250, 0.14)" : "#EAF2FF" }]}>
-//               <Text style={[styles.searchIcon, { color: theme.accentColor }]}>⌕</Text>
-//             </View>
-//             <TextInput
-//               style={[styles.input, { color: theme.textPrimary }]}
-//               placeholder="Pesquise seus arquivos..."
-//               placeholderTextColor={theme.textSecondary}
-//             />
-//           </View>
-
-//           <TouchableOpacity
-//             activeOpacity={0.9}
-//             onPress={adicionarDocumentoGaleria}
-//             style={[styles.addButton, { backgroundColor: theme.accentColor, shadowColor: theme.accentColor }]}
-//           >
-//             <View style={styles.addButtonContent}>
-//               <View style={styles.addButtonIconWrapper}>
-//                 <Text style={styles.addButtonIcon}>＋</Text>
-//               </View>
-//               <Text style={styles.addButtonText}>Adicionar documento</Text>
-//             </View>
-//           </TouchableOpacity>
-//         </View>
-
-//         <View style={styles.filterHeader}>
-//           <Text style={[styles.filterTitle, { color: theme.textPrimary }]}>Categorias</Text>
-//           <Text style={[styles.filterSubtitle, { color: theme.textSecondary }]}>Filtre sua biblioteca rapidamente</Text>
-//         </View>
-
-//         <View style={styles.chipsContainer}>
-//           {(["Tudo"] as const).map((tab) => (
-//             <TouchableOpacity
-//               key={tab}
-//               activeOpacity={0.9}
-//               style={[
-//                 styles.chip,
-//                 {
-//                   backgroundColor: activeTab === tab ? theme.accentColor : isDarkMode ? "rgba(255,255,255,0.05)" : "#F1F5F9",
-//                   borderColor: activeTab === tab ? theme.accentColor : softBorder,
-//                 },
-//               ]}
-//               onPress={() => setActiveTab(tab)}
-//             >
-//               <Text style={[styles.chipText, { color: activeTab === tab ? "#FFFFFF" : theme.textSecondary, fontWeight: activeTab === tab ? "700" : "600" }]}>
-//                 {tab}
-//               </Text>
-//             </TouchableOpacity>
-//           ))}
-//         </View>
-
-//         <View style={styles.sectionHeader}>
-//           <View>
-//             <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>Arquivos recentes</Text>
-//             <Text style={[styles.sectionSubtitle, { color: theme.textSecondary }]}>Seus últimos documentos acessados</Text>
-//           </View>
-//           <TouchableOpacity activeOpacity={0.85} style={styles.sectionAction}>
-//             <Text style={[styles.viewAllText, { color: theme.accentColor }]}>Ver tudo</Text>
-//           </TouchableOpacity>
-//         </View>
-
-//         {documentos
-//           .filter((doc) => activeTab === "Tudo" || doc.type.toLowerCase() === activeTab.toLowerCase())
-//           .map((item) => {
-//             const visual = getDocumentVisual(item, isDarkMode);
-
-//             return (
-//               <View key={item.id} style={[styles.docCard, { backgroundColor: theme.card, borderColor: softBorder, shadowColor: elevatedShadow }]}>
-//                 <View style={[styles.iconContainer, { backgroundColor: visual.iconBg }]}>
-//                   <Text style={[styles.iconLabel, { color: visual.iconText }]}>{visual.label}</Text>
-//                 </View>
-
-//                 <View style={styles.docInfo}>
-//                   <View style={styles.docTopRow}>
-//                     <Text style={[styles.docTitle, { color: theme.textPrimary }]} numberOfLines={2}>
-//                       {item.title}
-//                     </Text>
-//                     <TouchableOpacity
-//                       activeOpacity={0.8}
-//                       onPress={() => removerDocumento(item.id)}
-//                       style={[styles.moreButton, { backgroundColor: isDarkMode ? "rgba(255,255,255,0.05)" : "#F8FAFC", borderColor: softBorder }]}
-//                     >
-//                       <Text style={[styles.moreButtonText, { color: theme.textSecondary }]}>⋯</Text>
-//                     </TouchableOpacity>
-//                   </View>
-
-//                   {item.uri && (
-//                     <View style={[styles.previewImageContainer, { borderColor: softBorder }]}>
-//                       <Image source={{ uri: item.uri }} style={styles.previewImage} />
-//                     </View>
-//                   )}
-
-//                   <View style={styles.docBottomRow}>
-//                     <Text style={[styles.docMeta, { color: theme.textSecondary }]} numberOfLines={1}>
-//                       {item.info}
-//                     </Text>
-//                     <View style={[styles.badge, { backgroundColor: visual.badgeBg }]}>
-//                       <Text style={[styles.badgeText, { color: visual.badgeText }]}>{item.type}</Text>
-//                     </View>
-//                   </View>
-//                 </View>
-//               </View>
-//             );
-//           })}
-
-//         <View style={[styles.upgradeBanner, { backgroundColor: isDarkMode ? "#1D4ED8" : "#3B82F6", shadowColor: isDarkMode ? "#000000" : "#2563EB" }]}>
-//           <View style={styles.bannerPill}>
-//             <Text style={styles.bannerPillText}>PRO</Text>
-//           </View>
-//           <Text style={styles.bannerTitle}>Armazenamento em nuvem cheio?</Text>
-//           <Text style={styles.bannerSubtitle}>Faça upgrade para a versão Pro e obtenha 2 TB de armazenamento criptografado de documentos.</Text>
-//           <TouchableOpacity activeOpacity={0.9} style={styles.upgradeButton}>
-//             <Text style={styles.upgradeButtonText}>Atualize agora</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </ScrollView>
-
-//       <FooterScreen />
-//     </View>
-//   );
-// }
-
-
-
 import React, { useEffect, useState } from "react";
 import {
     View,
@@ -295,6 +7,8 @@ import {
     TextInput,
     Alert,
     ActivityIndicator,
+    Modal,
+    Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -314,6 +28,7 @@ interface DocumentoAPI {
     numero: string;
     orgaoEmissor: string;
     cidadeEmissao: string;
+    dataEmissao: string;
     usuario?: string;
     tipo?: string;
 }
@@ -325,9 +40,28 @@ interface DocumentItem {
     info: string;
     iconType: "RG" | "CNH" | "RA" | "e-titulo" | "DOC";
     uri?: string;
+    // campos "crus", usados no modal de detalhes (só existem pra documentos vindos da API)
+    numero?: string;
+    orgaoEmissor?: string;
+    cidadeEmissao?: string;
+    dataEmissao?: string;
 }
 
 const STORAGE_KEY = "@meus_documentos_v1";
+
+function formatarData(dataIso?: string) {
+    if (!dataIso) {
+        return "-";
+    }
+
+    const data = new Date(dataIso);
+
+    if (isNaN(data.getTime())) {
+        return "-";
+    }
+
+    return data.toLocaleDateString("pt-BR");
+}
 
 export default function DocumentosScreen() {
     const { theme, isDarkMode } = useTheme();
@@ -338,6 +72,10 @@ export default function DocumentosScreen() {
     const [documentos, setDocumentos] = useState<DocumentItem[]>([]);
     const [busca, setBusca] = useState("");
     const [carregando, setCarregando] = useState(true);
+    const [categoriaAtiva, setCategoriaAtiva] = useState("Tudo");
+
+    const [modalVisivel, setModalVisivel] = useState(false);
+    const [documentoSelecionado, setDocumentoSelecionado] = useState<DocumentItem | null>(null);
 
     /**
      * Converte o documento da API
@@ -376,27 +114,35 @@ export default function DocumentosScreen() {
         return {
             id: documento.id.toString(),
             title: tipo,
-            type: "Documento",
+            // O "type" também vira a categoria usada no filtro e no badge do card.
+            type: tipo,
             info: `${documento.numero} • ${documento.orgaoEmissor}`,
             iconType,
+            numero: documento.numero,
+            orgaoEmissor: documento.orgaoEmissor,
+            cidadeEmissao: documento.cidadeEmissao,
+            dataEmissao: documento.dataEmissao,
         };
     }
 
     /**
      * Busca os documentos na API.
      */
+    /**
+     * Busca os documentos: da API e também os anexados
+     * localmente pela galeria (que não somem mais ao navegar).
+     */
     async function carregarDocumentos() {
         try {
             setCarregando(true);
 
             const response = await api.get<DocumentoAPI[]>("/Documento");
+            const documentosConvertidos = response.data.map(converterDocumento);
 
-            console.log("Documentos recebidos da API:", response.data);
+            const localSalvo = await AsyncStorage.getItem(STORAGE_KEY);
+            const documentosLocais: DocumentItem[] = localSalvo ? JSON.parse(localSalvo) : [];
 
-            const documentosConvertidos =
-                response.data.map(converterDocumento);
-
-            setDocumentos(documentosConvertidos);
+            setDocumentos([...documentosLocais, ...documentosConvertidos]);
         } catch (error: any) {
             console.error("Erro ao carregar documentos:", error);
 
@@ -419,26 +165,36 @@ export default function DocumentosScreen() {
     }, []);
 
     /**
-     * Pesquisa os documentos.
+     * Categorias disponíveis pro filtro, montadas a partir
+     * dos documentos que realmente existem (não é uma lista fixa).
+     */
+    const categorias = [
+        "Tudo",
+        ...Array.from(new Set(documentos.map((documento) => documento.type))),
+    ];
+
+    /**
+     * Pesquisa e filtra os documentos.
      */
     const documentosFiltrados = documentos.filter((documento) => {
         const texto = busca.toLowerCase().trim();
 
-        if (!texto) {
-            return true;
-        }
-
-        return (
+        const bateBusca =
+            !texto ||
             documento.title.toLowerCase().includes(texto) ||
-            documento.info.toLowerCase().includes(texto)
-        );
+            documento.info.toLowerCase().includes(texto);
+
+        const bateCategoria =
+            categoriaAtiva === "Tudo" || documento.type === categoriaAtiva;
+
+        return bateBusca && bateCategoria;
     });
 
     /**
-     * Seleciona uma imagem da galeria.
+     * Seleciona uma imagem da galeria e anexa como documento local.
      *
-     * Por enquanto continua sendo apenas local.
-     * Depois vamos integrar com FotoController.
+     * Continua sendo apenas local (a equipe optou por manter as duas
+     * formas de adicionar: galeria E o formulário do AdicionarDocumento).
      */
     const adicionarDocumentoGaleria = async () => {
         const { status } =
@@ -469,7 +225,7 @@ export default function DocumentosScreen() {
             const novoDocumento: DocumentItem = {
                 id: Date.now().toString(),
                 title: "Novo Documento Anexado",
-                type: "Pessoal",
+                type: "Anexo",
                 info: "Adicionado hoje",
                 iconType: "DOC",
                 uri: uriImagem,
@@ -497,24 +253,38 @@ export default function DocumentosScreen() {
     };
 
     /**
-     * Remove documento.
-     *
-     * Documentos que vieram da API (sem "uri") são removidos
-     * de verdade via DELETE. Os adicionados localmente pela
-     * galeria (ainda sem tela própria de cadastro) continuam
-     * sendo removidos só do estado local.
+     * Abre o modal com os detalhes do documento.
      */
-    const removerDocumento = (documento: DocumentItem) => {
+    function abrirDetalhes(documento: DocumentItem) {
+        setDocumentoSelecionado(documento);
+        setModalVisivel(true);
+    }
+
+    function fecharDetalhes() {
+        setModalVisivel(false);
+        setDocumentoSelecionado(null);
+    }
+
+    /**
+     * Exclui documento.
+     *
+     * Documentos que vieram da API (sem "uri") são excluídos de
+     * verdade via DELETE (que agora, no back-end, faz soft delete —
+     * o registro continua no banco, só marcado como inativo). Os
+     * adicionados localmente pela galeria continuam sendo removidos
+     * só do estado local.
+     */
+    const excluirDocumento = (documento: DocumentItem) => {
         Alert.alert(
-            "Retirar documento",
-            "Deseja realmente retirar este documento?",
+            "Excluir documento",
+            "Deseja realmente excluir este documento?",
             [
                 {
                     text: "Cancelar",
                     style: "cancel",
                 },
                 {
-                    text: "Retirar",
+                    text: "Excluir",
                     style: "destructive",
                     onPress: async () => {
                         const ehDocumentoLocal = !!documento.uri;
@@ -548,13 +318,13 @@ export default function DocumentosScreen() {
                             );
                         } catch (error: any) {
                             console.error(
-                                "Erro ao remover documento:",
+                                "Erro ao excluir documento:",
                                 error
                             );
 
                             const mensagem =
                                 error.response?.data?.mensagem ||
-                                "Não foi possível remover o documento.";
+                                "Não foi possível excluir o documento.";
 
                             Alert.alert("Erro", mensagem);
                         }
@@ -567,13 +337,13 @@ export default function DocumentosScreen() {
     /**
      * Escolhe o ícone de acordo com o tipo do documento.
      */
-    function renderIcone(documento: DocumentItem) {
+    function renderIcone(documento: DocumentItem, size: number = 25) {
         switch (documento.iconType) {
             case "RG":
                 return (
                     <Ionicons
                         name="card-outline"
-                        size={25}
+                        size={size}
                         color={theme.accentColor}
                     />
                 );
@@ -582,7 +352,7 @@ export default function DocumentosScreen() {
                 return (
                     <Ionicons
                         name="car-outline"
-                        size={25}
+                        size={size}
                         color={theme.accentColor}
                     />
                 );
@@ -591,7 +361,7 @@ export default function DocumentosScreen() {
                 return (
                     <Ionicons
                         name="shield-outline"
-                        size={25}
+                        size={size}
                         color={theme.accentColor}
                     />
                 );
@@ -600,7 +370,7 @@ export default function DocumentosScreen() {
                 return (
                     <Ionicons
                         name="document-text-outline"
-                        size={25}
+                        size={size}
                         color={theme.accentColor}
                     />
                 );
@@ -609,7 +379,7 @@ export default function DocumentosScreen() {
                 return (
                     <Ionicons
                         name="document-outline"
-                        size={25}
+                        size={size}
                         color={theme.accentColor}
                     />
                 );
@@ -706,26 +476,54 @@ export default function DocumentosScreen() {
                         />
                     </View>
 
-                    {/* ADICIONAR */}
-                    <TouchableOpacity
-                        style={[styles.addButton, { backgroundColor: theme.accentColor }]}
-                        activeOpacity={0.8}
-                        onPress={() => navigation.navigate('AdicionarDocumento')}
-                    >
-                        <View style={styles.addButtonContent}>
-                            <View style={styles.addButtonIconWrapper}>
-                                <Ionicons
-                                    name="add"
-                                    size={18}
-                                    color="#FFFFFF"
-                                />
-                            </View>
+                    {/* ADICIONAR — duas opções: formulário e galeria */}
+                    <View style={styles.addButtonsRow}>
+                        <TouchableOpacity
+                            style={[styles.addButton, { backgroundColor: theme.accentColor, flex: 1 }]}
+                            activeOpacity={0.8}
+                            onPress={() => navigation.navigate('AdicionarDocumento')}
+                        >
+                            <View style={styles.addButtonContent}>
+                                <View style={styles.addButtonIconWrapper}>
+                                    <Ionicons
+                                        name="add"
+                                        size={18}
+                                        color="#FFFFFF"
+                                    />
+                                </View>
 
-                            <Text style={styles.addButtonText}>
-                                Adicionar documento
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
+                                <Text style={styles.addButtonText}>
+                                    Cadastrar
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[
+                                styles.addButtonSecondary,
+                                {
+                                    borderColor: theme.accentColor,
+                                    backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF',
+                                },
+                            ]}
+                            activeOpacity={0.8}
+                            onPress={adicionarDocumentoGaleria}
+                        >
+                            <View style={styles.addButtonSecondaryContent}>
+                                <View style={styles.addButtonSecondaryIconWrapper}>
+                                    <Ionicons
+                                        name="image-outline"
+                                        size={18}
+                                        color={theme.accentColor}
+                                    />
+                                </View>
+
+                                <Text style={[styles.addButtonSecondaryText, { color: theme.accentColor }]}>
+                                    Da galeria
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {/* FILTROS */}
@@ -753,30 +551,45 @@ export default function DocumentosScreen() {
                     </Text>
                 </View>
 
-                <View style={styles.chipsContainer}>
-                    <TouchableOpacity
-                        style={[
-                            styles.chip,
-                            {
-                                backgroundColor:
-                                    theme.accentColor,
-                                borderColor:
-                                    theme.accentColor,
-                            },
-                        ]}
-                    >
-                        <Text
-                            style={[
-                                styles.chipText,
-                                {
-                                    color: "#FFFFFF",
-                                },
-                            ]}
-                        >
-                            Tudo
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={styles.chipsContainer}
+                >
+                    {categorias.map((categoria) => {
+                        const selecionada = categoria === categoriaAtiva;
+
+                        return (
+                            <TouchableOpacity
+                                key={categoria}
+                                style={[
+                                    styles.chip,
+                                    {
+                                        backgroundColor: selecionada
+                                            ? theme.accentColor
+                                            : isDarkMode
+                                                ? 'rgba(255,255,255,0.05)'
+                                                : '#F1F5F9',
+                                        borderColor: selecionada ? theme.accentColor : theme.borderColor,
+                                    },
+                                ]}
+                                onPress={() => setCategoriaAtiva(categoria)}
+                            >
+                                <Text
+                                    style={[
+                                        styles.chipText,
+                                        {
+                                            color: selecionada ? "#FFFFFF" : theme.textSecondary,
+                                            fontWeight: selecionada ? "700" : "600",
+                                        },
+                                    ]}
+                                >
+                                    {categoria}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </ScrollView>
 
                 {/* ARQUIVOS RECENTES */}
                 <View style={styles.sectionHeader}>
@@ -800,8 +613,8 @@ export default function DocumentosScreen() {
                                 },
                             ]}
                         >
-                            {documentos.length} documento
-                            {documentos.length !== 1
+                            {documentosFiltrados.length} documento
+                            {documentosFiltrados.length !== 1
                                 ? "s"
                                 : ""}
                         </Text>
@@ -862,14 +675,18 @@ export default function DocumentosScreen() {
                                 color: theme.textSecondary,
                             }}
                         >
-                            Seus documentos aparecerão aqui.
+                            {categoriaAtiva === "Tudo"
+                                ? "Seus documentos aparecerão aqui."
+                                : "Nenhum documento nessa categoria ainda."}
                         </Text>
                     </View>
                 ) : (
                     /* LISTA */
                     documentosFiltrados.map((documento) => (
-                        <View
+                        <TouchableOpacity
                             key={documento.id}
+                            activeOpacity={0.85}
+                            onPress={() => abrirDetalhes(documento)}
                             style={[
                                 styles.docCard,
                                 {
@@ -916,28 +733,23 @@ export default function DocumentosScreen() {
 
                                     <TouchableOpacity
                                         style={[
-                                            styles.moreButton,
+                                            styles.deleteButton,
                                             {
-                                                borderColor:
-                                                    theme.borderColor,
+                                                borderColor: isDarkMode ? 'rgba(248,113,113,0.4)' : '#FCA5A5',
+                                                backgroundColor: isDarkMode ? 'rgba(248,113,113,0.1)' : '#FEF2F2',
                                             },
                                         ]}
                                         onPress={() =>
-                                            removerDocumento(
+                                            excluirDocumento(
                                                 documento
                                             )
                                         }
                                     >
-                                        <Text
-                                            style={[
-                                                styles.moreButtonText,
-                                                {
-                                                    color: theme.textSecondary,
-                                                },
-                                            ]}
-                                        >
-                                            ⋮
-                                        </Text>
+                                        <Ionicons
+                                            name="trash-outline"
+                                            size={16}
+                                            color="#DC2626"
+                                        />
                                     </TouchableOpacity>
                                 </View>
 
@@ -982,7 +794,7 @@ export default function DocumentosScreen() {
                                     </View>
                                 </View>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     ))
                 )}
 
@@ -1032,6 +844,104 @@ export default function DocumentosScreen() {
             </ScrollView>
 
             <FooterScreen />
+
+            {/* MODAL DE DETALHES DO DOCUMENTO */}
+            <Modal
+                animationType="slide"
+                transparent
+                visible={modalVisivel}
+                onRequestClose={fecharDetalhes}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={[styles.modalCard, { backgroundColor: theme.card }]}>
+                        <View style={styles.modalHeaderRow}>
+                            <View style={{ flex: 1 }}>
+                                <Text style={[styles.modalTitle, { color: theme.textPrimary }]}>
+                                    {documentoSelecionado?.title}
+                                </Text>
+                                <Text style={[styles.modalSubtitle, { color: theme.textSecondary }]}>
+                                    Detalhes do documento
+                                </Text>
+                            </View>
+
+                            <TouchableOpacity onPress={fecharDetalhes}>
+                                <Ionicons name="close" size={24} color={theme.textSecondary} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            {documentoSelecionado?.uri ? (
+                                <Image
+                                    source={{ uri: documentoSelecionado.uri }}
+                                    style={styles.previewImage}
+                                    resizeMode="cover"
+                                />
+                            ) : (
+                                <View
+                                    style={[
+                                        styles.modalIconBadge,
+                                        { backgroundColor: isDarkMode ? theme.borderColor : '#EEF4FF' },
+                                    ]}
+                                >
+                                    {documentoSelecionado && renderIcone(documentoSelecionado, 28)}
+                                </View>
+                            )}
+
+                            {documentoSelecionado?.numero && (
+                                <View style={[styles.modalRow, { borderBottomColor: theme.borderColor }]}>
+                                    <Text style={[styles.modalLabel, { color: theme.textSecondary }]}>Número</Text>
+                                    <Text style={[styles.modalValue, { color: theme.textPrimary }]}>
+                                        {documentoSelecionado.numero}
+                                    </Text>
+                                </View>
+                            )}
+
+                            {documentoSelecionado?.orgaoEmissor && (
+                                <View style={[styles.modalRow, { borderBottomColor: theme.borderColor }]}>
+                                    <Text style={[styles.modalLabel, { color: theme.textSecondary }]}>Órgão emissor</Text>
+                                    <Text style={[styles.modalValue, { color: theme.textPrimary }]}>
+                                        {documentoSelecionado.orgaoEmissor}
+                                    </Text>
+                                </View>
+                            )}
+
+                            {documentoSelecionado?.cidadeEmissao && (
+                                <View style={[styles.modalRow, { borderBottomColor: theme.borderColor }]}>
+                                    <Text style={[styles.modalLabel, { color: theme.textSecondary }]}>Cidade de emissão</Text>
+                                    <Text style={[styles.modalValue, { color: theme.textPrimary }]}>
+                                        {documentoSelecionado.cidadeEmissao}
+                                    </Text>
+                                </View>
+                            )}
+
+                            {documentoSelecionado?.dataEmissao && (
+                                <View style={[styles.modalRow, { borderBottomColor: theme.borderColor }]}>
+                                    <Text style={[styles.modalLabel, { color: theme.textSecondary }]}>Data de emissão</Text>
+                                    <Text style={[styles.modalValue, { color: theme.textPrimary }]}>
+                                        {formatarData(documentoSelecionado.dataEmissao)}
+                                    </Text>
+                                </View>
+                            )}
+
+                            {!documentoSelecionado?.numero && (
+                                <View style={[styles.modalRow, { borderBottomColor: theme.borderColor }]}>
+                                    <Text style={[styles.modalLabel, { color: theme.textSecondary }]}>Origem</Text>
+                                    <Text style={[styles.modalValue, { color: theme.textPrimary }]}>
+                                        Anexado pela galeria
+                                    </Text>
+                                </View>
+                            )}
+                        </ScrollView>
+
+                        <TouchableOpacity
+                            style={[styles.modalCloseButton, { backgroundColor: theme.accentColor }]}
+                            onPress={fecharDetalhes}
+                        >
+                            <Text style={styles.modalCloseButtonText}>Fechar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 }

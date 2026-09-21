@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { HeaderScreen } from '../../components/Header';
 import { FooterScreen } from '../../components/Footer';
 import { useNavigation } from '@react-navigation/native';
@@ -12,93 +11,76 @@ import { useTheme } from '../../context/ThemeContext';
 import styles from '../../theme/ConfiguracaoCss';
 import { BiometricService } from '../../services/BiometricService';
 
-const NOTIFICATIONS_SETTINGS_KEY = '@user_notifications_settings';
-
-const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+const BIOMETRIA_STORAGE_KEY = '@biometria_ativa_v1';
 
 export default function ConfiguracoesScreen() {
     const { isDarkMode, toggleTheme, theme } = useTheme();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-    const [alertasEmail, setAlertasEmail] = useState(true);
-    const [pushNotifications, setPushNotifications] = useState(true);
+    const [nomeUsuario, setNomeUsuario] = useState('');
     const [biometria, setBiometria] = useState(false);
+    const [alterandoBiometria, setAlterandoBiometria] = useState(false);
 
     useEffect(() => {
-        const loadSettings = async () => {
+        const carregar = async () => {
             try {
-                const storedSettings = await AsyncStorage.getItem(NOTIFICATIONS_SETTINGS_KEY);
-                if (storedSettings !== null) {
-                    const { email, push, bio } = JSON.parse(storedSettings);
-                    if (email !== undefined) setAlertasEmail(email);
-                    if (push !== undefined) setPushNotifications(push);
-                    if (bio !== undefined) setBiometria(bio);
-                }
+                const usuarioSalvo = await AsyncStorage.getItem('usuario');
+                const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+                setNomeUsuario(usuario?.nome || '');
+
+                const biometriaSalva = await AsyncStorage.getItem(BIOMETRIA_STORAGE_KEY);
+                setBiometria(biometriaSalva === 'true');
             } catch (error) {
                 console.error('Erro ao carregar configurações:', error);
             }
         };
 
-        loadSettings();
+        carregar();
     }, []);
 
-    const saveSettings = async (emailVal: boolean, pushVal: boolean, bioVal: boolean) => {
-        try {
-            await AsyncStorage.setItem(
-                NOTIFICATIONS_SETTINGS_KEY,
-                JSON.stringify({ email: emailVal, push: pushVal, bio: bioVal })
-            );
-        } catch (error) {
-            console.error('Erro ao salvar configurações:', error);
-        }
-    };
+    const inicialAvatar = nomeUsuario.trim().charAt(0).toUpperCase() || '?';
 
-    const handleToggleEmail = (value: boolean) => {
-        setAlertasEmail(value);
-        saveSettings(value, pushNotifications, biometria);
-    };
-
-    const handleTogglePush = async (value: boolean) => {
-        if (value) {
-            if (isExpoGo) {
-                Alert.alert(
-                    'Modo Expo Go',
-                    'Push notifications remotas não são suportadas dentro do Expo Go no SDK 53+. Para testar notificações reais, utilize uma Development Build.'
-                );
-                setPushNotifications(true);
-                saveSettings(alertasEmail, true, biometria);
-                return;
-            }
-
-            try {
-                const Notifications = await import('expo-notifications');
-                const { status } = await Notifications.requestPermissionsAsync();
-                if (status !== 'granted') {
-                    Alert.alert('Atenção', 'A permissão para enviar notificações foi negada no dispositivo.');
-                    setPushNotifications(false);
-                    saveSettings(alertasEmail, false, biometria);
-                    return;
-                }
-            } catch (error) {
-                console.warn('Erro ao solicitar permissões de notificação:', error);
-            }
-        }
-        setPushNotifications(value);
-        saveSettings(alertasEmail, value, biometria);
-    };
-
+    /**
+     * Mesma lógica e mesma chave de armazenamento usadas no
+     * Perfil — ativar/desativar aqui reflete lá, e vice-versa.
+     */
     const handleToggleBiometria = async (value: boolean) => {
-        if (value) {
-            const disponivel = await BiometricService.isBiometricAvaliable();
-            if (!disponivel) {
-                Alert.alert('Biometria Indisponível', 'Seu aparelho não possui suporte ou biometria cadastrada.');
+        if (alterandoBiometria) {
+            return;
+        }
+
+        try {
+            setAlterandoBiometria(true);
+
+            if (!value) {
                 setBiometria(false);
-                saveSettings(alertasEmail, pushNotifications, false);
+                await AsyncStorage.setItem(BIOMETRIA_STORAGE_KEY, 'false');
                 return;
             }
+
+            const disponivel = await BiometricService.isBiometricAvaliable();
+
+            if (!disponivel) {
+                Alert.alert('Biometria indisponível', 'Seu aparelho não possui suporte ou biometria cadastrada.');
+                return;
+            }
+
+            const autenticou = await BiometricService.autenticarComBiometria(
+                'Confirme sua identidade para ativar o login biométrico'
+            );
+
+            if (!autenticou) {
+                return;
+            }
+
+            setBiometria(true);
+            await AsyncStorage.setItem(BIOMETRIA_STORAGE_KEY, 'true');
+        } catch (error) {
+            console.error('Erro ao alternar biometria:', error);
+            Alert.alert('Erro', 'Não foi possível alterar a configuração de biometria.');
+        } finally {
+            setAlterandoBiometria(false);
         }
-        setBiometria(value);
-        saveSettings(alertasEmail, pushNotifications, value);
     };
 
     return (
@@ -115,11 +97,10 @@ export default function ConfiguracoesScreen() {
                 >
                     <View style={styles.profileInfoContainer}>
                         <View style={[styles.profileAvatar, { backgroundColor: isDarkMode ? theme.borderColor : '#1E293B' }]}>
-                            <Text style={styles.profileAvatarText}>N</Text>
+                            <Text style={styles.profileAvatarText}>{inicialAvatar}</Text>
                         </View>
                         <View style={styles.profileTextContainer}>
-                            <Text style={[styles.profileName, { color: theme.textPrimary }]}>Nickinho</Text>
-                            <Text style={[styles.profilePlan, { color: theme.accentColor }]}>Plano Membro</Text>
+                            <Text style={[styles.profileName, { color: theme.textPrimary }]}>{nomeUsuario}</Text>
                         </View>
                     </View>
                     <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
@@ -149,24 +130,24 @@ export default function ConfiguracoesScreen() {
                     </View>
                 </View>
 
-                {/* NOTIFICAÇÃO */}
+                {/* NOTIFICAÇÃO — indisponível por enquanto */}
                 <View style={styles.sectionHeader}>
-                    <Ionicons name="notifications-outline" size={18} color={theme.accentColor} />
+                    <Ionicons name="notifications-outline" size={18} color={theme.textSecondary} />
                     <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>NOTIFICAÇÃO</Text>
                 </View>
 
-                <View style={[styles.optionsGroup, { backgroundColor: theme.card, borderColor: theme.borderColor }]}>
+                <View style={[styles.optionsGroup, { backgroundColor: theme.card, borderColor: theme.borderColor, opacity: 0.5 }]}>
                     <View style={styles.optionRow}>
                         <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? '#1E293B' : '#EEF4FF' }]}>
-                            <Ionicons name="mail-outline" size={20} color={theme.accentColor} />
+                            <Ionicons name="mail-outline" size={20} color={theme.textSecondary} />
                         </View>
                         <View style={styles.optionTextContainer}>
                             <Text style={[styles.optionTitle, { color: theme.textPrimary }]}>Alertas por e-mail</Text>
-                            <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Atualizações sobre documentos</Text>
+                            <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Indisponível no momento</Text>
                         </View>
                         <Switch
-                            value={alertasEmail}
-                            onValueChange={handleToggleEmail}
+                            value={false}
+                            disabled
                             trackColor={{ false: '#CBD5E1', true: theme.accentColor }}
                             thumbColor="#FFFFFF"
                         />
@@ -176,15 +157,15 @@ export default function ConfiguracoesScreen() {
 
                     <View style={styles.optionRow}>
                         <View style={[styles.iconWrapper, { backgroundColor: isDarkMode ? '#1E293B' : '#EEF4FF' }]}>
-                            <Ionicons name="phone-portrait-outline" size={20} color={theme.accentColor} />
+                            <Ionicons name="phone-portrait-outline" size={20} color={theme.textSecondary} />
                         </View>
                         <View style={styles.optionTextContainer}>
                             <Text style={[styles.optionTitle, { color: theme.textPrimary }]}>Push Notifications</Text>
-                            <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Diretamente no seu dispositivo</Text>
+                            <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Indisponível no momento</Text>
                         </View>
                         <Switch
-                            value={pushNotifications}
-                            onValueChange={handleTogglePush}
+                            value={false}
+                            disabled
                             trackColor={{ false: '#CBD5E1', true: theme.accentColor }}
                             thumbColor="#FFFFFF"
                         />
@@ -203,12 +184,13 @@ export default function ConfiguracoesScreen() {
                             <Ionicons name="finger-print-outline" size={20} color={theme.accentColor} />
                         </View>
                         <View style={styles.optionTextContainer}>
-                            <Text style={[styles.optionTitle, { color: theme.textPrimary }]}>Biometria</Text>
+                            <Text style={[styles.optionTitle, { color: theme.textPrimary }]}>Login biométrico</Text>
                             <Text style={[styles.optionSubtitle, { color: theme.textSecondary }]}>Reconhecimento facial ou impressão digital</Text>
                         </View>
                         <Switch
                             value={biometria}
                             onValueChange={handleToggleBiometria}
+                            disabled={alterandoBiometria}
                             trackColor={{ false: '#CBD5E1', true: theme.accentColor }}
                             thumbColor="#FFFFFF"
                         />

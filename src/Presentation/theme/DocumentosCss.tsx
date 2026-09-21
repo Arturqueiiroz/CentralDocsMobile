@@ -281,6 +281,107 @@ const styles = StyleSheet.create({
     fontSize: 14, 
     fontWeight: "800" 
   },
+  addButtonsRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  addButtonSecondary: {
+    flex: 1,
+    borderRadius: 18,
+    minHeight: 58,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1.5,
+  },
+  addButtonSecondaryContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addButtonSecondaryIconWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  addButtonSecondaryText: {
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  deleteButton: {
+    width: 34,
+    height: 34,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(15,23,42,0.55)",
+    justifyContent: "flex-end",
+  },
+  modalCard: {
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    padding: 22,
+    maxHeight: "82%",
+  },
+  modalHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 18,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "800",
+    flex: 1,
+    marginRight: 12,
+  },
+  modalSubtitle: {
+    fontSize: 13,
+    fontWeight: "500",
+    marginTop: 2,
+  },
+  modalIconBadge: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginBottom: 16,
+  },
+  modalRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+  },
+  modalLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  modalValue: {
+    fontSize: 14,
+    fontWeight: "700",
+    flex: 1,
+    textAlign: "right",
+    marginLeft: 12,
+  },
+  modalCloseButton: {
+    marginTop: 20,
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  modalCloseButtonText: {
+    fontSize: 15,
+    fontWeight: "700",
+  },
 });
 
 export default styles;

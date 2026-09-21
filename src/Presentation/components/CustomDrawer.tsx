@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../theme/CustomDrawerCss';
 import { useTheme } from '../context/ThemeContext';
 
@@ -19,6 +20,23 @@ export default function CustomDrawer({
 }: CustomDrawerProps) {
 
     const { theme, isDarkMode } = useTheme();
+    const [nomeUsuario, setNomeUsuario] = useState('');
+
+    useEffect(() => {
+        const carregarUsuario = async () => {
+            try {
+                const usuarioSalvo = await AsyncStorage.getItem('usuario');
+                const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+                setNomeUsuario(usuario?.nome || '');
+            } catch (error) {
+                console.error('Erro ao carregar usuário no menu:', error);
+            }
+        };
+
+        carregarUsuario();
+    }, []);
+
+    const inicialAvatar = nomeUsuario.trim().charAt(0).toUpperCase() || '?';
 
     const menuItems = [
         { id: 'TelaHome', label: 'Home', icon: 'home-outline' },
@@ -51,7 +69,11 @@ export default function CustomDrawer({
             {/* Header */}
             <View style={styles.header}>
                 <Image
-                    source={require('../../../assets/img/LogoCentralDocsNova.png')}
+                    source={
+                        isDarkMode
+                            ? require('../../../assets/img/LogoParaTemaClaro.png')
+                            : require('../../../assets/img/LogoCentralDocsNova.png')
+                    }
                     style={styles.logo}
                     resizeMode="contain"
                 />
@@ -149,12 +171,12 @@ export default function CustomDrawer({
                             { backgroundColor: theme.accentColor },
                         ]}
                     >
-                        <Text style={styles.avatarText}>N</Text>
+                        <Text style={styles.avatarText}>{inicialAvatar}</Text>
                     </View>
 
                     <View style={styles.userInfo}>
                         <Text style={[styles.userName, { color: theme.textPrimary }]}>
-                            Nickinho
+                            {nomeUsuario || 'Usuário'}
                         </Text>
 
                         <Text style={[styles.userSub, { color: theme.textSecondary }]}>
