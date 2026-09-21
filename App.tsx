@@ -19,6 +19,7 @@ import PerguntasFrequentesScreen from "./src/Presentation/views/PerguntasFrequen
 import SuporteScreen from "./src/Presentation/views/Suporte/Suporte";
 import EsqueceuSenhaScreen from "./src/Presentation/views/EsqueceuSenha/EsqueceuSenha";
 import AdicionarDocumentoScreen from './src/Presentation/views/AdicionarDocumento/AdicionarDocumento';
+import ChatbotScreen from './src/Presentation/views/Chatbot/ChatbotView';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -36,6 +37,7 @@ export type RootStackParamList = {
   Suporte: undefined;
   EsqueceuSenha: { email?: string };
   AdicionarDocumento: undefined;
+  Chatbot: undefined;
 }
   {/*
     Login: undefined;
@@ -81,10 +83,14 @@ export default function App() {
           <Stack.Screen name="PerguntasFrequentes" component={PerguntasFrequentesScreen} />
           <Stack.Screen name="Suporte" component={SuporteScreen} />
           <Stack.Screen name="AdicionarDocumento" component={AdicionarDocumentoScreen} />
+          
+          {/* 3. ROTA REGISTRADA NO STACK */}
+          <Stack.Screen name="Chatbot" component={ChatbotScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ThemeProvider>
   );
+}
 {/* 
     return (
 
@@ -157,4 +163,3 @@ export default function App() {
         </ThemeProvider>
     );
     */}
-}
