@@ -1,9 +1,17 @@
 import React, { useEffect, useRef } from "react";
-import { StyleSheet, View, Text, ScrollView, Image, Animated, Easing, } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  Image,
+  Animated,
+  Easing,
+} from "react-native";
 import { HeaderScreen } from "../../components/Header";
 import { FooterScreen } from "../../components/Footer";
-import { useTheme } from '../../context/ThemeContext';
-import styles from "../../theme/SobreNosCss"
+import { useTheme } from "../../context/ThemeContext";
+import styles from "../../theme/SobreNosCss";
 
 interface TeamMember {
   id: string;
@@ -15,6 +23,7 @@ interface TeamMember {
 
 export default function SobreNosScreen() {
   const { theme, isDarkMode } = useTheme();
+
   const equipe: TeamMember[] = [
     {
       id: "1",
@@ -113,7 +122,7 @@ export default function SobreNosScreen() {
     <View
       style={[
         styles.container,
-        { backgroundColor: theme.background }
+        { backgroundColor: theme.background },
       ]}
     >
       <HeaderScreen />
@@ -122,12 +131,14 @@ export default function SobreNosScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
+        {/* HERO */}
         <Animated.View style={[styles.hero, fadeUp(heroAnim)]}>
           <View style={styles.heroGlowPrimary} />
           <View style={styles.heroGlowSecondary} />
 
           <View style={styles.heroBadge}>
             <View style={styles.heroBadgeDot} />
+
             <Text style={styles.heroBadgeText}>
               Gestão documental com padrão profissional
             </Text>
@@ -155,30 +166,51 @@ export default function SobreNosScreen() {
           </View>
         </Animated.View>
 
+        {/* MISSÃO */}
         <Animated.View style={[styles.section, fadeUp(missionAnim)]}>
           <View style={styles.sectionHeader}>
             <Text
               style={[
                 styles.sectionTitle,
-                { color: theme.textPrimary }
+                { color: theme.textPrimary },
               ]}
-            > Nossa missão</Text>
+            >
+              Nossa missão
+            </Text>
+
             <Text
               style={[
                 styles.sectionSubtitle,
-                { color: theme.textSecondary }
+                { color: theme.textSecondary },
               ]}
             >
               O que orienta cada decisão de produto e experiência.
             </Text>
           </View>
 
-          <View style={[styles.card, {
-            backgroundColor: theme.card,
-            borderColor: theme.borderColor,
-          }, styles.missionCard]}>
-            <View style={styles.missionAccent} />
-            <Text style={styles.cardTextStrong}>
+          <View
+            style={[
+              styles.card,
+              styles.missionCard,
+              {
+                backgroundColor: theme.card,
+                borderColor: theme.borderColor,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.missionAccent,
+                { backgroundColor: theme.accentColor },
+              ]}
+            />
+
+            <Text
+              style={[
+                styles.cardTextStrong,
+                { color: theme.textPrimary },
+              ]}
+            >
               Oferecer uma solução prática para o gerenciamento de documentos,
               proporcionando mais segurança, organização e facilidade no dia a
               dia de pessoas e empresas.
@@ -186,10 +218,24 @@ export default function SobreNosScreen() {
           </View>
         </Animated.View>
 
+        {/* VALORES */}
         <Animated.View style={[styles.section, fadeUp(valuesAnim)]}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Nossos valores</Text>
-            <Text style={styles.sectionSubtitle}>
+            <Text
+              style={[
+                styles.sectionTitle,
+                { color: theme.textPrimary },
+              ]}
+            >
+              Nossos valores
+            </Text>
+
+            <Text
+              style={[
+                styles.sectionSubtitle,
+                { color: theme.textSecondary },
+              ]}
+            >
               Princípios que sustentam a qualidade e a confiança da plataforma.
             </Text>
           </View>
@@ -197,44 +243,146 @@ export default function SobreNosScreen() {
           {valores.map((valor, index) => (
             <View
               key={index}
-              style={[styles.card, styles.valueCard, index === 2 && styles.lastCard]}
+              style={[
+                styles.card,
+                styles.valueCard,
+                index === 2 && styles.lastCard,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: theme.borderColor,
+                },
+              ]}
             >
-              <View style={styles.valueIcon}>
-                <Text style={styles.valueIconText}>{valor.sigla}</Text>
+              <View
+                style={[
+                  styles.valueIcon,
+                  {
+                    backgroundColor: isDarkMode
+                      ? theme.borderColor
+                      : "#F3E8FF",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.valueIconText,
+                    { color: theme.accentColor },
+                  ]}
+                >
+                  {valor.sigla}
+                </Text>
               </View>
 
               <View style={styles.valueContent}>
-                <Text style={styles.cardTitle}>{valor.titulo}</Text>
-                <Text style={styles.cardText}>{valor.descricao}</Text>
+                <Text
+                  style={[
+                    styles.cardTitle,
+                    { color: theme.textPrimary },
+                  ]}
+                >
+                  {valor.titulo}
+                </Text>
+
+                <Text
+                  style={[
+                    styles.cardText,
+                    { color: theme.textSecondary },
+                  ]}
+                >
+                  {valor.descricao}
+                </Text>
               </View>
             </View>
           ))}
         </Animated.View>
 
+        {/* EQUIPE */}
         <Animated.View style={[styles.section, fadeUp(teamAnim)]}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Nossa equipe</Text>
-            <Text style={styles.sectionSubtitle}>
+            <Text
+              style={[
+                styles.sectionTitle,
+                { color: theme.textPrimary },
+              ]}
+            >
+              Nossa equipe
+            </Text>
+
+            <Text
+              style={[
+                styles.sectionSubtitle,
+                { color: theme.textSecondary },
+              ]}
+            >
               Um time multidisciplinar focado em desempenho, confiabilidade e
               experiência do usuário.
             </Text>
           </View>
 
           {equipe.map((membro) => (
-            <View key={membro.id} style={styles.memberCard}>
+            <View
+              key={membro.id}
+              style={[
+                styles.memberCard,
+                {
+                  backgroundColor: theme.card,
+                  borderColor: theme.borderColor,
+                },
+              ]}
+            >
               <View style={styles.memberTop}>
-                <Image source={membro.foto} style={styles.avatar} />
+                <Image
+                  source={membro.foto}
+                  style={[
+                    styles.avatar,
+                    {
+                      borderColor: isDarkMode
+                        ? theme.borderColor
+                        : "#EEF2FF",
+                    },
+                  ]}
+                />
 
                 <View style={styles.memberHeader}>
-                  <Text style={styles.memberName}>{membro.nome}</Text>
+                  <Text
+                    style={[
+                      styles.memberName,
+                      { color: theme.textPrimary },
+                    ]}
+                  >
+                    {membro.nome}
+                  </Text>
 
-                  <View style={styles.roleBadge}>
-                    <Text style={styles.memberRole}>{membro.cargo}</Text>
+                  <View
+                    style={[
+                      styles.roleBadge,
+                      {
+                        backgroundColor: isDarkMode
+                          ? theme.borderColor
+                          : "#EEF2FF",
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.memberRole,
+                        { color: theme.accentColor },
+                      ]}
+                    >
+                      {membro.cargo}
+                    </Text>
                   </View>
                 </View>
               </View>
 
-              <Text style={styles.memberDescription}>{membro.descricao}</Text>
+              <Text
+                style={[
+                  styles.memberDescription,
+                  { color: theme.textSecondary },
+                ]}
+              >
+                {membro.descricao}
+              </Text>
             </View>
           ))}
         </Animated.View>
