@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F4F7FB",
   },
 
   scrollContent: {
@@ -12,6 +11,7 @@ const styles = StyleSheet.create({
     paddingBottom: 44,
   },
 
+  // HERO
   hero: {
     position: "relative",
     overflow: "hidden",
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#ffffffff",
+    backgroundColor: "#FFFFFF",
     marginRight: 8,
   },
 
@@ -117,40 +117,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  metricsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 28,
-  },
-
-  metricCard: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
-    paddingVertical: 18,
-    paddingHorizontal: 18,
-    borderWidth: 1,
-    borderColor: "#E7ECF3",
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.06,
-    shadowRadius: 18,
-    elevation: 4,
-  },
-
-  metricNumber: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#111827",
-    marginBottom: 6,
-  },
-
-  metricLabel: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#64748B",
-  },
-
+  // SEÇÕES
   section: {
     marginBottom: 30,
   },
@@ -159,41 +126,30 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  sectionEyebrow: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#081249ff",
-    textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 6,
-  },
-
   sectionTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#111827",
     marginBottom: 6,
   },
 
   sectionSubtitle: {
     fontSize: 14,
     lineHeight: 22,
-    color: "#64748B",
   },
 
+  // CARDS
   card: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: "#E7ECF3",
     padding: 20,
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 12 },
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.06,
-    shadowRadius: 20,
-    elevation: 4,
+    shadowRadius: 16,
+    elevation: 3,
   },
 
+  // MISSÃO
   missionCard: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -204,31 +160,17 @@ const styles = StyleSheet.create({
     height: "100%",
     minHeight: 74,
     borderRadius: 999,
-    backgroundColor: "#2e00faff",
     marginRight: 14,
-  },
-
-  cardTitle: {
-    fontSize: 17,
-    fontWeight: "700",
-    color: "#0F172A",
-    marginBottom: 6,
-  },
-
-  cardText: {
-    fontSize: 14,
-    color: "#64748B",
-    lineHeight: 23,
   },
 
   cardTextStrong: {
     flex: 1,
     fontSize: 15,
-    color: "#334155",
     lineHeight: 24,
     fontWeight: "500",
   },
 
+  // VALORES
   valueCard: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -239,7 +181,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 16,
-    backgroundColor: "#F3E8FF",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 14,
@@ -248,7 +189,6 @@ const styles = StyleSheet.create({
   valueIconText: {
     fontSize: 13,
     fontWeight: "800",
-    color: "#0033dbff",
     letterSpacing: 0.6,
   },
 
@@ -256,22 +196,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  cardTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+    marginBottom: 6,
+  },
+
+  cardText: {
+    fontSize: 14,
+    lineHeight: 23,
+  },
+
   lastCard: {
     marginBottom: 0,
   },
 
+  // EQUIPE
   memberCard: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: "#E7ECF3",
     padding: 18,
     marginBottom: 16,
-    shadowColor: "#0F172A",
-    shadowOffset: { width: 0, height: 12 },
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.06,
-    shadowRadius: 20,
-    elevation: 4,
+    shadowRadius: 16,
+    elevation: 3,
   },
 
   memberTop: {
@@ -286,7 +236,6 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     marginRight: 14,
     borderWidth: 3,
-    borderColor: "#EEF2FF",
   },
 
   memberHeader: {
@@ -296,13 +245,11 @@ const styles = StyleSheet.create({
   memberName: {
     fontSize: 18,
     fontWeight: "800",
-    color: "#111827",
     marginBottom: 8,
   },
 
   roleBadge: {
     alignSelf: "flex-start",
-    backgroundColor: "#EEF2FF",
     borderRadius: 999,
     paddingVertical: 8,
     paddingHorizontal: 12,
@@ -311,13 +258,11 @@ const styles = StyleSheet.create({
   memberRole: {
     fontSize: 12,
     fontWeight: "700",
-    color: "#4338CA",
   },
 
   memberDescription: {
     fontSize: 14,
     lineHeight: 23,
-    color: "#64748B",
   },
 });
 
