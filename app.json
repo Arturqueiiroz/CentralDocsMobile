@@ -10,6 +10,7 @@
       "supportsTablet": true
     },
     "android": {
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -19,6 +20,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "splash": {
+      "image": "./assets/img/LogoParaTemaClaro.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "plugins": [
+      "expo-splash-screen"
+    ]
   }
 }

@@ -7,7 +7,7 @@ import { HeaderScreen } from "../../components/Header";
 import { FooterScreen } from "../../components/Footer";
 import styles from '../../theme/PerguntasFrequentesCss';
 
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental && !(globalThis as any).nativeFabricUIManager) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
