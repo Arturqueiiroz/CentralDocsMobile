@@ -24,29 +24,24 @@ api.interceptors.request.use(
             config.headers.Authorization = `Bearer ${token}`;
         }
 
-        console.log('➡️ Fazendo requisição para:', `${config.baseURL}${config.url}`);
+        console.log(
+            '➡️ Requisição:',
+            `${config.baseURL}${config.url}`
+        );
 
         return config;
     },
-    (error) => {
-        console.log('❌ Erro antes da requisição:', error);
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-    (response) => {
-        console.log('✅ Resposta da API:', response.status);
-        return response;
-    },
+    (response) => response,
     (error) => {
         console.log('❌ Erro da API:', error.message);
 
         if (error.response) {
             console.log('Status:', error.response.status);
             console.log('Dados:', error.response.data);
-        } else if (error.request) {
-            console.log('⚠️ API não respondeu à requisição');
         }
 
         return Promise.reject(error);
